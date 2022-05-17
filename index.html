@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MTR PIDS Simulator</title>
+    <!-- Google Fonts (Noto Serif TC) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&display=swap">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/reset.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <script src="./assets/js/flowtype.js"></script>
+    <!-- Meta/Facebook -->
+    <meta property="og:url" content="http://hktss.github.io/pidssim" />
+    <meta property="og:title" content="Railway Vision PIDS Simulator" />
+    <meta property="og:description" content="MTR Railway Vision PIDS Simulator" />
+    <meta property="og:image" content="./assets/img/thumb.png" />
+</head>
+
+<body>
+    <span class="widthCheck"></span>
+    <div class="config">
+        <div class="box">
+            <div id="error" style="display: none"></div>
+            <span class="title lang-en">MTR PIDS Config</span>
+            <span class="title lang-zh">願景資訊顯示屏模擬器</span>
+            <button id="langchoose">EN</button>
+            <div class="online">
+                <h1 class="secHeader lang-en">Lines</h1>
+                <h1 class="secHeader lang-zh">路線</h1>
+                <select class="route">
+                    <option value="TCL">東涌綫 Tung Chung Line</option>
+                    <option value="TML">屯馬綫 Tuen Ma Line</option>
+                    <option value="TKL">將軍澳綫 Tsueng Kwan O Line</option>
+                    <option value="AEL">機場快綫 Airport Express</option>
+                    <option value="EAL">東鐵綫 East Rail Line</option>
+                    <option value="DRL">迪士尼綫 Disneyland Resort Line</option>
+                    <option value="LRT">輕鐵 Light Rail</option>
+                </select>
+
+                <h1 class="secHeader lang-en">Station</h1>
+                <h1 class="secHeader lang-zh">車站</h1>
+                <select class="station">
+                </select>
+
+                <h1 class="secHeader lang-en">Direction</h1>
+                <h1 class="secHeader lang-zh">方向</h1>
+                <select class="direction">
+                    <option value="UP">上行 Up</option>
+                    <option value="DOWN">下行 Down</option>
+                    <option value="BOTH">雙向 Both</option>
+                </select>
+            </div>
+
+            <div class="offline" style="display: none;">
+                <h1 class="secHeader lang-en">ETA Data</h1>
+                <h1 class="secHeader lang-zh">下班列車資料</h1>
+                <table>
+                    <tr class="lang-en">
+                        <td>Destination</td>
+                        <td>Platform</td>
+                        <td>ETA</td>
+                    </tr>
+                    <tr class="lang-zh">
+                        <td>終點站</td>
+                        <td>月台</td>
+                        <td>到達時間</td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" autocomplete="off" id="dest1"></input>
+                        </td>
+                        <td><input type="text" size="1" autocomplete="off" id="plat1"></input>
+                        </td>
+                        <td><input type="text" size="2" autocomplete="off" id="ttnt1"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" autocomplete="off" id="dest2"></input>
+                        </td>
+                        <td><input type="text" size="1" autocomplete="off" id="plat2"></input>
+                        </td>
+                        <td><input type="text" size="2" autocomplete="off" id="ttnt2"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" autocomplete="off" id="dest3"></input>
+                        </td>
+                        <td><input type="text" size="1" autocomplete="off" id="plat3"></input>
+                        </td>
+                        <td><input type="text" size="2" autocomplete="off" id="ttnt3"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" autocomplete="off" id="dest4"></input>
+                        </td>
+                        <td><input type="text" size="1" autocomplete="off" id="plat4"></input>
+                        </td>
+                        <td><input type="text" size="2" autocomplete="off" id="ttnt4"></input>
+                        </td>
+                    </tr>
+                </table>
+                <h1 class="lang-en secHeader">Route Color (Hex)</h1>
+                <h1 class="lang-zh secHeader">路線顏色 (Hex)</h1>
+                #<input type="text" maxlength="6" size="6" class="rtColor"></input>
+                <br>
+                <h1 class="lang-en secHeader">Font Ratio:</h1>
+                <h1 class="lang-zh secHeader">字體比例</h1>
+                <input type="number" class="fontRatioCustom" size="2" value="1"></input>
+            </div>
+
+            <h1 class="secHeader lang-en">Special Message</h1>
+            <h1 class="secHeader lang-zh">特別信息:</h1>
+            <select class="specialMsg"></select>
+            <br>
+            <input type="checkbox" class="onlineMode translatable" checked></input><span class="lang-en">Use real-time train data</span><span class="lang-zh">使用實時到站資訊</span>
+            <br>
+            <input class="showPlat" type="checkbox" checked></input><span class="lang-en">Show Platform</span> <span class="lang-zh">顯示月台</span>
+            <br>
+            <input class="hideAdv" type="checkbox"></input><span class="lang-en">Show Train ETA Only</span> <span class="lang-zh">只顯示列車到站時間</span>
+            <br>
+            <br>
+            <button class="saveCfg lang-en">Save & Close this page</button>
+            <button class="saveCfg lang-zh">套用設定及關閉此頁面</button>
+            <p class="footer">HKTSS 2022</p>
+            <br>
+        </div>
+    </div>
+    <div class="main">
+        <div id="titlebar">
+            <div class="content">
+                <span id="weatherIcon"></span>
+                <span id="weather"></span>°C
+                <span class="clock floatright"></span>
+            </div>
+        </div>
+        <div id="advertisement">
+            <iframe class="centeredItem" src="./adv/0.html"></iframe>
+        </div>
+        <div id="arrivals">
+            <table id="arrivalBackground">
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+            </table>
+            <table id="arrivalOverlay">
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

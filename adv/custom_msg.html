@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./custom_msg.js"></script>
+</head>
+
+<body style="overflow: hidden;background-color: white">
+    <div id="content">
+        <h1 class="header-zh"></h1>
+        <h1 class="header-en"></h1>
+    </div>
+</body>
+
+<style>
+    body {
+        text-align: center;
+        font-family: "Myriad Pro Semibold", "Noto Serif TC";
+        color: #1A2B42;
+    }
+    
+    #content {
+        position: absolute;
+        top: 50%;
+        left: 15%;
+        right: 15%;
+        margin-left: auto;
+        margin-right: auto;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+    
+    .header-zh {
+        font-size: calc(4.5 * (1vw + 1vh + 1vmin));
+        margin: 0;
+    }
+    
+    .header-en {
+        font-size: calc(3.2 * (1vw + 1vh + 1vmin));
+        margin: 0;
+    }
+</style>
+
+</html>
