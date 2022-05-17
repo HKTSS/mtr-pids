@@ -586,7 +586,7 @@ function setUILanguage(lang) {
     if (lang == 'EN') {
         $('.lang-en').show()
         $('.lang-zh').hide()
-    } else {
+    } else if (lang == 'ZH') {
         $('.lang-zh').show()
         $('.lang-en').hide()
     }
