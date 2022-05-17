@@ -541,7 +541,21 @@ function drawUI() {
 
         let entry = arrivalData[entryIndex]
         let stationName = selectedData.route.via ? `${switchLang(entry.dest)} ${switchLang("經|via")} ${switchLang(stationCodeList.get(selectedData.route.via).name)}` : switchLang(entry.dest);
-        let timetext = entry.isDeparture == true ? "正在離開|Departing" : entry.ttnt == 0 ? "" : entry.ttnt == 1 ? "即將抵達|Arriving" : "分鐘|min"
+        let timetext = ""
+
+        if (entry.isDeparture == true) {
+            if (entry.ttnt == 0) timetext = "正在離開|Departing"
+            else timetext = "分鐘|min"
+        } else {
+            if (entry.ttnt == 0) {
+                timetext = ""
+            } else if (entry.ttnt == 1) {
+                timetext = "即將抵達|Arriving"
+            } else {
+                timetext = "分鐘|min"
+            }
+        }
+
         let lrtElement = entry.route.isLRT ? `<span class="lrtrt" style="border-color:#${entry.route.color}">${entry.route.initials}</span>` : ""
         let tableRow = `<tr><td class="destination scalable">${lrtElement}${stationName}</td>`
         if (selectedData.showPlatform) tableRow += `<td style="width:10%"><span class="platcircle" style="background-color:#${selectedData.route.color}">${entry.plat}</span></td>`
@@ -590,6 +604,7 @@ function setUILanguage(lang) {
     }
 
     $('.direction > option').each(function() {
+        if (selectedData.route.directionInfo.length < 2) return;
         let UPTerminus = stationCodeList.get(selectedData.route.directionInfo[0]);
         let DNTerminus = stationCodeList.get(selectedData.route.directionInfo[1]);
         let Text = switchLang("往 |To ", true)
@@ -663,7 +678,9 @@ async function queryData(direction) {
     if (api == API.NONE) return;
 
     if (api == API.MTR_LR) {
-        const response = await fetch(`https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id=${selectedData.stn.initials}`);
+        const response = await fetch(`https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id=${selectedData.stn.initials}`, {
+            headers: {}
+        });
 
         if (!response.ok) {
             error(`Cannot fetch arrival data (${response.status}).`)
