@@ -262,7 +262,9 @@ const weatherIcon = {
     '93': './assets/img/hko_icon/85.png',
     'WTS': './assets/img/hko_icon/warning/wts.png',
     'WRAINA': './assets/img/hko_icon/warning/wraina.png',
-    'WL': './assets/img/hko_icon/warning/wl.png'
+    'WL': './assets/img/hko_icon/warning/wl.png',
+    'WFIRER': './assets/img/hko_icon/warning/wfirer.png',
+    'WFIREY': './assets/img/hko_icon/warning/wfirey.png'
 }
 let currentLanguage = 'ZH'
 let arrivalData = []
@@ -673,8 +675,8 @@ async function queryWeather() {
     }
 }
 
-async function queryData(direction) {
-    let api = selectedData.route.api
+async function queryETAData(direction) {
+    let api = selectedData.route.api;
     if (api == API.NONE) return;
 
     if (api == API.MTR_LR) {
@@ -726,6 +728,7 @@ async function queryData(direction) {
         }
 
         if (!response.ok) {
+            error(`Cannot fetch arrival data:\n${data.message}`)
             return []
         }
 
@@ -820,7 +823,7 @@ async function updateData(forced) {
     if (configOpened && !forced) return;
     if (!selectedData.onlineMode) return drawUI();
 
-    let newArrivalData = await queryData(selectedData.direction)
+    let newArrivalData = await queryETAData(selectedData.direction)
     if (newArrivalData == null) return;
 
     arrivalData = newArrivalData
