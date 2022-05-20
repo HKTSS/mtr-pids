@@ -151,16 +151,18 @@ input[type=text]:focus {
 
 .lrtrt {
     display: inline-block;
+    width: 10.5vw;
+    min-width: 120px;
+    text-align: center;
     vertical-align: middle;
     background-color: white;
     font-family: "Myriad Pro Semibold";
-    font-size: 5vh;
+    font-size: 6vh;
     color: black;
-    border-radius: 20% / 50%;
-    border: 18px solid orange;
-    outline: 10px solid black;
-    padding: 0 50px 0 50px;
-    margin-right: 40px;
+    border-radius: 50vh;
+    border: 2.2vh solid orange;
+    outline: 1.2vh solid black;
+    margin-right: 3vw;
 }
 
 .platcircle {
@@ -199,7 +201,7 @@ input[type=text]:focus {
 .eta {
     font-family: var(--font-eta);
     text-align: right;
-    width: 18%;
+    width: 17%;
     padding-left: 15px;
     overflow: hidden;
     white-space: nowrap;
