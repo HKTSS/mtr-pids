@@ -1,3 +1,12 @@
+let arrivalVisbility = [true, true, true, true]
+let nextAdvTime;
+let currentLanguage = 'ZH'
+let arrivalData = []
+let weatherData = {}
+let configOpened = false;
+let showingSpecialMessage = false;
+let currentAdvId = 0;
+
 class Route {
     initials;
     api;
@@ -26,16 +35,14 @@ class ArrivalEntry {
     ttnt;
     plat;
     isLRT;
-    APISource;
     paxLoad;
     isDeparture;
     firstClassCar;
-    constructor(dest, ttnt, route, platforms, isLRT, APISource, isDeparture, paxLoad, firstClass) {
+    constructor(dest, ttnt, route, platforms, isLRT, isDeparture, paxLoad, firstClass) {
         this.dest = dest
         this.ttnt = ttnt
         this.plat = platforms
         this.isLRT = isLRT
-        this.APISource = APISource
         this.paxLoad = paxLoad;
         this.isDeparture = isDeparture
         this.firstClassCar = firstClass
@@ -68,7 +75,7 @@ const RouteList = {
     'TKL': new Route('TKL', API.MTR_OPEN, '將軍澳綫|Tsueng Kwan O Line', '7d499d', false, false, "", ["POA", "NOP"], ["NOP", "QUB", "YAT", "TIK", "TKO", "LHP", "HAH", "POA"]),
     'AEL': new Route('AEL', API.MTR_OPEN, '機場快綫|Airport Express', '00888a', false, false, "", ["AWE", "HOK"], ["HOK", "KOW", "TSY", "AIR", "AWE"]),
     'EAL': new Route('EAL', API.MTR, '東鐵綫|East Rail Line', '53b7e8', false, true, "", ["SHS", "ADM"], ["ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "RAC", "FOT", "UNI", "TAP", "TWO", "FAN", "SHS"]),
-    'EALRAC': new Route('EALRAC', API.MTR, '東涌綫|East Rail Line', '53b7e8', false, true, "RAC", ["ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "FOT", "RAC", "UNI", "TAP", "TWO", "FAN", "SHS"]),
+    'EALRAC': new Route('EALRAC', API.MTR, '東鐵綫|East Rail Line', '53b7e8', false, true, "RAC", ["ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "FOT", "RAC", "UNI", "TAP", "TWO", "FAN", "SHS"]),
     'DRL': new Route('DRL', API.METRO_RIDE, '迪士尼綫|Disneyland Resorts Line', 'f173ac', false, false, "", ["SUN", "DIS"], ["SUN", "DIS"]),
     'LRT': new Route('LRT', API.MTR_LR, '輕鐵|Light Rail', 'd3a809', true, false, "", [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"]),
     'LR505': new Route('505', API.MTR_LR, '輕鐵 505|Light Rail 505', 'da2128', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"]),
@@ -95,6 +102,7 @@ let selectedData = {
     'fontPreset': null,
     'hideAdv': false,
     'UILang': 'EN',
+    'debugMode': true,
     'specialMsgID': "NONE"
 }
 
@@ -151,9 +159,6 @@ let advData = {
         }
     ]
 }
-
-let arrivalVisbility = [true, true, true, true]
-let nextAdvTime;
 
 const FontPreset = {
     "default": {
@@ -230,7 +235,7 @@ const FontPreset = {
     }
 }
 
-const weatherIcon = {
+const WeatherIcon = {
     '50': './assets/img/hko_icon/50.png',
     '51': './assets/img/hko_icon/51.png',
     '52': './assets/img/hko_icon/52.png',
@@ -266,14 +271,8 @@ const weatherIcon = {
     'WFIRER': './assets/img/hko_icon/warning/wfirer.png',
     'WFIREY': './assets/img/hko_icon/warning/wfirey.png'
 }
-let currentLanguage = 'ZH'
-let arrivalData = []
-let weatherData = {}
-let configOpened = false;
-let currentAdvId = 0;
-let showingSpecialMessage = false;
 
-const stationCodeList = new Map([
+const StationCodeList = new Map([
     /* DRL START*/
     ['DIS', new Station("DIS", "迪士尼|Disneyland Resort", 55)],
 
@@ -505,14 +504,6 @@ function adjustFontSize() {
 
         $(this).css("font-size", `${ogSize * (percentW)}px`)
     });
-
-    $('.platcircle').each(function() {
-        $(this).flowtype({
-            minimum: $(this).width(),
-            maximum: $(this).width(),
-            fontRatio: 1
-        });
-    })
 }
 
 function parseQuery() {
@@ -542,7 +533,7 @@ function drawUI() {
         }
 
         let entry = arrivalData[entryIndex]
-        let stationName = selectedData.route.via ? `${switchLang(entry.dest)} ${switchLang("經|via")} ${switchLang(stationCodeList.get(selectedData.route.via).name)}` : switchLang(entry.dest);
+        let stationName = selectedData.route.via ? `${switchLang(entry.dest)} ${switchLang("經|via")} ${switchLang(StationCodeList.get(selectedData.route.via).name)}` : switchLang(entry.dest);
         let timetext = ""
 
         if (entry.isDeparture == true) {
@@ -598,7 +589,7 @@ function setUILanguage(lang) {
     })
 
     $('.station > option').each(function() {
-        $(this).text(switchLang(stationCodeList.get($(this).val()).name, true))
+        $(this).text(switchLang(StationCodeList.get($(this).val()).name, true))
     })
 
     for (adv of advData.special) {
@@ -607,8 +598,8 @@ function setUILanguage(lang) {
 
     $('.direction > option').each(function() {
         if (selectedData.route.directionInfo.length < 2) return;
-        let UPTerminus = stationCodeList.get(selectedData.route.directionInfo[0]);
-        let DNTerminus = stationCodeList.get(selectedData.route.directionInfo[1]);
+        let UPTerminus = StationCodeList.get(selectedData.route.directionInfo[0]);
+        let DNTerminus = StationCodeList.get(selectedData.route.directionInfo[1]);
         let Text = switchLang("往 |To ", true)
 
         if ($(this).val() == "UP") {
@@ -634,7 +625,7 @@ async function updateWeather() {
 
     $('#weatherIcon').empty()
     for (iconID of weatherIconList) {
-        icon = weatherIcon[iconID];
+        icon = WeatherIcon[iconID];
         if (icon == null) continue;
         $('#weatherIcon').append(`<img src=${icon}>`);
     }
@@ -642,8 +633,9 @@ async function updateWeather() {
     if (weatherWarningList) {
         for (warns of weatherWarningList) {
             let code = warns.subtype ? warns.subtype : warns.warningStatementCode
-            let icon = weatherIcon[code];
+            let icon = WeatherIcon[code];
 
+            /* Skip if there's no corresponding icon */
             if (!icon) continue;
             $('#weatherIcon').append(`<img src='${icon}'>`);
         }
@@ -652,11 +644,12 @@ async function updateWeather() {
     /* Update temperature */
     let temperatureData = weatherData.rhrread.temperature.data;
     let temperature = 0;
+
+    /* Average the temperature collected from all stations */
     for (place of temperatureData) {
         temperature = temperature + parseInt(place.value);
     }
 
-    /* Average the temperature collected from all stations */
     temperature = Math.round(temperature / temperatureData.length)
     $('#weather').text(temperature);
 }
@@ -703,6 +696,7 @@ async function queryETAData(direction) {
             if (platform.end_service_status == 1) continue;
 
             for (entry of platform.route_list) {
+                /* Replace to only numbers, e.g. 2 min -> 2 */
                 let ttnt = entry.time_en.replace(/[^0-9.]/g, '')
                 if (!parseInt(ttnt)) {
                     if (entry.time_en == "-") ttnt = 0
@@ -710,7 +704,7 @@ async function queryETAData(direction) {
                     if (entry.time_en == "Departing") isDeparture = true;
                 }
 
-                let convertedEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttnt, RouteList[`LR${entry.route_no}`], currentPlatform, true, "MTR_LR", isDeparture, null)
+                let convertedEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttnt, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null)
                 finalArray.push(convertedEntry)
             }
         }
@@ -773,19 +767,19 @@ async function queryETAData(direction) {
         for (entry of tempArray) {
             let arrTime = new Date(entry.time)
             let isDeparture;
-            entry.ttnt = Math.max(Math.floor((arrTime - Date.now()) / 60000), 0)
-            let destName = stationCodeList.get(entry.dest).name
+            let ttnt = Math.max(Math.floor((arrTime - Date.now()) / 60000), 0);
+            let destName = StationCodeList.get(entry.dest).name
+
+            if (entry.timeType == "D") {
+                isDeparture = true;
+            }
 
             /* EAL only */
             if (selectedData.route.initials == "EAL") {
-                if (entry.timeType == "D") {
-                    isDeparture = true;
-                }
-
                 entry.firstClass = selectedData.direction == "UP" ? 4 : 6
             }
 
-            let convertedEntry = new ArrivalEntry(destName, entry.ttnt, RouteList[selectedData.route.initials], entry.plat, false, "MTR", isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass)
+            let convertedEntry = new ArrivalEntry(destName, ttnt, RouteList[selectedData.route.initials], entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass)
             finalArray.push(convertedEntry)
         }
 
@@ -794,15 +788,55 @@ async function queryETAData(direction) {
     }
 
     if (api == API.METRO_RIDE) {
-        let directionURL = direction == 'BOTH' ? "" : `&dir=${direction}`
+        let finalArray = [];
+
+        if (direction == "BOTH") {
+            const response1 = await fetch(`https://MTRData.kennymhhui.repl.co/metroride?line=${selectedData.route.initials}&sta=${selectedData.stn.MRCode}&dir=UP`)
+            const response2 = await fetch(`https://MTRData.kennymhhui.repl.co/metroride?line=${selectedData.route.initials}&sta=${selectedData.stn.MRCode}&dir=DOWN`)
+            const data1 = await response1.json()
+            const data2 = await response2.json()
+
+            for (entry of data1.eta) {
+                let station = null;
+                for (stn of StationCodeList.values()) {
+                    if (stn.MRCode == entry.destination) {
+                        station = stn;
+                        break;
+                    }
+                }
+                if (station == null) return [];
+                let stnName = station.name
+
+                let convertedEntry = new ArrivalEntry(stnName, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false)
+                finalArray.push(convertedEntry)
+            }
+
+            for (entry of data2.eta) {
+                let station = null;
+                for (stn of StationCodeList.values()) {
+                    if (stn.MRCode == entry.destination) {
+                        station = stn;
+                        break;
+                    }
+                }
+                if (station == null) return [];
+                let stnName = station.name
+
+                let convertedEntry = new ArrivalEntry(stnName, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false)
+                finalArray.push(convertedEntry)
+            }
+            finalArray.sort((a, b) => a.ttnt - b.ttnt)
+            $('#error').hide()
+            return finalArray;
+        }
+
+        let directionURL = `&dir=${direction}`
         const response = await fetch(`https://MTRData.kennymhhui.repl.co/metroride?line=${selectedData.route.initials}&sta=${selectedData.stn.MRCode}${directionURL}`)
         const data = await response.json()
-        arrivalData = []
 
-        let finalArray = [];
         for (entry of data.eta) {
             let station = null;
-            for (stn of stationCodeList.values()) {
+            for (stn of StationCodeList.values()) {
                 if (stn.MRCode == entry.destination) {
                     station = stn;
                     break;
@@ -811,7 +845,7 @@ async function queryETAData(direction) {
             if (station == null) return [];
             let stnName = station.name
 
-            let convertedEntry = new ArrivalEntry(stnName, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false, "MetroRide")
+            let convertedEntry = new ArrivalEntry(stnName, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false)
             finalArray.push(convertedEntry)
         }
         $('#error').hide()
@@ -835,7 +869,7 @@ function saveConfig() {
         selectedData.route = RouteList[$(`.route`).val()]
         selectedData.fontPreset = FontPreset[selectedData.route.initials]
         selectedData.direction = $('.direction').val()
-        selectedData.stn = stationCodeList.get($('.station').val())
+        selectedData.stn = StationCodeList.get($('.station').val())
     } else {
         let customFontRatio = $('.fontRatioCustom').val()
         let routeColor = $('.rtColor').val()
@@ -1019,9 +1053,9 @@ function setupConfigUI() {
     $('.station').empty()
 
     for (stnCode of selectedData.route.stations) {
-        $('.station').append(`<option value="${stnCode}">${switchLang(stationCodeList.get(stnCode).name, true)}`)
+        $('.station').append(`<option value="${stnCode}">${switchLang(StationCodeList.get(stnCode).name, true)}`)
     }
-    selectedData.stn = stationCodeList.get(selectedData.route.stations[0])
+    selectedData.stn = StationCodeList.get(selectedData.route.stations[0])
 
     // $('.route').empty()
     // for (key in RouteList) {
@@ -1054,6 +1088,8 @@ $(document).ready(async function() {
     setInterval(updateData, 10000, false)
     setInterval(drawUI, 1000)
     setInterval(updateWeather, 60000, false)
+
+    if (!selectedData.debugMode) toggleConfigPage();
 
     $('.onlineMode').on('change', function() {
         selectedData.onlineMode = $(this).is(':checked')
@@ -1098,11 +1134,13 @@ $(document).ready(async function() {
 })
 
 $(window).on('keydown', function(e) {
+    /* Enter key */
     if (e.which == 13) {
         toggleConfigPage()
     }
 
-    if (e.which == 71) {
+    /* G key */
+    if (e.which == 71 && selectedData.debugMode) {
         changeLanguage()
         cycleAdv()
         renderAdv()
