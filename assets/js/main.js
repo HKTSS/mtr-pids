@@ -14,17 +14,15 @@ class Route {
     color;
     isLRT;
     hasPaxLoad;
-    via;
     directionInfo
     stations;
-    constructor(initials, api, name, color, isLRT, hasPaxLoad, via, directionInfo, stations) {
+    constructor(initials, api, name, color, isLRT, hasPaxLoad, directionInfo, stations) {
         this.initials = initials
         this.api = api
         this.name = name
         this.color = color
         this.isLRT = isLRT
         this.hasPaxLoad = hasPaxLoad
-        this.via = via;
         this.directionInfo = directionInfo;
         this.stations = stations;
     }
@@ -38,7 +36,8 @@ class ArrivalEntry {
     paxLoad;
     isDeparture;
     firstClassCar;
-    constructor(dest, ttnt, route, platforms, isLRT, isDeparture, paxLoad, firstClass) {
+    via;
+    constructor(dest, ttnt, route, platforms, isLRT, isDeparture, paxLoad, firstClass, via) {
         this.dest = dest
         this.ttnt = ttnt
         this.plat = platforms
@@ -47,6 +46,7 @@ class ArrivalEntry {
         this.isDeparture = isDeparture
         this.firstClassCar = firstClass
         this.route = route;
+        this.via = via;
     }
 }
 
@@ -70,14 +70,13 @@ const API = {
 }
 
 const RouteList = {
-    'TCL': new Route('TCL', API.MTR_OPEN, '東涌綫|Tung Chung Line', 'f7943e', false, false, "", ["TUC", "HOK"], ["HOK", "KOW", "OLY", "NAC", "LAK", "TSY", "SUN", "TUC"]),
-    'TML': new Route('TML', API.MTR, '屯馬綫|Tuen Ma Line', '923011', false, true, "", ["TUM", "WKS"], ["TUM", "SIH", "TIS", "LOP", "YUL", "KSR", "TWW", "MEF", "NAC", "AUS", "ETS", "HUH", "HOM", "TKW", "SUW", "KAT", "DIH", "HIK", "TAW", "CKT", "STW", "CIO", "SHM", "TSH", "HEO", "MOS", "WKS"]),
-    'TKL': new Route('TKL', API.MTR_OPEN, '將軍澳綫|Tsueng Kwan O Line', '7d499d', false, false, "", ["POA", "NOP"], ["NOP", "QUB", "YAT", "TIK", "TKO", "LHP", "HAH", "POA"]),
-    'AEL': new Route('AEL', API.MTR_OPEN, '機場快綫|Airport Express', '00888a', false, false, "", ["AWE", "HOK"], ["HOK", "KOW", "TSY", "AIR", "AWE"]),
-    'EAL': new Route('EAL', API.MTR, '東鐵綫|East Rail Line', '53b7e8', false, true, "", ["SHS", "ADM"], ["ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "RAC", "FOT", "UNI", "TAP", "TWO", "FAN", "SHS"]),
-    'EALRAC': new Route('EALRAC', API.MTR, '東鐵綫|East Rail Line', '53b7e8', false, true, "RAC", ["ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "FOT", "RAC", "UNI", "TAP", "TWO", "FAN", "SHS"]),
+    'TCL': new Route('TCL', API.MTR_OPEN, '東涌綫|Tung Chung Line', 'f7943e', false, false, ["TUC", "HOK"], ["HOK", "KOW", "OLY", "NAC", "LAK", "TSY", "SUN", "TUC"]),
+    'TML': new Route('TML', API.MTR, '屯馬綫|Tuen Ma Line', '923011', false, true, ["TUM", "WKS"], ["TUM", "SIH", "TIS", "LOP", "YUL", "KSR", "TWW", "MEF", "NAC", "AUS", "ETS", "HUH", "HOM", "TKW", "SUW", "KAT", "DIH", "HIK", "TAW", "CKT", "STW", "CIO", "SHM", "TSH", "HEO", "MOS", "WKS"]),
+    'TKL': new Route('TKL', API.MTR_OPEN, '將軍澳綫|Tsueng Kwan O Line', '7d499d', false, false, ["POA", "NOP"], ["NOP", "QUB", "YAT", "TIK", "TKO", "LHP", "HAH", "POA"]),
+    'AEL': new Route('AEL', API.MTR_OPEN, '機場快綫|Airport Express', '00888a', false, false, ["AWE", "HOK"], ["HOK", "KOW", "TSY", "AIR", "AWE"]),
+    'EAL': new Route('EAL', API.MTR, '東鐵綫|East Rail Line', '53b7e8', false, true, ["SHS", "ADM"], ["ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "RAC", "FOT", "UNI", "TAP", "TWO", "FAN", "SHS"]),
     'DRL': new Route('DRL', API.METRO_RIDE, '迪士尼綫|Disneyland Resorts Line', 'f173ac', false, false, "", ["SUN", "DIS"], ["SUN", "DIS"]),
-    'LRT': new Route('LRT', API.MTR_LR, '輕鐵|Light Rail', 'd3a809', true, false, "", [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"]),
+    'LRT': new Route('LRT', API.MTR_LR, '輕鐵|Light Rail', 'd3a809', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"]),
     'LR505': new Route('505', API.MTR_LR, '輕鐵 505|Light Rail 505', 'da2128', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"]),
     'LR507': new Route('507', API.MTR_LR, '輕鐵 507|Light Rail 507', '00a650', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"]),
     'LR610': new Route('610', API.MTR_LR, '輕鐵 610|Light Rail 610', '551b14', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"]),
@@ -533,12 +532,17 @@ function drawUI() {
         }
 
         let entry = arrivalData[entryIndex]
-        let stationName = selectedData.route.via ? `${switchLang(entry.dest)} ${switchLang("經|via")} ${switchLang(StationCodeList.get(selectedData.route.via).name)}` : switchLang(entry.dest);
+        let stationName = entry.via ? `${switchLang(entry.dest)}${switchLang("經| via ")}${switchLang(StationCodeList.get(entry.via).name)}` : switchLang(entry.dest);
         let timetext = ""
+        let time = entry.ttnt < 2 ? "" : Math.min(entry.ttnt, 99);
 
         if (entry.isDeparture == true) {
-            if (entry.ttnt == 0) timetext = "正在離開|Departing"
-            else timetext = "分鐘|min"
+            if (entry.ttnt == 0) {
+                timetext = "正在離開|Departing"
+            } else {
+                time = entry.ttnt < 1 ? "" : Math.min(entry.ttnt, 99);
+                timetext = "分鐘|min"
+            }
         } else {
             if (entry.ttnt == 0) {
                 timetext = ""
@@ -552,7 +556,7 @@ function drawUI() {
         let lrtElement = entry.route.isLRT ? `<span class="lrtrt" style="border-color:#${entry.route.color}">${entry.route.initials}</span>` : ""
         let tableRow = `<tr><td class="destination scalable">${lrtElement}${stationName}</td>`
         if (selectedData.showPlatform) tableRow += `<td style="width:10%"><span class="platcircle" style="background-color:#${selectedData.route.color}">${entry.plat}</span></td>`
-        tableRow += `<td class="eta scalable">${entry.ttnt < 2 ? "" : Math.min(entry.ttnt, 99)} <span class="etamin scalable">${switchLang(timetext)}</span></td></tr>`
+        tableRow += `<td class="eta scalable">${time} <span class="etamin scalable">${switchLang(timetext)}</span></td></tr>`
         $('#arrivalOverlay').append(tableRow)
         entryIndex++;
     }
@@ -704,7 +708,7 @@ async function queryETAData(direction) {
                     if (entry.time_en == "Departing") isDeparture = true;
                 }
 
-                let convertedEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttnt, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null)
+                let convertedEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttnt, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "")
                 finalArray.push(convertedEntry)
             }
         }
@@ -765,6 +769,7 @@ async function queryETAData(direction) {
 
         /* Convert data to adapt to a standardized format */
         for (entry of tempArray) {
+            let route = RouteList[selectedData.route.initials];
             let arrTime = new Date(entry.time)
             let isDeparture;
             let ttnt = Math.max(Math.floor((arrTime - Date.now()) / 60000), 0);
@@ -779,7 +784,7 @@ async function queryETAData(direction) {
                 entry.firstClass = selectedData.direction == "UP" ? 4 : 6
             }
 
-            let convertedEntry = new ArrivalEntry(destName, ttnt, RouteList[selectedData.route.initials], entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass)
+            let convertedEntry = new ArrivalEntry(destName, ttnt, route, entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass, entry.route)
             finalArray.push(convertedEntry)
         }
 
@@ -822,7 +827,7 @@ async function queryETAData(direction) {
                 if (station == null) return [];
                 let stnName = station.name
 
-                let convertedEntry = new ArrivalEntry(stnName, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false)
+                let convertedEntry = new ArrivalEntry(stnName, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false, false, null, 0, "")
                 finalArray.push(convertedEntry)
             }
             finalArray.sort((a, b) => a.ttnt - b.ttnt)

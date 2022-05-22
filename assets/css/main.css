@@ -51,7 +51,7 @@ input[type=text]:focus {
 
 .title {
     display: inline-block;
-    padding: 10px 10px 10px 10px;
+    padding: 1vh 1vh 1vh 1vh;
     font-family: var(--font-titlebar);
     font-size: 48px;
     text-align: center;
@@ -69,7 +69,7 @@ input[type=text]:focus {
 }
 
 #titlebar>.content {
-    padding: 0px 50px 0px 50px;
+    padding: 0px 3% 0px 3%;
 }
 
 #weatherIcon img {
@@ -167,6 +167,7 @@ input[type=text]:focus {
 
 .platcircle {
     display: block;
+    margin: auto;
     font-family: var(--font-platformcircle);
     font-size: var(--font-size);
     height: var(--font-size);
