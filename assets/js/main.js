@@ -337,7 +337,7 @@ const StationCodeList = new Map([
     /* EAL START */
     ['EXC', new Station("EXC", "會展|Exhibition Centre", 96)],
     ['MKK', new Station("MKK", "旺角東|Mong Kok East", 66)],
-    ['KOT', new Station("KOT", "九龍塘|Kowloon Tong", ["KTL", "EAL"], 46)],
+    ['KOT', new Station("KOT", "九龍塘|Kowloon Tong", 46)],
     ['SHT', new Station("SHT", "沙田|Sha Tin", 69)],
     ['FOT', new Station("FOT", "火炭|Fo Tan", 70)],
     ['RAC', new Station("RAC", "馬場|Racecourse", 71)],
@@ -350,46 +350,46 @@ const StationCodeList = new Map([
     ['LMC', new Station("LMC", "落馬洲|Lok Ma Chau", 80)],
 
     /* KTL START */
-    ['WHA', new Station("WHA", "黃埔|Wongpoa")],
-    ['YMT', new Station("YMT", "油麻地|Yau Ma Tei")],
-    ['MOK', new Station("MOK", "旺角|Mong Kok")],
-    ['PRE', new Station("PRE", "太子|Prince Edward")],
-    ['SKM', new Station("SKM", "石硤尾|Shek Kip Mei")],
-    ['LOF', new Station("LOF", "樂富|Lok Fu")],
-    ['WTS', new Station("WTS", "黃大仙|Wong Tai Sin")],
-    ['CHH', new Station("CHH", "彩虹|Choi Hung")],
-    ['KOB', new Station("KOB", "九龍灣|Kowloon Bay")],
-    ['NTK', new Station("NTK", "牛頭角|Ngau Tau Kok")],
-    ['KWT', new Station("KWT", "觀塘|Kwun Tong")],
-    ['LAT', new Station("LAT", "藍田|Lam Tin")],
+    ['WHA', new Station("WHA", "黃埔|Whampoa", 85)],
+    ['YMT', new Station("YMT", "油麻地|Yau Ma Tei", 6)],
+    ['MOK', new Station("MOK", "旺角|Mong Kok", 7)],
+    ['PRE', new Station("PRE", "太子|Prince Edward", 16)],
+    ['SKM', new Station("SKM", "石硤尾|Shek Kip Mei", 8)],
+    ['LOF', new Station("LOF", "樂富|Lok Fu", 10)],
+    ['WTS', new Station("WTS", "黃大仙|Wong Tai Sin", 11)],
+    ['CHH', new Station("CHH", "彩虹|Choi Hung", 12)],
+    ['KOB', new Station("KOB", "九龍灣|Kowloon Bay", 13)],
+    ['NTK', new Station("NTK", "牛頭角|Ngau Tau Kok", 14)],
+    ['KWT', new Station("KWT", "觀塘|Kwun Tong", 15)],
+    ['LAT', new Station("LAT", "藍田|Lam Tin", 39)],
 
     /* TWL START */
-    ['TSW', new Station("TSW", "荃灣|Tsuen Wan")],
-    ['TWH', new Station("TWH", "大窩口|Tai Wo Hau")],
-    ['KWH', new Station("KWH", "葵興|Kwai Hing")],
-    ['KWF', new Station("KWF", "葵芳|Kwai Fong")],
-    ['LCK', new Station("LCK", "茘枝角|Lai Chi Kok")],
-    ['CSW', new Station("CSW", "長沙灣|Cheung Sha Wan")],
-    ['SSP', new Station("SSP", "深水埗|Sham Shui Po")],
-    ['JOR', new Station("JOR", "佐敦|Jordan")],
-    ['TST', new Station("TST", "尖沙咀|Tsim Sha Tsui")],
-    ['ADM', new Station("ADM", "金鐘|Admiralty")],
-    ['CEN', new Station("CEN", "中環|Central", '1')],
+    ['TSW', new Station("TSW", "荃灣|Tsuen Wan", 25)],
+    ['TWH', new Station("TWH", "大窩口|Tai Wo Hau", 24)],
+    ['KWH', new Station("KWH", "葵興|Kwai Hing", 23)],
+    ['KWF', new Station("KWF", "葵芳|Kwai Fong", 22)],
+    ['LCK', new Station("LCK", "茘枝角|Lai Chi Kok", 19)],
+    ['CSW', new Station("CSW", "長沙灣|Cheung Sha Wan", 18)],
+    ['SSP', new Station("SSP", "深水埗|Sham Shui Po", 17)],
+    ['JOR', new Station("JOR", "佐敦|Jordan", 4)],
+    ['TST', new Station("TST", "尖沙咀|Tsim Sha Tsui", 3)],
+    ['ADM', new Station("ADM", "金鐘|Admiralty", 2)],
+    ['CEN', new Station("CEN", "中環|Central", 1)],
 
     /* ISL START */
-    ['KET', new Station("KET", "堅尼地城|Kennedy Town")],
-    ['HKU', new Station("HKU", "香港大學|HKU")],
-    ['SYP', new Station("SYP", "西營盤|Sai Ying Pun")],
-    ['SHW', new Station("SHW", "上環|Sheung Wan")],
-    ['WAC', new Station("WAC", "灣仔|Wan Chai")],
-    ['CAB', new Station("CAB", "銅鑼灣|Causeway Bay")],
-    ['TIH', new Station("TIH", "天后|Tin Hau")],
-    ['FOH', new Station("FOH", "炮台山|Fortress Hill")],
-    ['TAK', new Station("TAK", "太古|Tai Koo")],
-    ['SWH', new Station("SWH", "西灣河|Sai Wan Ho")],
-    ['SKW', new Station("SKW", "筲箕灣|Shau Kei Wan")],
-    ['HFC', new Station("HFC", "杏花邨|Heng Fa Chuen")],
-    ['CHW', new Station("CHW", "柴灣|Chai Wan")],
+    ['KET', new Station("KET", "堅尼地城|Kennedy Town", 83)],
+    ['HKU', new Station("HKU", "香港大學|HKU", 82)],
+    ['SYP', new Station("SYP", "西營盤|Sai Ying Pun", 81)],
+    ['SHW', new Station("SHW", "上環|Sheung Wan", 26)],
+    ['WAC', new Station("WAC", "灣仔|Wan Chai", 27)],
+    ['CAB', new Station("CAB", "銅鑼灣|Causeway Bay", 28)],
+    ['TIH', new Station("TIH", "天后|Tin Hau", 29)],
+    ['FOH', new Station("FOH", "炮台山|Fortress Hill", 30)],
+    ['TAK', new Station("TAK", "太古|Tai Koo", 33)],
+    ['SWH', new Station("SWH", "西灣河|Sai Wan Ho", 34)],
+    ['SKW', new Station("SKW", "筲箕灣|Shau Kei Wan", 35)],
+    ['HFC', new Station("HFC", "杏花邨|Heng Fa Chuen", 36)],
+    ['CHW', new Station("CHW", "柴灣|Chai Wan", 37)],
 
     /* LRT START */
     ["1", new Station("1", "屯門碼頭|Tuen Mun Ferry Pier")],
@@ -484,14 +484,14 @@ function switchLang(str, isUI = false) {
 /* Hacky solution, but if it works then it works. */
 function adjustFontSize() {
     $('.scalable').each(function() {
-        const PADDING = 5;
+        const PADDING = 15;
         let ogSize = selectedData.fontPreset.fontRatio * parseInt($(this).css("font-size"));
         let tdWidth = $(this).width() - PADDING;
         let percentW = 1
 
-        $('.widthCheck').text($(this).text())
-        $('.widthCheck').css("font-size", ogSize)
-        $('.widthCheck').css("font-family", $(this).css("font-family"))
+        $('.widthCheck').html($(this).html())
+        $('.widthCheck').css("font-size", ogSize);
+        $('.widthCheck').css("font-family", $(this).css("font-family"));
         $(".widthCheck").css("letter-spacing", $(this).css("letter-spacing"));
         $(".widthCheck").css("font-weight", $(this).css("font-weight"));
 

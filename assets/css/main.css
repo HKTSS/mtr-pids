@@ -1,18 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400&family=Noto+Sans:wght@700&family=Noto+Serif+TC:wght@600;900&display=swap');
 :root {
-    --font-titlebar: "Myriad Pro", "Noto Serif TC";
-    --font-arrivals: "Myriad Pro Semibold", "Noto Serif TC";
-    --font-platformcircle: "Myriad Pro";
-    --font-eta: "Myriad Pro Semibold", "Noto Serif TC";
+    --font-titlebar: "Myriad Pro", "Noto Sans", "Noto Serif TC";
+    --font-arrivals: "Myriad Pro Semibold", "Noto Sans", "Noto Serif TC";
+    --font-platformcircle: "Myriad Pro", "Noto Sans";
+    --font-eta: "Myriad Pro Semibold", "Noto Sans", "Noto Serif TC";
     --font-size: 12vh;
 }
 
 input[type=text] {
-    font-family: 'Segoe UI', "Noto Serif TC", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', "Noto Sans HK", Tahoma, Geneva, Verdana, sans-serif;
     font-size: 14px;
     background-color: white;
     padding: 4px 8px 4px 8px;
     border: 1px solid #bbb;
     border-radius: 3px;
+}
+
+input[type=text]:focus {
+    border-bottom: 2px solid #005FB8;
+    outline-width: 0;
 }
 
 select {
@@ -29,7 +35,7 @@ button {
     border: 1px solid #ccc;
     background-color: white;
     border-radius: 5px;
-    font-family: 'Segoe UI', "Noto Serif TC", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', "Noto Sans HK", Tahoma, Geneva, Verdana, sans-serif;
     font-size: 18px;
     padding: 3px 15px 3px 15px;
     transition: .1s
@@ -37,11 +43,6 @@ button {
 
 button:hover {
     background-color: rgba(255, 255, 255, 0.6);
-}
-
-input[type=text]:focus {
-    border-bottom: 2px solid #005FB8;
-    outline-width: 0;
 }
 
 .main {
@@ -52,7 +53,7 @@ input[type=text]:focus {
 .title {
     display: inline-block;
     padding: 1vh 1vh 1vh 1vh;
-    font-family: var(--font-titlebar);
+    font-family: 'Segoe UI', "Noto Sans HK", Tahoma, Geneva, Verdana, sans-serif;
     font-size: 48px;
     text-align: center;
 }

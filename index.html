@@ -5,14 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <title>MTR PIDS Simulator</title>
-    <!-- Google Fonts (Noto Serif TC) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&display=swap">
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/reset.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./assets/js/main.js"></script>
+
     <!-- Meta/Facebook -->
     <meta property="og:url" content="http://hktss.github.io/pidssim" />
     <meta property="og:title" content="Railway Vision PIDS Simulator" />
@@ -118,22 +115,23 @@
             </div>
 
             <h1 class="secHeader lang-en">Special Message</h1>
-            <h1 class="secHeader lang-zh">特別信息:</h1>
+            <h1 class="secHeader lang-zh">特別信息</h1>
             <select class="specialMsg"></select>
             <br>
             <input type="checkbox" class="onlineMode translatable" checked></input><span class="lang-en">Use real-time train data</span><span class="lang-zh">使用實時到站資訊</span>
             <br>
-            <input class="showPlat" type="checkbox" checked></input><span class="lang-en">Show Platform</span> <span class="lang-zh">顯示月台</span>
+            <input class="showPlat" type="checkbox" checked></input><span class="lang-en">Show Platform</span><span class="lang-zh">顯示月台</span>
             <br>
-            <input class="hideAdv" type="checkbox"></input><span class="lang-en">Show Train ETA Only</span> <span class="lang-zh">只顯示列車到站時間</span>
+            <input class="hideAdv" type="checkbox"></input><span class="lang-en">Show Train ETA Only</span><span class="lang-zh">只顯示列車到站時間</span>
             <br>
             <br>
             <button class="saveCfg lang-en">Save & Close this page</button>
             <button class="saveCfg lang-zh">套用設定及關閉此頁面</button>
-            <p class="footer">HKTSS 2022</p>
+            <a href="https://www.facebook.com/HKTransportSimulationStudio" class="footer">HKTSS 2022</a>
             <br>
         </div>
     </div>
+
     <div class="main">
         <div id="titlebar">
             <div class="content">
@@ -142,8 +140,10 @@
                 <span class="clock floatright"></span>
             </div>
         </div>
+
         <div id="advertisement">
         </div>
+
         <div id="arrivals">
             <table id="arrivalBackground">
                 <tr>
