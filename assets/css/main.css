@@ -11,12 +11,13 @@ input[type=text] {
     font-family: 'Segoe UI', "Noto Sans HK", Tahoma, Geneva, Verdana, sans-serif;
     font-size: 14px;
     background-color: white;
-    padding: 4px 8px 4px 8px;
+    padding: 4px 8px 5px 8px;
     border: 1px solid #bbb;
     border-radius: 3px;
 }
 
 input[type=text]:focus {
+    padding: 4px 8px 3px 8px;
     border-bottom: 2px solid #005FB8;
     outline-width: 0;
 }
@@ -90,6 +91,31 @@ button:hover {
     left: 0;
     right: 0;
     background: transparent;
+}
+
+.marquee {
+    transform: translateX(50%);
+    -moz-transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+    -moz-animation: scroll-left 2s linear infinite;
+    -webkit-animation: scroll-left 2s linear infinite;
+    animation: scroll-left 2s linear infinite;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+@keyframes scroll-left {
+    0% {
+        -moz-transform: translateX(100%);
+        -webkit-transform: translateX(100%);
+        transform: translateX(100%);
+    }
+    100% {
+        -moz-transform: translateX(-100%);
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    }
 }
 
 #arrivalOverlay tr td {
@@ -167,7 +193,7 @@ button:hover {
 }
 
 .platcircle {
-    display: block;
+    display: flex;
     margin: auto;
     font-family: var(--font-platformcircle);
     font-size: var(--font-size);
@@ -175,7 +201,8 @@ button:hover {
     width: var(--font-size);
     border-radius: 50%;
     color: #fff;
-    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
 #advertisement {
