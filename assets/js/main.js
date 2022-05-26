@@ -1,9 +1,10 @@
-let arrivalVisbility = [true, true, true, true]
+let arrivalVisibility = [true, true, true, true]
 let nextAdvTime;
-let currentLanguage = 'ZH'
+let currentLanguage = 0
 let arrivalData = []
 let weatherData = {}
 let configOpened = false;
+let debugMode = true;
 let showingSpecialMessage = false;
 let currentAdvId = 0;
 
@@ -101,8 +102,8 @@ let selectedData = {
     'fontPreset': null,
     'hideAdv': false,
     'UILang': 'EN',
-    'debugMode': true,
-    'specialMsgID': "NONE"
+    'specialMsgID': "NONE",
+    'marquee': false
 }
 
 let advData = {
@@ -463,21 +464,26 @@ const StationCodeList = new Map([
 ])
 
 function updateClock() {
-    let currDate = new Date()
-    let strMin = `${currDate.getMinutes()}`.padStart(2, '0')
-    let strHour = `${currDate.getHours()}`.padStart(2, '0')
-    $('.clock').text(`${strHour}:${strMin}`)
+    let currDate = new Date();
+    let strMin = `${currDate.getMinutes()}`.padStart(2, '0');
+    let strHour = `${currDate.getHours()}`.padStart(2, '0');
+    $('.clock').text(`${strHour}:${strMin}`);
 }
 
 function switchLang(str, isUI = false) {
-    let targetLang = isUI ? selectedData.UILang : currentLanguage
-
-    let name = str.split("|")
-    if (targetLang == 'EN') {
-        return name[1] == undefined ? name[0] : name[1]
-    } else {
-        return name[0]
+    if (isUI == true) {
+        let targetLang = selectedData.UILang;
+        if (targetLang == 'EN') {
+            return str.split("|").length > 0 ? str.split("|")[1] : str.split("|")[0];
+        } else {
+            return str.split("|")[0];
+        }
     }
+
+    let targetLang = currentLanguage
+
+    let name = str.split("|");
+    return name[targetLang % name.length];
 }
 
 /* This function puts the arrival destination text into a hidden element to calculate the width and make changes accordingly */
@@ -487,7 +493,7 @@ function adjustFontSize() {
         const PADDING = 15;
         let ogSize = selectedData.fontPreset.fontRatio * parseInt($(this).css("font-size"));
         let tdWidth = $(this).width() - PADDING;
-        let percentW = 1
+        let percentW = 1;
 
         $('.widthCheck').html($(this).html())
         $('.widthCheck').css("font-size", ogSize);
@@ -495,13 +501,13 @@ function adjustFontSize() {
         $(".widthCheck").css("letter-spacing", $(this).css("letter-spacing"));
         $(".widthCheck").css("font-weight", $(this).css("font-weight"));
 
-        let resultWidth = $('.widthCheck').width()
+        let resultWidth = $('.widthCheck').width();
 
         if (resultWidth > tdWidth) {
-            percentW = (tdWidth / resultWidth)
+            percentW = (tdWidth / resultWidth);
         }
 
-        $(this).css("font-size", `${ogSize * (percentW)}px`)
+        $(this).css("font-size", `${ogSize * (percentW)}px`);
     });
 }
 
@@ -509,60 +515,71 @@ function parseQuery() {
     let params = (new URL(document.location)).searchParams;
     let lang = params.get("lang");
     if (lang == null) return;
-    lang = lang.toUpperCase()
+    lang = lang.toUpperCase();
 
     if (lang == 'EN' || lang == 'ZH') {
         selectedData.UILang = lang;
-        $(`#langchoose`).text(lang == 'EN' ? 'EN' : '中')
+        $(`#langchoose`).text(lang == 'EN' ? 'EN' : '中');
     }
 }
 
 function drawUI() {
-    $("#arrivalOverlay").empty();
-    renderAdv()
     let entryIndex = 0;
 
-    for (let i = 0; i < 4; i++) {
-        let showing = arrivalVisbility[i];
-        let arrivalEntryValid = entryIndex + 1 <= arrivalData.length && arrivalData[entryIndex] != null;
+    $("#arrivalOverlay").empty();
+    renderAdv()
 
-        if (!showing || !arrivalEntryValid) {
-            $('#arrivalOverlay').append(`<tr><td>&nbsp;</td></tr>`)
+    for (let i = 0; i < 4; i++) {
+        let thisRowIsVisible = arrivalVisibility[i];
+        let arrivalEntryValid = entryIndex <= arrivalData.length - 1 && arrivalData[entryIndex] != null;
+
+        if (!thisRowIsVisible || !arrivalEntryValid) {
+            $('#arrivalOverlay').append(`<tr><td>&nbsp;</td></tr>`);
             continue;
         }
 
-        let entry = arrivalData[entryIndex]
-        let stationName = entry.via ? `${switchLang(entry.dest)}${switchLang("經| via ")}${switchLang(StationCodeList.get(entry.via).name)}` : switchLang(entry.dest);
-        let timetext = ""
-        let time = entry.ttnt < 2 ? "" : Math.min(entry.ttnt, 99);
+        let entry = arrivalData[entryIndex];
+        let stationName = entry.via ? `${switchLang(entry.dest)}${switchLang(" 經| via ")}${switchLang(StationCodeList.get(entry.via).name)}` : switchLang(entry.dest);
+        let timetext = "";
+        let time = getETAmin(entry.ttnt, false)
 
         if (entry.isDeparture == true) {
             if (entry.ttnt == 0) {
-                timetext = "正在離開|Departing"
+                timetext = "正在離開|Departing";
             } else {
-                time = entry.ttnt < 1 ? "" : Math.min(entry.ttnt, 99);
-                timetext = "分鐘|min"
+                time = getETAmin(entry.ttnt, true)
+                timetext = "分鐘|min";
             }
         } else {
             if (entry.ttnt == 0) {
-                timetext = ""
+                timetext = "";
             } else if (entry.ttnt == 1) {
-                timetext = "即將抵達|Arriving"
+                timetext = "即將抵達|Arriving";
             } else {
-                timetext = "分鐘|min"
+                timetext = "分鐘|min";
             }
         }
 
         let lrtElement = entry.route.isLRT ? `<span class="lrtrt" style="border-color:#${entry.route.color}">${entry.route.initials}</span>` : ""
-        let tableRow = `<tr><td class="destination scalable">${lrtElement}${stationName}</td>`
-        if (selectedData.showPlatform) tableRow += `<td style="width:10%"><span class="platcircle" style="background-color:#${selectedData.route.color}">${entry.plat}</span></td>`
+        let tableRow = `<tr><td style="width:70%" class="destination scalable">${lrtElement}${stationName}</td>`
+        if (selectedData.showPlatform) {
+            tableRow += `<td style="width:10%"><span class="platcircle scalable" style="background-color:#${selectedData.route.color}">${entry.plat}</span></td>`
+        }
         tableRow += `<td class="eta scalable">${time} <span class="etamin scalable">${switchLang(timetext)}</span></td></tr>`
-        $('#arrivalOverlay').append(tableRow)
+        $('#arrivalOverlay').append(tableRow);
         entryIndex++;
     }
 
-    changeFontPreset()
-    adjustFontSize()
+    changeFontPreset();
+    adjustFontSize();
+}
+
+function getETAmin(eta, departure) {
+    if (eta == 0 || (eta == 1 && !departure)) {
+        return "";
+    } else {
+        return Math.min(eta, 99);
+    }
 }
 
 function toggleConfigPage() {
@@ -572,56 +589,57 @@ function toggleConfigPage() {
         } else {
             configOpened = false;
             saveConfig();
-            updateData(true)
+            updateData(true);
         }
     })
 
-    setUILanguage(selectedData.UILang)
+    setUILanguage(selectedData.UILang);
 }
 
 function setUILanguage(lang) {
     if (lang == 'EN') {
-        $('.lang-en').show()
-        $('.lang-zh').hide()
+        $('.lang-en').show();
+        $('.lang-zh').hide();
     } else if (lang == 'ZH') {
-        $('.lang-zh').show()
-        $('.lang-en').hide()
+        $('.lang-zh').show();
+        $('.lang-en').hide();
     }
 
     $('.route > option').each(function() {
-        $(this).text(switchLang(RouteList[$(this).val()].name, true))
-    })
+        $(this).text(switchLang(RouteList[$(this).val()].name, true));
+    });
 
     $('.station > option').each(function() {
-        $(this).text(switchLang(StationCodeList.get($(this).val()).name, true))
-    })
+        $(this).text(switchLang(StationCodeList.get($(this).val()).name, true));
+    });
 
     for (adv of advData.special) {
-        $(`.specialMsg > option[value="${adv.id}"]`).text(`${switchLang(adv.name, true)}`)
+        $(`.specialMsg > option[value="${adv.id}"]`).text(`${switchLang(adv.name, true)}`);
     }
 
     $('.direction > option').each(function() {
-        if (selectedData.route.directionInfo.length < 2) return;
+        if (!selectedData.route.directionInfo || selectedData.route.directionInfo.length < 2) return;
         let UPTerminus = StationCodeList.get(selectedData.route.directionInfo[0]);
         let DNTerminus = StationCodeList.get(selectedData.route.directionInfo[1]);
         let Text = switchLang("往 |To ", true)
 
         if ($(this).val() == "UP") {
-            $(this).text(Text + switchLang(UPTerminus.name, true))
+            $(this).text(Text + switchLang(UPTerminus.name, true));
         } else if ($(this).val() == "DOWN") {
-            $(this).text(Text + switchLang(DNTerminus.name, true))
+            $(this).text(Text + switchLang(DNTerminus.name, true));
         } else {
-            $(this).text(switchLang("雙向|Both", true))
+            $(this).text(switchLang("雙向|Both", true));
         }
-    })
+    });
 }
 
-function changeLanguage() {
-    currentLanguage = currentLanguage == 'EN' ? 'ZH' : 'EN'
+function cycleLanguage() {
+    currentLanguage++;
+    changeFontPreset();
 }
 
 async function updateWeather() {
-    weatherData = await queryWeather()
+    weatherData = await queryWeather();
     if (weatherData == null) return;
     /* Update weather icon */
     let weatherIconList = weatherData.rhrread.icon;
@@ -703,8 +721,8 @@ async function queryETAData(direction) {
                 /* Replace to only numbers, e.g. 2 min -> 2 */
                 let ttnt = entry.time_en.replace(/[^0-9.]/g, '')
                 if (!parseInt(ttnt)) {
-                    if (entry.time_en == "-") ttnt = 0
-                    if (entry.time_en == "Arriving") ttnt = 1
+                    if (entry.time_en == "-") ttnt = 0;
+                    if (entry.time_en == "Arriving") ttnt = 1;
                     if (entry.time_en == "Departing") isDeparture = true;
                 }
 
@@ -862,7 +880,7 @@ async function updateData(forced) {
     if (configOpened && !forced) return;
     if (!selectedData.onlineMode) return drawUI();
 
-    let newArrivalData = await queryETAData(selectedData.direction)
+    let newArrivalData = await queryETAData(selectedData.direction);
     if (newArrivalData == null) return;
 
     arrivalData = newArrivalData
@@ -877,7 +895,7 @@ function saveConfig() {
         selectedData.stn = StationCodeList.get($('.station').val())
     } else {
         let customFontRatio = $('.fontRatioCustom').val()
-        let routeColor = $('.rtColor').val()
+        let customRTColor = $('.rtColor').val()
 
         if (!parseInt(customFontRatio)) {
             customFontRatio = 1;
@@ -886,10 +904,10 @@ function saveConfig() {
         }
 
         if (!$('.rtColor').val()) {
-            routeColor = '000000'
+            customRTColor = '000000'
         }
 
-        selectedData.route = new Route("CUSTOM", "NONE", "Custom Route", routeColor, false, false)
+        selectedData.route = new Route("CUSTOM", "NONE", "Custom Route", customRTColor, false, false)
 
         let defPreset = FontPreset["default"]
         defPreset.fontRatio = customFontRatio
@@ -909,13 +927,7 @@ function saveConfig() {
             if (!platform) platform = 1;
             if (!timetilnexttrain) timetilnexttrain = 0;
 
-            customArrivalData.push({
-                dest: destination,
-                plat: platform,
-                route: selectedData.route,
-                ttnt: timetilnexttrain,
-                isLRT: false
-            })
+            customArrivalData.push(new ArrivalEntry(destination, timetilnexttrain, selectedData.route, platform, false, false));
         }
 
         arrivalData = customArrivalData;
@@ -968,33 +980,33 @@ function renderAdv(firstLoad) {
         $(`.promo-${adv.id}`).hide()
     }
 
-    const ONE_ROW_HEIGHT = $('#arrivalBackground tr td:first').height()
-    const TITLE_HEIGHT = $('#titlebar').height()
-    let finalHeight = $(window).height() - TITLE_HEIGHT - ONE_ROW_HEIGHT;
-    $('#advertisement').css("height", `${finalHeight}px`)
-
     if (nextAdCycle.framesrc == null || (selectedData.hideAdv && !showingSpecialMessage)) {
-        arrivalVisbility = [true, true, true, true]
-        $('#advertisement').hide()
+        arrivalVisibility = [true, true, true, true];
+        $('#advertisement').hide();
     } else {
-        $('#advertisement').show()
-        $(`.promo-${nextAdCycle.id}`).show()
-        arrivalVisbility = [false, false, false, true]
+        $('#advertisement').show();
+        $(`.promo-${nextAdCycle.id}`).show();
+        arrivalVisibility = [false, false, false, true];
     }
+
+    const ONE_ROW_HEIGHT = $('#arrivalBackground tr td:first').height()
+    const TITLE_HEIGHT = $('#titlebar').height();
+    let finalHeight = $(window).height() - TITLE_HEIGHT - (ONE_ROW_HEIGHT * arrivalVisibility.filter(visible => visible == true).length);
+    $('#advertisement').css("height", `${finalHeight}px`);
 
     if (showingSpecialMessage) {
         let fullURL = nextAdCycle.framesrc + nextAdCycle.queryString;
-        let dirty = false
+        let needRefresh = false;
         $('#advertisement').show()
         if ($(`.promo-${nextAdCycle.id}`).length > 0) {
             if (fullURL != $(`.promo-${nextAdCycle.id}`).attr("src")) {
-                dirty = true
+                needRefresh = true;
             }
         }
 
-        if (dirty) {
-            $(`.promo-${nextAdCycle.id}`).attr("src", fullURL)
-            $(`.promo-${nextAdCycle.id}`).show()
+        if (needRefresh) {
+            $(`.promo-${nextAdCycle.id}`).attr("src", fullURL);
+            $(`.promo-${nextAdCycle.id}`).show();
         }
         return;
     }
@@ -1004,7 +1016,7 @@ function renderAdv(firstLoad) {
         for (let cate in advData) {
             for (adv of advData[cate]) {
                 if (adv.framesrc != null) {
-                    $('#advertisement').append(`<iframe style="display:block" class="promo-${adv.id} centeredItem" src=${adv.framesrc}></iframe>`)
+                    $('#advertisement').append(`<iframe style="display:block" class="promo-${adv.id} centeredItem" src=${adv.framesrc}></iframe>`);
                 }
             }
         }
@@ -1014,15 +1026,15 @@ function renderAdv(firstLoad) {
         let paxArray = []
         if (arrivalData[0] && arrivalData[0].paxLoad && arrivalData[0].paxLoad.length > 1) {
             for (pax of arrivalData[0].paxLoad) {
-                paxArray.push(pax.availability)
+                paxArray.push(pax.availability);
             }
             let firstClassCar = arrivalData[0].firstClassCar ? arrivalData[0].firstClassCar : 0
 
-            let curURL = $(`.promo-${nextAdCycle.id}`).attr("src")
+            let curURL = $(`.promo-${nextAdCycle.id}`).attr("src");
             let fullURL = `${nextAdCycle.framesrc}?data=${paxArray.join(",")}&firstClass=${firstClassCar}`
             if (curURL == fullURL) return;
 
-            $(`.promo-${nextAdCycle.id}`).attr("src", fullURL)
+            $(`.promo-${nextAdCycle.id}`).attr("src", fullURL);
         } else {
             cycleAdv()
             renderAdv()
@@ -1032,20 +1044,31 @@ function renderAdv(firstLoad) {
 
 function changeFontPreset() {
     let preset = selectedData.fontPreset;
+    const Chinese = /\p{Script=Han}/u;
     if (preset == null) {
         preset = FontPreset["default"]
         selectedData.fontPreset = FontPreset["default"]
     }
 
-    if (currentLanguage == 'ZH') {
-        $(".destination").css("letter-spacing", preset.chinFontSpacing);
-        $(".destination").css("font-weight", preset.fontWeight);
-        $(".etamin").css("font-weight", preset.fontWeight);
-    } else {
-        $(".destination").css("letter-spacing", `normal`);
-        $(".destination").css("font-weight", "normal");
-        $(".etamin").css("font-weight", "normal");
-    }
+    $(".destination").each(function() {
+        let isChinese = Chinese.test($(this).text());
+        if (isChinese) {
+            $(this).css("letter-spacing", preset.chinFontSpacing);
+            $(this).css("font-weight", preset.fontWeight);
+        } else {
+            $(this).css("letter-spacing", `normal`);
+            $(this).css("font-weight", `normal`);
+        }
+    })
+
+    $(".etamin").each(function() {
+        let isChinese = Chinese.test($(this).text());
+        if (isChinese) {
+            $(this).css("font-weight", preset.fontWeight);
+        } else {
+            $(this).css("font-weight", `normal`);
+        }
+    })
 
     $("#titlebar").css(`font-family`, preset.title);
     $(".platcircle").css("font-family", preset.platformCircle);
@@ -1053,14 +1076,14 @@ function changeFontPreset() {
     $(".eta").css("font-family", preset.eta);
 }
 
-function setupConfigUI() {
+function updateUI() {
     /* Show the corresponding station list of the route */
-    $('.station').empty()
+    $('.station').empty();
 
     for (stnCode of selectedData.route.stations) {
-        $('.station').append(`<option value="${stnCode}">${switchLang(StationCodeList.get(stnCode).name, true)}`)
+        $('.station').append(`<option value="${stnCode}">${switchLang(StationCodeList.get(stnCode).name, true)}`);
     }
-    selectedData.stn = StationCodeList.get(selectedData.route.stations[0])
+    selectedData.stn = StationCodeList.get(selectedData.route.stations[0]);
 
     // $('.route').empty()
     // for (key in RouteList) {
@@ -1068,9 +1091,9 @@ function setupConfigUI() {
     // }
     // selectedData.route = RouteList[$('.route').val()]
 
-    $('.specialMsg').empty()
+    $('.specialMsg').empty();
     for (adv of advData.special) {
-        $('.specialMsg').append(`<option value="${adv.id}">${switchLang(adv.name, true)}`)
+        $('.specialMsg').append(`<option value="${adv.id}">${switchLang(adv.name, true)}`);
     }
 }
 
@@ -1080,21 +1103,23 @@ function error(text) {
 }
 
 $(document).ready(async function() {
-    parseQuery()
-    updateClock()
-    updateWeather()
-    saveConfig()
-    setupConfigUI()
-    renderAdv(true)
-    updateData(true)
-    setUILanguage(selectedData.UILang)
-    setInterval(updateClock, 1000)
-    setInterval(changeLanguage, 10000)
-    setInterval(updateData, 10000, false)
-    setInterval(drawUI, 1000)
-    setInterval(updateWeather, 60000, false)
+    parseQuery();
+    updateClock();
+    updateWeather();
+    saveConfig();
+    updateUI();
+    renderAdv(true);
+    updateData(true);
+    setUILanguage(selectedData.UILang);
+    setInterval(updateClock, 1000);
+    setInterval(cycleLanguage, 10000);
+    setInterval(updateData, 10000, false);
+    setInterval(drawUI, 1000);
+    setInterval(updateWeather, 60000, false);
 
-    if (!selectedData.debugMode) toggleConfigPage();
+    if (!debugMode) {
+        toggleConfigPage();
+    }
 
     $('.onlineMode').on('change', function() {
         selectedData.onlineMode = $(this).is(':checked')
@@ -1110,7 +1135,7 @@ $(document).ready(async function() {
 
     $('.route').on('change', function() {
         selectedData.route = RouteList[$(this).val()];
-        setupConfigUI()
+        updateUI()
         setUILanguage()
 
         if (selectedData.route.isLRT) {
@@ -1145,8 +1170,8 @@ $(window).on('keydown', function(e) {
     }
 
     /* G key */
-    if (e.which == 71 && selectedData.debugMode) {
-        changeLanguage()
+    if (e.which == 71 && debugMode) {
+        cycleLanguage()
         cycleAdv()
         renderAdv()
         drawUI()
