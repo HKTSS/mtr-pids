@@ -4,7 +4,7 @@ let currentLanguage = 0
 let arrivalData = []
 let weatherData = {}
 let configOpened = false;
-let debugMode = true;
+let debugMode = false;
 let showingSpecialMessage = false;
 let currentAdvId = 0;
 
