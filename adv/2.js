@@ -24,7 +24,7 @@ function parseQuery() {
 
 function updateData() {
     if (paxData.length == 0) return;
-    let paxLoadEntry = paxData.split(",")
+    let paxLoadEntry = paxData.split(",");
 
     $('#paxIcon').empty()
     $('#carNum').empty()
