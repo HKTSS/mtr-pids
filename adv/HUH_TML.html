@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body style="overflow: hidden;background-color: #923011">
+    <table id="content">
+        <tr>
+            <td width="30%">
+                <div id="left">
+                    <img src="train.png">
+                    <p class="linename">屯馬綫</p>
+                </div>
+            </td>
+            <td>
+                <div id="right" style="border-left: 2px solid white;">
+                    <p>請跟從指示</p>
+                    <h1>經C出口大堂前往</h1>
+                    <h1>新月台轉車</h1>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+
+<style>
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+        padding: 0;
+        margin: 0;
+    }
+    
+    body {
+        font-family: "Myriad Pro Semibold", "Noto Serif TC";
+        color: white;
+        font-size: 4.0vw;
+        margin: 0;
+        padding: 0;
+    }
+    
+    img {
+        width: 70%;
+    }
+    
+    #left {
+        text-align: center;
+    }
+    
+    #right {
+        display: inline-block;
+        padding: 0px 7% 0px 7%;
+        letter-spacing: -8px;
+    }
+    
+    .linename {
+        font-family: "Noto Serif TC", "Noto Serif SC";
+        font-weight: 800;
+    }
+    
+    #content {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .header-zh {
+        font-size: calc(4.5 * (1vw + 1vh + 1vmin));
+        margin: 0;
+    }
+    
+    .header-en {
+        font-size: calc(3.2 * (1vw + 1vh + 1vmin));
+        margin: 0;
+    }
+</style>
+
+</html>
