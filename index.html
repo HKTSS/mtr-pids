@@ -33,7 +33,7 @@
 <body>
     <span class="widthCheck"></span>
     <div class="config">
-        <div class="box">
+        <div class="configBox">
             <div id="error" style="display: none"></div>
             <span class="title lang-en">MTR PIDS Config</span>
             <span class="title lang-zh">願景資訊顯示屏模擬器</span>
@@ -139,6 +139,9 @@
             <input class="showPlat" type="checkbox" checked></input><span class="lang-en">Show Platform</span><span class="lang-zh">顯示月台</span>
             <br>
             <br>
+            <button class="tfs lang-en">Toggle Fullscreen</button>
+            <button class="tfs lang-zh">切換全螢幕</button>
+            <br>
             <button class="saveCfg lang-en">Save & Close this page</button>
             <button class="saveCfg lang-zh">套用設定及關閉此頁面</button>
             <a href="https://www.facebook.com/HKTransportSimulationStudio" class="footer">HKTSS 2022</a>
@@ -148,9 +151,9 @@
 
     <div class="main">
         <div id="titlebar">
-            <div class="content">
-                <span id="weatherIcon"></span>
-                <span id="weather"></span>°C
+            <div id="titleOverlay">
+                <span class="weatherIcon"></span>
+                <span class="weather"></span>
                 <span class="clock floatright"></span>
             </div>
         </div>

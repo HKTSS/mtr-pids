@@ -1,12 +1,14 @@
 let arrivalVisibility = [true, true, true, true]
 let nextAdvTime;
-let currentLanguage = 0
+let languageCycle = 0
 let arrivalData = []
 let weatherData = {}
 let configOpened = false;
 let debugMode = false;
 let showingSpecialMessage = false;
 let currentAdvId = 0;
+let marqueeX = 100;
+let forceRefresh;
 
 let selectedData = {
     direction: 'UP',
@@ -15,7 +17,7 @@ let selectedData = {
     onlineMode: true,
     showPlatform: true,
     API: API.MTR_OPEN,
-    fontPreset: null,
+    uiPreset: null,
     UILang: 'EN',
     dpMode: DisplayMode.NORMAL,
     specialMsgID: "NONE",
@@ -39,7 +41,7 @@ function switchLang(str, isUI = false) {
         }
     }
 
-    let targetLang = currentLanguage
+    let targetLang = languageCycle
 
     let name = str.split("|");
     return name[targetLang % name.length];
@@ -49,8 +51,8 @@ function switchLang(str, isUI = false) {
 /* Hacky solution, but if it works then it works. */
 function adjustFontSize() {
     $('.scalable').each(function() {
-        const PADDING = 15;
-        let ogSize = selectedData.fontPreset.fontRatio * parseInt($(this).css("font-size"));
+        let ogSize = selectedData.uiPreset.fontRatio * parseInt($(this).css("font-size"));
+        const PADDING = 20
         let tdWidth = $(this).width() - PADDING;
         let percentW = 1;
 
@@ -95,14 +97,15 @@ function drawUI() {
         let arrivalEntryValid = entryIndex <= arrivalData.length - 1 && arrivalData[entryIndex] != null;
 
         if (!thisRowIsVisible || !arrivalEntryValid) {
-            $('#arrivalOverlay').append(`<tr><td>&nbsp;</td></tr>`);
+            $('#arrivalOverlay').append(`<tr><td class="destination">&nbsp;</td><td style="width:10%">&nbsp;</td><td class="eta">&nbsp;</td></tr>`);
             continue;
         }
 
         let entry = arrivalData[entryIndex];
         let stationName = entry.via ? `${switchLang(entry.dest)}${switchLang(" 經| via ")}${switchLang(StationCodeList.get(entry.via).name)}` : switchLang(entry.dest);
+
         let timetext = "";
-        let time = getETAmin(entry.ttnt, false)
+        let time = getETAmin(entry.ttnt, false);
 
         if (entry.isDeparture == true) {
             if (entry.ttnt == 0) {
@@ -121,17 +124,27 @@ function drawUI() {
             }
         }
 
+        let tableRow = "";
         let lrtElement = entry.route.isLRT ? `<span class="lrtrt" style="border-color:#${entry.route.color}">${entry.route.initials}</span>` : ""
-        let tableRow = `<tr><td style="width:70%" class="destination scalable">${lrtElement}${stationName}</td>`
-        if (selectedData.showPlatform) {
-            tableRow += `<td style="width:10%"><span class="platcircle scalable" style="background-color:#${selectedData.route.color}">${entry.plat}</span></td>`
+        let platformElement = selectedData.showPlatform ? `<td style="width:10%"><span class="platcircle scalable" style="background-color:#${selectedData.route.color}">${entry.plat}</span></td>` : `<td style="width:10%"></td>`
+        let ETAElement = `<td class="eta scalable">${time} <span class="etamin scalable">${switchLang(timetext)}</span></td>`
+        let destElement;
+
+        if (entry.marquee && !Chinese.test(stationName)) {
+            destElement = `<td class="destination"><div class="marquee" style="transform: translateX(${marqueeX}%)">${lrtElement}${stationName}</div></td>`
+        } else {
+            destElement = `<td class="destination scalable">${lrtElement}${stationName}</td>`
         }
-        tableRow += `<td class="eta scalable">${time} <span class="etamin scalable">${switchLang(timetext)}</span></td></tr>`
-        $('#arrivalOverlay').append(tableRow);
+
+        tableRow += destElement;
+        tableRow += platformElement;
+        tableRow += ETAElement;
+
+        $('#arrivalOverlay').append(`<tr>${tableRow}</tr>`);
         entryIndex++;
     }
 
-    changeFontPreset();
+    changeUIPreset();
     adjustFontSize();
 }
 
@@ -199,22 +212,24 @@ function updateUILanguage(lang) {
 }
 
 function cycleLanguage() {
-    currentLanguage++;
-    changeFontPreset();
+    marqueeX = -100;
+    languageCycle++;
+    forceRefresh = true;
+    changeUIPreset();
 }
 
 async function updateWeather() {
-    weatherData = await queryWeather();
+    weatherData = await fetchWeatherData();
     if (weatherData == null) return;
     /* Update weather icon */
     let weatherIconList = weatherData.rhrread.icon;
     let weatherWarningList = weatherData.warning.details;
 
-    $('#weatherIcon').empty()
+    $('.weatherIcon').empty()
     for (iconID of weatherIconList) {
         icon = WeatherIcon[iconID];
         if (icon == null) continue;
-        $('#weatherIcon').append(`<img src=${icon}>`);
+        $('.weatherIcon').append(`<img src=${icon}>`);
     }
 
     if (weatherWarningList) {
@@ -224,7 +239,7 @@ async function updateWeather() {
 
             /* Skip if there's no corresponding icon */
             if (!icon) continue;
-            $('#weatherIcon').append(`<img src='${icon}'>`);
+            $('.weatherIcon').append(`<img src='${icon}'>`);
         }
     }
 
@@ -238,10 +253,10 @@ async function updateWeather() {
     }
 
     temperature = Math.round(temperature / temperatureData.length)
-    $('#weather').text(temperature);
+    $('.weather').text(temperature + WeatherUnit);
 }
 
-async function queryWeather() {
+async function fetchWeatherData() {
     try {
         let rhrread = await fetch(`https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en`)
         let warning = await fetch(`https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warningInfo&lang=en`)
@@ -255,12 +270,11 @@ async function queryWeather() {
     }
 }
 
-async function queryETAData(direction) {
+async function fetchETAData(direction) {
     let api = selectedData.route.api;
     if (api == API.NONE) return;
 
-    /* With only ads you can't see arrivals anyway */
-    if (selectedData.dpMode == DisplayMode.AD) return;
+    if (selectedData.dpMode == DisplayMode.AD || configOpened) return;
 
     if (api == API.MTR_LR) {
         const response = await fetch(`https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id=${selectedData.stn.initials}`);
@@ -296,6 +310,8 @@ async function queryETAData(direction) {
                 finalArray.push(convertedEntry)
             }
         }
+
+        /* Sort by ETA */
         finalArray.sort((a, b) => a.ttnt - b.ttnt)
         $('#error').hide()
         return finalArray;
@@ -304,9 +320,19 @@ async function queryETAData(direction) {
     if (api == API.MTR_OPEN || api == API.MTR) {
         let response;
         if (api == API.MTR_OPEN) {
-            response = await fetch(`https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${selectedData.route.initials}&sta=${selectedData.stn.initials}`);
+            try {
+                response = await fetch(`https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${selectedData.route.initials}&sta=${selectedData.stn.initials}`);
+            } catch {
+                error("Cannot fetch arrival data: Invalid URL/CORS Error)")
+                return;
+            }
         } else {
-            response = await fetch(`https://MTRData.kennymhhui.repl.co/mtr?line=${selectedData.route.initials}&sta=${selectedData.stn.initials}`);
+            try {
+                response = await fetch(`https://MTRData.kennymhhui.repl.co/mtr?line=${selectedData.route.initials}&sta=${selectedData.stn.initials}`);
+            } catch {
+                error("Cannot fetch arrival data: Invalid URL/CORS Error")
+                return;
+            }
         }
 
         if (!response.ok) {
@@ -350,7 +376,7 @@ async function queryETAData(direction) {
             }
         }
 
-        /* Sort by remaining time */
+        /* Sort by ETA */
         tempArray.sort((a, b) => a.ttnt - b.ttnt)
 
         /* Convert data to adapt to a standardized format */
@@ -368,6 +394,9 @@ async function queryETAData(direction) {
                 isDeparture = true;
             }
 
+            // let marquee = entry.route ? true : false;
+            let marquee = false;
+
             /* EAL only */
             if (selectedData.route.initials == "EAL") {
                 if (selectedData.direction == "BOTH") {
@@ -382,7 +411,7 @@ async function queryETAData(direction) {
                 }
             }
 
-            let convertedEntry = new ArrivalEntry(destName, ttnt, route, entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass, entry.route)
+            let convertedEntry = new ArrivalEntry(destName, ttnt, route, entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass, entry.route, marquee)
             finalArray.push(convertedEntry)
         }
 
@@ -460,7 +489,7 @@ async function updateData(forced) {
     if (configOpened && !forced) return;
     if (!selectedData.onlineMode) return drawUI();
 
-    let newArrivalData = await queryETAData(selectedData.direction);
+    let newArrivalData = await fetchETAData(selectedData.direction);
     if (newArrivalData == null) return;
 
     arrivalData = newArrivalData
@@ -470,17 +499,17 @@ async function updateData(forced) {
 function saveConfig() {
     if (selectedData.onlineMode) {
         selectedData.route = RouteList[$(`.route`).val()]
-        selectedData.fontPreset = FontPreset[selectedData.route.initials]
+        selectedData.uiPreset = UIPreset[selectedData.route.initials]
         selectedData.direction = $('.direction').val()
         selectedData.stn = StationCodeList.get($('.station').val())
     } else {
         let customFontRatio = $('.fontRatioCustom').val()
         let customRTColor = $('.rtColor').val()
 
-        if (!parseInt(customFontRatio)) {
+        if (!parseFloat(customFontRatio)) {
             customFontRatio = 1;
         } else {
-            customFontRatio = parseInt(customFontRatio)
+            customFontRatio = parseFloat(customFontRatio)
         }
 
         if (!$('.rtColor').val()) {
@@ -489,9 +518,9 @@ function saveConfig() {
 
         selectedData.route = new Route("CUSTOM", "NONE", "Custom Route", customRTColor, false, false)
 
-        let defPreset = FontPreset["default"]
+        let defPreset = UIPreset["default"]
         defPreset.fontRatio = customFontRatio
-        selectedData.fontPreset = defPreset;
+        selectedData.uiPreset = defPreset;
 
         let customArrivalData = []
         for (let i = 0; i < 4; i++) {
@@ -524,7 +553,6 @@ function saveConfig() {
     }
 
     selectedData.dpMode = DisplayMode[$('.dpMode').val()];
-
     selectedData.showPlatform = $('.showPlat').is(':checked')
 }
 
@@ -645,13 +673,18 @@ function renderAdv(firstLoad) {
     }
 }
 
-function changeFontPreset() {
-    let preset = selectedData.fontPreset;
-    const Chinese = /\p{Script=Han}/u;
-    if (preset == null) {
-        preset = FontPreset["default"]
-        selectedData.fontPreset = FontPreset["default"]
+function changeUIPreset() {
+    selectedData.uiPreset = UIPreset[selectedData.route.initials]
+
+    if (selectedData.uiPreset == null) {
+        selectedData.uiPreset = UIPreset["default"]
     }
+
+    let preset = selectedData.uiPreset;
+
+
+    $('#titleOverlay').css(`width`, `${preset.titleWidth}%`)
+    $('#arrivalOverlay').css(`width`, `${preset.ETAWidth}%`)
 
     $(".destination").each(function() {
         let isChinese = Chinese.test($(this).text());
@@ -687,11 +720,16 @@ function setupUI() {
         $('.dpMode').append(`<option value=${mode}>${switchLang(modeName, true)}</option>`)
     }
 
-    // $('.route').empty()
-    // for (key in RouteList) {
-    //     $('.route').append(`<option style="background-color:#${RouteList[key].color}" value="${key}">${switchLang(RouteList[key].name)}</option>`)
-    // }
-    // selectedData.route = RouteList[$('.route').val()]
+    if (!document.fullscreenEnabled) {
+        $('.tfs').hide();
+    }
+
+    $('.route').empty()
+    for (key in RouteList) {
+        if (RouteList[key].hidden) continue;
+        $('.route').append(`<option value="${key}">${switchLang(RouteList[key].name)}</option>`)
+    }
+    selectedData.route = RouteList[$('.route').val()]
 
     $('.specialMsg').empty();
     for (adv of advData.special) {
@@ -728,6 +766,7 @@ $(document).ready(async function() {
     setInterval(updateData, 10000, false);
     setInterval(drawUI, 1000);
     setInterval(updateWeather, 60000, false);
+    setInterval(updateMarquee, 1000)
 
     if (!debugMode) {
         toggleConfigPage();
@@ -751,15 +790,9 @@ $(document).ready(async function() {
         updateUILanguage()
 
         if (selectedData.route.isLRT) {
-            $('.direction').prop("disabled", true)
-                // platformAmt = stationCodeList.get($('.station').val()).platformCount
-                // $('#platform').empty()
-                // for(i = 0; i < platformAmt; i++) {
-                //     $('#platform').append(`<option value=${i}>${i}</option>`)
-                // }
-                // $('#platform').show()
+            $('.direction').prop("disabled", true);
         } else {
-            $('.direction').prop("disabled", false)
+            $('.direction').prop("disabled", false);
         }
     })
 
@@ -772,6 +805,14 @@ $(document).ready(async function() {
 
     $('.saveCfg').on('click', function() {
         toggleConfigPage()
+    })
+
+    $('.tfs').on('click', function() {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        } else {
+            document.documentElement.requestFullscreen();
+        }
     })
 })
 
@@ -789,3 +830,15 @@ $(window).on('keydown', function(e) {
         drawUI()
     }
 })
+
+function updateMarquee() {
+    if (marqueeX < -100) {
+        marqueeX = 100;
+        $('.marquee').css("transition", `0s`)
+        $('.marquee').css("transform", `translateX(${marqueeX}%)`)
+        return;
+    }
+    marqueeX -= 30;
+    $('.marquee').css("transition", `1s linear`)
+    $('.marquee').css("transform", `translateX(${marqueeX}%)`)
+}

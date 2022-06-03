@@ -54,27 +54,28 @@ button:hover {
 .title {
     display: inline-block;
     padding: 1vh 1vh 1vh 1vh;
-    font-family: 'Segoe UI', "Noto Sans HK", Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 48px;
     text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 48px;
 }
 
 #titlebar {
-    height: 15vh;
+    height: 14vh;
     background-color: #153156;
     width: 100%;
     color: white;
     font-family: var(--font-titlebar);
-    font-size: 11vh;
-    line-height: 14vh;
+    font-size: 10vh;
+    line-height: 13vh;
     vertical-align: middle;
 }
 
-#titlebar>.content {
-    padding: 0px 3% 0px 3%;
+#titleOverlay {
+    width: 95%;
+    margin: auto;
 }
 
-#weatherIcon img {
+.weatherIcon img {
     padding-top: 11px;
     vertical-align: top;
     max-height: 13vh;
@@ -83,39 +84,14 @@ button:hover {
 
 #arrivalOverlay {
     position: absolute;
-    width: 95%;
+    /* table-layout: fixed; */
     margin: auto;
-    height: calc(100vh - 15vh);
-    top: 15vh;
+    height: calc(100vh - 14vh);
+    top: 14vh;
     bottom: 0;
     left: 0;
     right: 0;
     background: transparent;
-}
-
-.marquee {
-    transform: translateX(50%);
-    -moz-transform: translateX(100%);
-    -webkit-transform: translateX(100%);
-    transform: translateX(100%);
-    -moz-animation: scroll-left 2s linear infinite;
-    -webkit-animation: scroll-left 2s linear infinite;
-    animation: scroll-left 2s linear infinite;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-@keyframes scroll-left {
-    0% {
-        -moz-transform: translateX(100%);
-        -webkit-transform: translateX(100%);
-        transform: translateX(100%);
-    }
-    100% {
-        -moz-transform: translateX(-100%);
-        -webkit-transform: translateX(-100%);
-        transform: translateX(-100%);
-    }
 }
 
 #arrivalOverlay tr td {
@@ -126,7 +102,7 @@ button:hover {
 
 #arrivalBackground {
     width: 100%;
-    height: calc(100vh - 15vh);
+    height: calc(100vh - 14vh);
 }
 
 #arrivalBackground tr:nth-child(even) {
@@ -165,7 +141,7 @@ button:hover {
     margin: 5px 5px 5px 5px
 }
 
-.box {
+.configBox {
     margin: 0;
     padding: 0px 10px 0px 10px;
     position: relative;
@@ -173,23 +149,31 @@ button:hover {
     height: 100%;
     background-color: #f0f2f6;
     color: black;
+    overflow-y: scroll;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .lrtrt {
     display: inline-block;
-    width: 10.5vw;
+    width: 11vw;
     min-width: 120px;
     text-align: center;
     vertical-align: middle;
     background-color: white;
-    font-family: "Myriad Pro Semibold";
+    font-family: "Myriad Pro Semibold", "Noto Sans";
     font-size: 6vh;
     color: black;
+    overflow: visible;
     border-radius: 50vh;
     border: 2.2vh solid orange;
     outline: 1.2vh solid black;
-    margin-right: 3vw;
+    margin: 0 3vw 0 1vw;
+}
+
+.destination {
+    width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .platcircle {
@@ -208,7 +192,7 @@ button:hover {
 #advertisement {
     position: absolute;
     z-index: 2;
-    top: 15vh;
+    top: 14vh;
     left: 0;
     right: 0;
     background-color: #000000;
@@ -256,4 +240,8 @@ button:hover {
 .centeredItem {
     text-align: center;
     margin: auto;
+}
+
+.marquee {
+    white-space: nowrap;
 }

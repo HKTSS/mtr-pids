@@ -5,31 +5,46 @@
 <head>
     <meta charset="UTF-8">
     <title>MTR PIDS Simulator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body style="overflow: hidden;">
-	<iframe src="index.html"></iframe>
+    <!-- <button class="cngLn lang-zh" value="TCL">TCL</button>
+    <button class="cngLn lang-zh" value="TML">TML</button>
+    <button class="cngLn lang-zh" value="TKL">TKL</button>
+    <button class="cngLn lang-zh" value="AEL">AEL</button>
+    <button class="cngLn lang-zh" value="EAL">EAL</button>
+    <button class="cngLn lang-zh" value="DRL">DRL</button>
+    <button class="cngLn lang-zh" value="LRT">LRT</button> -->
+    <iframe id="frame" src="index.html"></iframe>
 </body>
 
 <style>
-	iframe {
-		margin: auto;
-		border: none;
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		overflow: hidden;
-		height: 100vmin;
-		aspect-ratio: 16 / 9;
-	}
-	
-	@media (min-aspect-ratio: 1/1) {
-		iframe {
-			aspect-ratio: 16 / 9;
-		}
-	}
+    body {
+        text-align: center;
+    }
+    
+    iframe {
+        display: block;
+        margin: auto;
+        border: none;
+        height: 80vh;
+        aspect-ratio: 16 / 9;
+    }
+    
+    @media (min-aspect-ratio: 1/1) {
+        iframe {
+            aspect-ratio: 16 / 9;
+        }
+    }
 </style>
+
+<script>
+    $(document).ready(function() {
+        $(".cngLn").click(function() {
+            $('.route', $("#frame")[0].contentWindow.document).val($(this).val());
+        })
+    })
+</script>
 
 </html>
