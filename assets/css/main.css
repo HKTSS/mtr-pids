@@ -5,6 +5,7 @@
     --font-platformcircle: "Myriad Pro", "Noto Sans";
     --font-eta: "Myriad Pro Semibold", "Noto Sans", "Noto Serif TC";
     --font-size: 12vh;
+    --aqua: #A8D9F2;
 }
 
 input[type=text] {
@@ -106,7 +107,7 @@ button:hover {
 }
 
 #arrivalBackground tr:nth-child(even) {
-    background-color: #A3DFF7;
+    background-color: var(--aqua);
 }
 
 #langchoose {
@@ -134,7 +135,7 @@ button:hover {
     background-color: rgba(0, 0, 0, 0.8);
     display: none;
     color: white;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(6px);
 }
 
 .config * {
