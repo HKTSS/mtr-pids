@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400&family=Noto+Sans:wght@700&family=Noto+Serif+TC:wght@600;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400&family=Noto+Sans:wght@400;600&family=Noto+Serif+TC:wght@600;900&display=swap');
 :root {
     --font-titlebar: "Myriad Pro", "Noto Sans", "Noto Serif TC";
     --font-arrivals: "Myriad Pro Semibold", "Noto Sans", "Noto Serif TC";
@@ -29,7 +29,7 @@ select {
     border-radius: 5px;
     cursor: pointer;
     font-size: 18px;
-    font-family: 'Roboto', 'Noto Sans HK', 'Segoe UI', "Arial", sans-serif;
+    font-family: 'Roboto', 'Noto Sans HK', 'Segoe UI', 'Arial', sans-serif;
 }
 
 button {
@@ -55,7 +55,7 @@ button:hover {
     display: inline-block;
     padding: 1vh 1vh 1vh 1vh;
     text-align: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', "Noto Sans", Tahoma, Geneva, Verdana, sans-serif;
     font-size: 48px;
 }
 
@@ -225,9 +225,9 @@ button:hover {
 }
 
 .secHeader {
-    font-family: "Segoe UI Semibold";
+    font-family: 'Segoe UI Semibold', 'Noto Sans', 'Arial';
     font-size: 36px;
-    font-weight: 500;
+    font-weight: 600;
     margin-top: 20px;
 }
 
