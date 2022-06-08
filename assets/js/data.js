@@ -240,12 +240,12 @@ const UIPreset = {
         title: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
         arrivals: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
         platformCircle: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        eta: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        chinFontSpacing: "3.5rem",
+        eta: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        chinFontSpacing: "3rem",
         titleWidth: 95,
         ETAWidth: 95,
-        fontWeight: 900,
-        fontRatio: 1.1
+        fontWeight: 600,
+        fontRatio: 1
     },
     "TWL": {
         title: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
