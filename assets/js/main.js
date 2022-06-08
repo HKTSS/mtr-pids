@@ -127,7 +127,7 @@ function drawUI() {
         let tableRow = "";
         let lrtElement = entry.route.isLRT ? `<span class="lrtrt" style="border-color:#${entry.route.color}">${entry.route.initials}</span>` : ""
         let platformElement = selectedData.showPlatform ? `<td style="width:10%"><span class="platcircle scalable" style="background-color:#${selectedData.route.color}">${entry.plat}</span></td>` : `<td style="width:10%"></td>`
-        let ETAElement = `<td class="eta scalable">${time} <span class="etamin scalable">${switchLang(timetext)}</span></td>`
+        let ETAElement = `<td class="eta scalable">${time} <span class="etamin">${switchLang(timetext)}</span></td>`
         let destElement;
 
         if (entry.marquee && !Chinese.test(stationName)) {
@@ -690,20 +690,15 @@ function changeUIPreset() {
         let isChinese = Chinese.test($(this).text());
         if (isChinese) {
             $(this).css("letter-spacing", preset.chinFontSpacing);
-            $(this).css("font-weight", preset.fontWeight);
         } else {
             $(this).css("letter-spacing", `normal`);
-            $(this).css("font-weight", `normal`);
         }
+
+        $(this).css("font-weight", preset.fontWeight);
     })
 
-    $(".etamin").each(function() {
-        let isChinese = Chinese.test($(this).text());
-        if (isChinese) {
-            $(this).css("font-weight", preset.fontWeight);
-        } else {
-            $(this).css("font-weight", `normal`);
-        }
+    $(".eta").each(function() {
+        $(this).css("font-weight", preset.fontWeight);
     })
 
     $("#titlebar").css(`font-family`, preset.title);

@@ -84,7 +84,7 @@ button:hover {
 
 #arrivalOverlay {
     position: absolute;
-    /* table-layout: fixed; */
+    table-layout: fixed;
     margin: auto;
     height: calc(100vh - 14vh);
     top: 14vh;
@@ -221,7 +221,7 @@ button:hover {
 }
 
 .etamin {
-    font-size: 9vh;
+    font-size: 65%;
 }
 
 .secHeader {
