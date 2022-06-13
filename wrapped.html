@@ -9,6 +9,7 @@
 </head>
 
 <body style="overflow: hidden;">
+    <button class="opnSettings">顯示/隱藏設定 Toggle Settings Page</button>
     <!-- <button class="cngLn lang-zh" value="TCL">TCL</button>
     <button class="cngLn lang-zh" value="TML">TML</button>
     <button class="cngLn lang-zh" value="TKL">TKL</button>
@@ -28,8 +29,16 @@
         display: block;
         margin: auto;
         border: none;
-        height: 80vh;
+        width: 75%;
         aspect-ratio: 16 / 9;
+    }
+    
+    button {
+        background-color: #DDDDDD;
+        width: 75%;
+        border: 0;
+        font-size: 25px;
+        border-radius: 7px 7px 0 0;
     }
     
     @media (min-aspect-ratio: 1/1) {
@@ -43,6 +52,10 @@
     $(document).ready(function() {
         $(".cngLn").click(function() {
             $('.route', $("#frame")[0].contentWindow.document).val($(this).val());
+        })
+
+        $(".opnSettings").click(function() {
+            document.getElementById("frame").contentWindow.toggleConfigPage()
         })
     })
 </script>

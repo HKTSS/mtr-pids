@@ -381,10 +381,11 @@ async function fetchETAData(direction) {
 
         /* Convert data to adapt to a standardized format */
         for (entry of tempArray) {
+            let marquee = false;
+            let isDeparture = false;
             let route = RouteList[selectedData.route.initials];
-            let arrTime = new Date(entry.time);
-            let sysTime = new Date(data.sys_time);
-            let isDeparture;
+            let arrTime = new Date(entry.time.replace(/-/g, "/"));
+            let sysTime = new Date(data.sys_time.replace(/-/g, "/"));
 
             /* Calculate the time difference */
             let ttnt = Math.max(Math.ceil((arrTime - sysTime) / 60000), 0);
@@ -393,9 +394,6 @@ async function fetchETAData(direction) {
             if (entry.timeType == "D") {
                 isDeparture = true;
             }
-
-            // let marquee = entry.route ? true : false;
-            let marquee = false;
 
             /* EAL only */
             if (selectedData.route.initials == "EAL") {

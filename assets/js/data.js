@@ -172,9 +172,9 @@ let advData = {
 const UIPreset = {
     "default": {
         title: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        arrivals: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        arrivals: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         platformCircle: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        eta: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        eta: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         chinFontSpacing: "normal",
         fontWeight: 600,
         titleWidth: 95,
@@ -183,9 +183,9 @@ const UIPreset = {
     },
     "AEL": {
         title: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        arrivals: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        arrivals: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         platformCircle: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        eta: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        eta: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         chinFontSpacing: "normal",
         fontWeight: 600,
         titleWidth: 95,
@@ -194,9 +194,9 @@ const UIPreset = {
     },
     "TCL": {
         title: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        arrivals: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        arrivals: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         platformCircle: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        eta: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        eta: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         chinFontSpacing: "normal",
         titleWidth: 95,
         ETAWidth: 95,
@@ -205,7 +205,7 @@ const UIPreset = {
     },
     "DRL": {
         title: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        arrivals: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        arrivals: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         platformCircle: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         eta: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
         chinFontSpacing: "normal",
@@ -215,10 +215,10 @@ const UIPreset = {
         fontRatio: 1
     },
     "EAL": {
-        title: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
-        arrivals: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
-        platformCircle: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
-        eta: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        title: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
+        arrivals: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
+        platformCircle: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
+        eta: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         chinFontSpacing: "normal",
         titleWidth: 95,
         ETAWidth: 95,
@@ -227,9 +227,9 @@ const UIPreset = {
     },
     "TML": {
         title: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        arrivals: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        arrivals: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         platformCircle: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
-        eta: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        eta: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         chinFontSpacing: "normal",
         titleWidth: 92,
         ETAWidth: 93,
@@ -237,8 +237,8 @@ const UIPreset = {
         fontRatio: 1
     },
     "TKL": {
-        title: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
-        arrivals: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
+        title: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
+        arrivals: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         platformCircle: "'Myriad Pro', 'Noto Sans', 'Noto Serif TC'",
         eta: "'Myriad Pro Semibold', 'Noto Sans', 'Noto Serif TC'",
         chinFontSpacing: "3rem",

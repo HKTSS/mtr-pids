@@ -66,9 +66,8 @@ button:hover {
     width: 100%;
     color: white;
     font-family: var(--font-titlebar);
-    font-size: 10vh;
+    font-size: calc((1vw + 1vh) * 3.5);
     line-height: 13vh;
-    vertical-align: middle;
 }
 
 #titleOverlay {
@@ -77,10 +76,12 @@ button:hover {
 }
 
 .weatherIcon img {
-    padding-top: 11px;
+    vertical-align: middle;
+    max-height: 14vh;
+}
+
+.weather {
     vertical-align: top;
-    max-height: 13vh;
-    margin: 0px 10px 0px 10px
 }
 
 #arrivalOverlay {
