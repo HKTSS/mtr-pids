@@ -3,7 +3,7 @@ let nextAdvTime;
 let languageCycle = 0
 let arrivalData = []
 let configOpened = false;
-let debugMode = true;
+let debugMode = false;
 let showingSpecialMessage = false;
 let currentAdvId = 0;
 let marqueeX = 100;
@@ -610,7 +610,7 @@ function renderAdv(firstLoad) {
     }
 
     if (firstLoad) {
-        $('#advertisement').empty()
+        $('#advertisement').empty();
         for (let cate in advData) {
             for (adv of advData[cate]) {
                 if (adv.framesrc != null) {
@@ -626,7 +626,7 @@ function renderAdv(firstLoad) {
             for (pax of arrivalData[0].paxLoad) {
                 paxArray.push(pax.availability);
             }
-            let firstClassCar = arrivalData[0].firstClassCar ? arrivalData[0].firstClassCar : 0
+            let firstClassCar = arrivalData[0].firstClassCar ? arrivalData[0].firstClassCar : 0;
 
             let curURL = $(`.promo-${nextAdCycle.id}`).attr("src");
             let fullURL = `${nextAdCycle.framesrc}?data=${paxArray.join(",")}&firstClass=${firstClassCar}`
@@ -634,8 +634,8 @@ function renderAdv(firstLoad) {
 
             $(`.promo-${nextAdCycle.id}`).attr("src", fullURL);
         } else {
-            cycleAdv()
-            renderAdv()
+            cycleAdv();
+            renderAdv();
         }
     }
 }
@@ -643,8 +643,16 @@ function renderAdv(firstLoad) {
 function changeUIPreset() {
     let preset = UIPreset[selectedData.route.initials] || UIPreset["default"];
 
-    $('#titleOverlay').css(`width`, `${preset.titleWidth}%`)
-    $('#arrivalOverlay').css(`width`, `${preset.ETAWidth}%`)
+    $('#titleOverlay').css(`width`, `${preset.titleWidth}%`);
+    $('#arrivalOverlay').css(`width`, `${preset.ETAWidth}%`);
+    $("#titlebar").css(`font-family`, preset.title);
+    $(".platcircle").css("font-family", preset.platformCircle);
+    $(".destination").css("font-family", preset.arrivals);
+    $(".eta").css("font-family", preset.eta);
+
+    $(".eta").each(function() {
+        $(this).css("font-weight", preset.fontWeight);
+    });
 
     $(".destination").each(function() {
         let isChinese = Chinese.test($(this).text());
@@ -655,16 +663,8 @@ function changeUIPreset() {
         }
 
         $(this).css("font-weight", preset.fontWeight);
-    })
+    });
 
-    $(".eta").each(function() {
-        $(this).css("font-weight", preset.fontWeight);
-    })
-
-    $("#titlebar").css(`font-family`, preset.title);
-    $(".platcircle").css("font-family", preset.platformCircle);
-    $(".destination").css("font-family", preset.arrivals);
-    $(".eta").css("font-family", preset.eta);
     selectedData.uiPreset = preset;
 }
 
