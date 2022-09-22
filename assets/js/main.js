@@ -1,14 +1,12 @@
-let arrivalVisibility = [true, true, true, true]
+let arrivalVisibility = [true, true, true, true];
 let nextAdvTime;
 let languageCycle = 0
 let arrivalData = []
-let weatherData = {}
 let configOpened = false;
-let debugMode = false;
+let debugMode = true;
 let showingSpecialMessage = false;
 let currentAdvId = 0;
 let marqueeX = 100;
-let forceRefresh;
 
 let selectedData = {
     direction: 'UP',
@@ -16,12 +14,11 @@ let selectedData = {
     stn: null,
     onlineMode: true,
     showPlatform: true,
-    API: API.MTR_OPEN,
+    API: ETA_API.MTR_OPEN,
     uiPreset: null,
-    UILang: 'EN',
+    UILang: 'en',
     dpMode: DisplayMode.NORMAL,
-    specialMsgID: "NONE",
-    marquee: false
+    specialMsgID: "NONE"
 }
 
 function updateClock() {
@@ -34,7 +31,7 @@ function updateClock() {
 function switchLang(str, isUI = false) {
     if (isUI == true) {
         let targetLang = selectedData.UILang;
-        if (targetLang == 'EN') {
+        if (targetLang == Lang.ENGLISH) {
             return str.split("|").length > 0 ? str.split("|")[1] : str.split("|")[0];
         } else {
             return str.split("|")[0];
@@ -49,11 +46,11 @@ function switchLang(str, isUI = false) {
 
 /* This function puts the arrival destination text into a hidden element to calculate the width and make changes accordingly */
 /* Hacky solution, but if it works then it works. */
-function adjustFontSize() {
-    $('.scalable').each(function() {
-        let ogSize = selectedData.uiPreset.fontRatio * parseInt($(this).css("font-size"));
-        const PADDING = 20
-        let tdWidth = $(this).width() - PADDING;
+function adjustLayoutSize() {
+    $('.destination').each(function() {
+        const ogSize = selectedData.uiPreset.fontRatio * parseInt($(this).css("font-size"));
+        const PADDING = 80;
+        const tdWidth = $(this).width() - PADDING;
         let percentW = 1;
 
         $('.widthCheck').html($(this).html())
@@ -70,15 +67,33 @@ function adjustFontSize() {
 
         $(this).css("font-size", `${ogSize * (percentW)}px`);
     });
+
+    let etaMaxSize = 0;
+
+    $('.eta').each(function() {
+        const ogSize = selectedData.uiPreset.fontRatio * parseInt($(this).css("font-size"));
+        const PADDING = 20;
+        const tdWidth = $(this).width();
+
+        $('.widthCheck').html($(this).html())
+        $('.widthCheck').css("font-size", ogSize);
+        $('.widthCheck').css("font-family", $(this).css("font-family"));
+        $(".widthCheck").css("letter-spacing", $(this).css("letter-spacing"));
+        $(".widthCheck").css("font-weight", $(this).css("font-weight"));
+
+        let resultWidth = Math.max($('.widthCheck').width() + PADDING, tdWidth);
+        etaMaxSize = Math.max(etaMaxSize, resultWidth);
+    });
+
+    $('.eta').css("width", `${etaMaxSize}px`);
 }
 
 function parseQuery() {
     let params = (new URL(document.location)).searchParams;
     let lang = params.get("lang");
     if (lang == null) return;
-    lang = lang.toUpperCase();
 
-    if (lang == 'EN' || lang == 'ZH') {
+    if (lang == 'en' || lang == 'zh') {
         selectedData.UILang = lang;
         $(`#langchoose`).text(lang == 'EN' ? 'EN' : '中');
     }
@@ -87,18 +102,17 @@ function parseQuery() {
 function drawUI() {
     /* Draw focus back to the main window instead of the advertisement iframe */
     window.focus();
+    renderAdv();
+    updateClock();
+
     let entryIndex = 0;
-
-    $("#arrivalOverlay").empty();
-    renderAdv()
-
-    for (let i = 0; i < 4; i++) {
+    $('#arrivalOverlay > tbody > tr').each(function (i) {
         let thisRowIsVisible = arrivalVisibility[i];
         let arrivalEntryValid = entryIndex <= arrivalData.length - 1 && arrivalData[entryIndex] != null;
 
         if (!thisRowIsVisible || !arrivalEntryValid) {
-            $('#arrivalOverlay').append(`<tr><td class="destination">&nbsp;</td><td style="width:10%">&nbsp;</td><td class="eta">&nbsp;</td></tr>`);
-            continue;
+            $(this).replaceWith(`<tr><td class="destination">&nbsp;</td><td style="width:10%">&nbsp;</td><td class="eta">&nbsp;</td></tr>`);
+            return;
         }
 
         let entry = arrivalData[entryIndex];
@@ -111,7 +125,6 @@ function drawUI() {
             if (entry.ttnt == 0) {
                 timetext = "正在離開|Departing";
             } else {
-                time = getETAmin(entry.ttnt, true)
                 timetext = "分鐘|min";
             }
         } else {
@@ -125,35 +138,30 @@ function drawUI() {
         }
 
         let tableRow = "";
-        let lrtElement = entry.route.isLRT ? `<span class="lrtrt" style="border-color:#${entry.route.color}">${entry.route.initials}</span>` : ""
-        let platformElement = selectedData.showPlatform ? `<td style="width:10%"><span class="platcircle scalable" style="background-color:#${selectedData.route.color}">${entry.plat}</span></td>` : `<td style="width:10%"></td>`
-        let ETAElement = `<td class="eta scalable">${time} <span class="etamin">${switchLang(timetext)}</span></td>`
-        let destElement;
-
-        if (entry.marquee && !Chinese.test(stationName)) {
-            destElement = `<td class="destination"><div class="marquee" style="transform: translateX(${marqueeX}%)">${lrtElement}${stationName}</div></td>`
-        } else {
-            destElement = `<td class="destination scalable">${lrtElement}${stationName}</td>`
-        }
+        const lrtElement = entry.route.isLRT ? `<span class="lrtrt" style="border-color:#${entry.route.color}">${entry.route.initials}</span>` : ""
+        const platformElement = selectedData.showPlatform ? `<td width="10%"><span class="platcircle" style="background-color:#${selectedData.route.color}">${entry.plat}</span></td>` : ``
+        const ETAElement = `<td class="eta scalable">${time} <span class="etamin">${switchLang(timetext)}</span></td>`
+        const destElement = `<td class="destination scalable">${lrtElement}${stationName}</td>`
 
         tableRow += destElement;
         tableRow += platformElement;
         tableRow += ETAElement;
 
-        $('#arrivalOverlay').append(`<tr>${tableRow}</tr>`);
+        tableRow = `<tr>${tableRow}</tr>`
+
+        $(this).replaceWith(tableRow);
         entryIndex++;
-    }
+    });
 
     changeUIPreset();
-    adjustFontSize();
+    adjustLayoutSize();
 }
 
 function getETAmin(eta, departure) {
     if (eta == 0 || (eta == 1 && !departure)) {
         return "";
-    } else {
-        return Math.min(eta, 99);
     }
+    return eta;
 }
 
 function toggleConfigPage() {
@@ -171,13 +179,8 @@ function toggleConfigPage() {
 }
 
 function updateUILanguage(lang) {
-    if (lang == 'EN') {
-        $('.lang-en').show();
-        $('.lang-zh').hide();
-    } else if (lang == 'ZH') {
-        $('.lang-zh').show();
-        $('.lang-en').hide();
-    }
+    $('.lang').hide()
+    $('.lang-' + lang).show()
 
     $('.route > option').each(function() {
         $(this).text(switchLang(RouteList[$(this).val()].name, true));
@@ -212,14 +215,12 @@ function updateUILanguage(lang) {
 }
 
 function cycleLanguage() {
-    marqueeX = -100;
     languageCycle++;
-    forceRefresh = true;
     changeUIPreset();
 }
 
 async function updateWeather() {
-    weatherData = await fetchWeatherData();
+    let weatherData = await fetchWeatherData();
     if (weatherData == null) return;
     /* Update weather icon */
     let weatherIconList = weatherData.rhrread.icon;
@@ -258,166 +259,137 @@ async function updateWeather() {
 
 async function fetchWeatherData() {
     try {
-        let rhrread = await fetch(`https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en`)
-        let warning = await fetch(`https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warningInfo&lang=en`)
+        let rhrread = await fetch(WEATHER_API.HKO_RHRREAD.url);
+        let warning = await fetch(WEATHER_API.HKO_WARNING_INFO.url);
 
         return {
             rhrread: await rhrread.json(),
             warning: await warning.json()
         }
     } catch (err) {
+        error(`Cannot fetch weather:\n${err}`)
         return null;
     }
 }
 
-async function fetchETAData(direction) {
+async function getETAData(direction) {
     let api = selectedData.route.api;
-    if (api == API.NONE) return;
+    if (configOpened || api == ETA_API.NONE || selectedData.dpMode == DisplayMode.AD) return;
 
-    if (selectedData.dpMode == DisplayMode.AD || configOpened) return;
-
-    if (api == API.MTR_LR) {
-        const response = await fetch(`https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id=${selectedData.stn.initials}`);
-
+    if (api == ETA_API.MTR_OPEN || api == ETA_API.MTR || api == ETA_API.MTR_LR) {
+        const response = await fetch(getAPIURL(api, selectedData.route.initials, selectedData.stn.initials, null));
         if (!response.ok) {
             error(`Cannot fetch arrival data (${response.status}).`)
             return []
         }
 
-        const data = await response.json()
+        const data = await response.json();
 
         if (data.status == 0) {
-            error(`No arrival data:\n${data.message}`)
+            error(`No ETA Available:\n${data.message}`)
             return []
         }
 
-        let finalArray = []
-        for (platform of data.platform_list) {
-            let currentPlatform = platform.platform_id
-            let isDeparture = false;
-            if (platform.end_service_status == 1) continue;
+        if (api == ETA_API.MTR_LR) {
+            let finalArray = []
+            for (platform of data.platform_list) {
+                let currentPlatform = platform.platform_id
+                let isDeparture = false;
+                if (platform.end_service_status == 1) continue;
 
-            for (entry of platform.route_list) {
-                /* Replace to only numbers, e.g. 2 min -> 2 */
-                let ttnt = entry.time_en.replace(/[^0-9.]/g, '')
-                if (!parseInt(ttnt)) {
-                    if (entry.time_en == "-") ttnt = 0;
-                    if (entry.time_en == "Arriving") ttnt = 1;
-                    if (entry.time_en == "Departing") isDeparture = true;
+                for (entry of platform.route_list) {
+                    /* Replace to only numbers, e.g. 2 min -> 2 */
+                    let ttnt = entry.time_en.replace(/[^0-9.]/g, '')
+                    if (!parseInt(ttnt)) {
+                        if (entry.time_en == "-") ttnt = 0;
+                        if (entry.time_en == "Arriving") ttnt = 1;
+                        if (entry.time_en == "Departing") isDeparture = true;
+                    }
+
+                    let convertedEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttnt, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "")
+                    finalArray.push(convertedEntry)
+                }
+            }
+
+            /* Sort by ETA */
+            finalArray.sort((a, b) => a.ttnt - b.ttnt)
+            $('#error').hide()
+            return finalArray;
+        }
+
+        if (api == ETA_API.MTR_OPEN || api == ETA_API.MTR) {
+            const routeAndStation = `${selectedData.route.initials}-${selectedData.stn.initials}`
+
+            let tempArray = []
+            let finalArray = []
+            let arrUP, arrDN;
+
+            if (direction == 'BOTH') {
+                if (data.data[routeAndStation].hasOwnProperty('UP')) {
+                    arrUP = data.data[routeAndStation]['UP'];
+                } else {
+                    arrUP = [];
                 }
 
-                let convertedEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttnt, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "")
+                if (data.data[routeAndStation].hasOwnProperty('DOWN')) {
+                    arrDN = data.data[routeAndStation]['DOWN'];
+                } else {
+                    arrDN = [];
+                }
+
+                /* Merge array from both directions */
+                tempArray = arrUP.concat(arrDN)
+
+            } else if (routeAndStation in data.data) {
+                if (selectedData.direction in data.data[routeAndStation]) {
+                    tempArray = data.data[routeAndStation][selectedData.direction]
+                } else {
+                    tempArray = [];
+                }
+            }
+
+            /* Sort by ETA */
+            tempArray.sort((a, b) => a.ttnt - b.ttnt);
+
+            /* Convert data to adapt to a standardized format */
+            for (entry of tempArray) {
+                let isDeparture = false;
+                let route = RouteList[selectedData.route.initials];
+                let arrTime = new Date(entry.time.replace(/-/g, "/"));
+                let sysTime = new Date(data.sys_time.replace(/-/g, "/"));
+
+                /* Calculate the time difference */
+                let ttnt = Math.max(Math.ceil((arrTime - sysTime) / 60000), 0);
+                let destName = StationCodeList.get(entry.dest).name;
+
+                if (entry.timeType == "D") {
+                    isDeparture = true;
+                }
+
+                /* EAL only */
+                if (selectedData.route.initials == "EAL") {
+                    if (selectedData.direction == "BOTH") {
+                        /* If this entry is for the UP Direction */
+                        if (arrUP.includes(entry)) {
+                            entry.firstClass = 4;
+                        } else {
+                            entry.firstClass = 6;
+                        }
+                    } else {
+                        entry.firstClass = selectedData.direction == "UP" ? 4 : 6
+                    }
+                }
+
+                let convertedEntry = new ArrivalEntry(destName, ttnt, route, entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass, entry.route, false);
                 finalArray.push(convertedEntry)
             }
-        }
 
-        /* Sort by ETA */
-        finalArray.sort((a, b) => a.ttnt - b.ttnt)
-        $('#error').hide()
-        return finalArray;
+            $('#error').hide()
+            return finalArray;
+        }
     }
 
-    if (api == API.MTR_OPEN || api == API.MTR) {
-        let response;
-        if (api == API.MTR_OPEN) {
-            try {
-                response = await fetch(`https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${selectedData.route.initials}&sta=${selectedData.stn.initials}`);
-            } catch {
-                error("Cannot fetch arrival data: Invalid URL/CORS Error)")
-                return;
-            }
-        } else {
-            try {
-                response = await fetch(`https://MTRData.kennymhhui.repl.co/mtr?line=${selectedData.route.initials}&sta=${selectedData.stn.initials}`);
-            } catch {
-                error("Cannot fetch arrival data: Invalid URL/CORS Error")
-                return;
-            }
-        }
-
-        if (!response.ok) {
-            error(`Cannot fetch arrival data:\n${data.message}`)
-            return []
-        }
-
-        const data = await response.json()
-        const routeAndStation = `${selectedData.route.initials}-${selectedData.stn.initials}`
-
-        if (data.status == 0) {
-            error(`Cannot fetch arrival data:\n${data.message}`)
-            return []
-        }
-
-        let tempArray = []
-        let finalArray = []
-        let arrUP, arrDN;
-
-        if (direction == 'BOTH') {
-            if (data.data[routeAndStation].hasOwnProperty('UP')) {
-                arrUP = data.data[routeAndStation]['UP'];
-            } else {
-                arrUP = [];
-            }
-
-            if (data.data[routeAndStation].hasOwnProperty('DOWN')) {
-                arrDN = data.data[routeAndStation]['DOWN'];
-            } else {
-                arrDN = [];
-            }
-
-            /* Merge array from both directions */
-            tempArray = arrUP.concat(arrDN)
-
-        } else if (routeAndStation in data.data) {
-            if (selectedData.direction in data.data[routeAndStation]) {
-                tempArray = data.data[routeAndStation][selectedData.direction]
-            } else {
-                tempArray = [];
-            }
-        }
-
-        /* Sort by ETA */
-        tempArray.sort((a, b) => a.ttnt - b.ttnt)
-
-        /* Convert data to adapt to a standardized format */
-        for (entry of tempArray) {
-            let marquee = false;
-            let isDeparture = false;
-            let route = RouteList[selectedData.route.initials];
-            let arrTime = new Date(entry.time.replace(/-/g, "/"));
-            let sysTime = new Date(data.sys_time.replace(/-/g, "/"));
-
-            /* Calculate the time difference */
-            let ttnt = Math.max(Math.ceil((arrTime - sysTime) / 60000), 0);
-            let destName = StationCodeList.get(entry.dest).name
-
-            if (entry.timeType == "D") {
-                isDeparture = true;
-            }
-
-            /* EAL only */
-            if (selectedData.route.initials == "EAL") {
-                if (selectedData.direction == "BOTH") {
-                    /* If this entry is for the UP Direction */
-                    if (arrUP.includes(entry)) {
-                        entry.firstClass = 4;
-                    } else {
-                        entry.firstClass = 6;
-                    }
-                } else {
-                    entry.firstClass = selectedData.direction == "UP" ? 4 : 6
-                }
-            }
-
-            let convertedEntry = new ArrivalEntry(destName, ttnt, route, entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass, entry.route, marquee)
-            finalArray.push(convertedEntry)
-        }
-
-        $('#error').hide()
-        return finalArray;
-    }
-
-    if (api == API.METRO_RIDE) {
+    if (api == ETA_API.METRO_RIDE) {
         let finalArray = [];
 
         if (direction == "BOTH") {
@@ -435,9 +407,8 @@ async function fetchETAData(direction) {
                     }
                 }
                 if (station == null) return [];
-                let stnName = station.name
 
-                let convertedEntry = new ArrivalEntry(stnName, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false)
+                let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false)
                 finalArray.push(convertedEntry)
             }
 
@@ -450,18 +421,17 @@ async function fetchETAData(direction) {
                     }
                 }
                 if (station == null) return [];
-                let stnName = station.name
 
-                let convertedEntry = new ArrivalEntry(stnName, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false, false, null, 0, "")
+                let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false, false, null, 0, "")
                 finalArray.push(convertedEntry)
             }
+
             finalArray.sort((a, b) => a.ttnt - b.ttnt)
             $('#error').hide()
             return finalArray;
         }
 
-        let directionURL = `&dir=${direction}`
-        const response = await fetch(`https://MTRData.kennymhhui.repl.co/metroride?line=${selectedData.route.initials}&sta=${selectedData.stn.MRCode}${directionURL}`)
+        const response = await fetch(getAPIURL(api, selectedData.route.initials, selectedData.stn.MRCode, direction))
         const data = await response.json()
 
         for (entry of data.eta) {
@@ -473,9 +443,8 @@ async function fetchETAData(direction) {
                 }
             }
             if (station == null) return [];
-            let stnName = station.name
 
-            let convertedEntry = new ArrivalEntry(stnName, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false)
+            let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, RouteList[selectedData.route.initials], entry.platform, false)
             finalArray.push(convertedEntry)
         }
         $('#error').hide()
@@ -487,11 +456,11 @@ async function updateData(forced) {
     if (configOpened && !forced) return;
     if (!selectedData.onlineMode) return drawUI();
 
-    let newArrivalData = await fetchETAData(selectedData.direction);
+    let newArrivalData = await getETAData(selectedData.direction);
     if (newArrivalData == null) return;
 
-    arrivalData = newArrivalData
-    drawUI()
+    arrivalData = newArrivalData;
+    drawUI();
 }
 
 function saveConfig() {
@@ -514,7 +483,7 @@ function saveConfig() {
             customRTColor = '000000'
         }
 
-        selectedData.route = new Route("CUSTOM", "NONE", "Custom Route", customRTColor, false, false)
+        selectedData.route = new Route("CUSTOM", ETA_API.NONE, "Custom Route", customRTColor, false, false)
 
         let defPreset = UIPreset["default"]
         defPreset.fontRatio = customFontRatio
@@ -618,10 +587,10 @@ function renderAdv(firstLoad) {
         arrivalVisibility = [false, false, false, false];
     }
 
-    const ONE_ROW_HEIGHT = $('#arrivalBackground tr td:first').height()
-    const TITLE_HEIGHT = $('#titlebar').height();
-    let finalHeight = $(window).height() - TITLE_HEIGHT - (ONE_ROW_HEIGHT * arrivalVisibility.filter(visible => visible == true).length);
-    $('#advertisement').css("height", `${finalHeight}px`);
+    const OneEntryRowHeight = $('#arrivalBackground tr td:first').height()
+    const TitleHeight = $('#titlebar').height();
+    const finalAdvHeight = $(window).height() - TitleHeight - (OneEntryRowHeight * arrivalVisibility.filter(visible => visible == true).length);
+    $('#advertisement').css("height", `${finalAdvHeight}px`);
 
     if (showingSpecialMessage) {
         let fullURL = nextAdCycle.framesrc + nextAdCycle.queryString;
@@ -653,7 +622,7 @@ function renderAdv(firstLoad) {
 
     if (nextAdCycle.isPaxLoad) {
         let paxArray = []
-        if (arrivalData[0] && arrivalData[0].paxLoad && arrivalData[0].paxLoad.length > 1) {
+        if (arrivalData[0] ?.paxLoad ?.length > 1) {
             for (pax of arrivalData[0].paxLoad) {
                 paxArray.push(pax.availability);
             }
@@ -672,14 +641,7 @@ function renderAdv(firstLoad) {
 }
 
 function changeUIPreset() {
-    selectedData.uiPreset = UIPreset[selectedData.route.initials]
-
-    if (selectedData.uiPreset == null) {
-        selectedData.uiPreset = UIPreset["default"]
-    }
-
-    let preset = selectedData.uiPreset;
-
+    let preset = UIPreset[selectedData.route.initials] || UIPreset["default"];
 
     $('#titleOverlay').css(`width`, `${preset.titleWidth}%`)
     $('#arrivalOverlay').css(`width`, `${preset.ETAWidth}%`)
@@ -703,6 +665,7 @@ function changeUIPreset() {
     $(".platcircle").css("font-family", preset.platformCircle);
     $(".destination").css("font-family", preset.arrivals);
     $(".eta").css("font-family", preset.eta);
+    selectedData.uiPreset = preset;
 }
 
 function setupUI() {
@@ -747,22 +710,21 @@ function error(text) {
 
 $(document).ready(async function() {
     parseQuery();
-    updateClock();
     updateWeather();
     saveConfig();
     setupUI();
     renderAdv(true);
     updateData(true);
     updateUILanguage(selectedData.UILang);
-    setInterval(updateClock, 1000);
-    setInterval(cycleLanguage, 10000);
-    setInterval(updateData, 10000, false);
-    setInterval(drawUI, 1000);
-    setInterval(updateWeather, 60000, false);
-    setInterval(updateMarquee, 1000)
+    setInterval(cycleLanguage, 10 * 1000);
+    setInterval(updateData, 10 * 1000, false);
+    setInterval(drawUI, 1 * 1000);
+    setInterval(updateWeather, 60 * 1000, false);
 
     if (!debugMode) {
         toggleConfigPage();
+    } else {
+        selectedData.dpMode = DisplayMode.NT4
     }
 
     $('.onlineMode').on('change', function() {
@@ -780,7 +742,7 @@ $(document).ready(async function() {
     $('.route').on('change', function() {
         selectedData.route = RouteList[$(this).val()];
         updateStation()
-        updateUILanguage()
+        updateUILanguage(selectedData.UILang)
 
         if (selectedData.route.isLRT) {
             $('.direction').prop("disabled", true);
@@ -790,10 +752,10 @@ $(document).ready(async function() {
     })
 
     $('#langchoose').on('click', function() {
-        let toggledLang = selectedData.UILang == 'EN' ? 'ZH' : 'EN'
+        let toggledLang = selectedData.UILang == Lang.ENGLISH ? Lang.CHINESE : Lang.ENGLISH
         selectedData.UILang = toggledLang;
-        $(`#langchoose`).text(toggledLang == 'EN' ? 'EN' : '中')
-        updateUILanguage(selectedData.UILang)
+        $(`#langchoose`).text(toggledLang == Lang.ENGLISH ? 'EN' : '中')
+        updateUILanguage(toggledLang)
     })
 
     $('.saveCfg').on('click', function() {
@@ -823,15 +785,3 @@ $(window).on('keydown', function(e) {
         drawUI()
     }
 })
-
-function updateMarquee() {
-    if (marqueeX < -100) {
-        marqueeX = 100;
-        $('.marquee').css("transition", `0s`)
-        $('.marquee').css("transform", `translateX(${marqueeX}%)`)
-        return;
-    }
-    marqueeX -= 30;
-    $('.marquee').css("transition", `1s linear`)
-    $('.marquee').css("transform", `translateX(${marqueeX}%)`)
-}

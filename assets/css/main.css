@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400&family=Noto+Sans:wght@400;600&family=Noto+Serif+TC:wght@600;900&display=swap');
 :root {
     --font-titlebar: "Myriad Pro", "Noto Sans", "Noto Serif TC";
-    --font-arrivals: "Myriad Pro Semibold", "Noto Sans", "Noto Serif TC";
+    --font-arrivals: "Myriad Pro Semibold", "Myriad Pro", "Noto Sans", "Noto Serif TC";
     --font-platformcircle: "Myriad Pro", "Noto Sans";
-    --font-eta: "Myriad Pro Semibold", "Noto Sans", "Noto Serif TC";
-    --font-size: 12vh;
+    --font-eta: "Myriad Pro Semibold", "Myriad Pro", "Noto Sans", "Noto Serif TC";
+    --font-size: 12vmin;
     --aqua: #A8D9F2;
 }
 
@@ -49,7 +49,6 @@ button:hover {
 
 .main {
     font-family: var(--font-arrivals);
-    font-size: var(--font-size);
 }
 
 .title {
@@ -66,7 +65,7 @@ button:hover {
     width: 100%;
     color: white;
     font-family: var(--font-titlebar);
-    font-size: calc((1vw + 1vh) * 3.5);
+    font-size: 10vh;
     line-height: 13vh;
 }
 
@@ -173,22 +172,21 @@ button:hover {
 }
 
 .destination {
-    width: 70%;
+    font-size: var(--font-size);
     white-space: nowrap;
     overflow: hidden;
 }
 
 .platcircle {
     display: flex;
-    margin: auto;
-    font-family: var(--font-platformcircle);
-    font-size: var(--font-size);
-    height: var(--font-size);
-    width: var(--font-size);
-    border-radius: 50%;
-    color: #fff;
     align-items: center;
     justify-content: center;
+    margin: auto;
+    height: 10vmin;
+    width: 10vmin;
+    border-radius: 50%;
+    font-size: 10vmin;
+    color: #fff;
 }
 
 #advertisement {
@@ -220,6 +218,8 @@ button:hover {
     padding-left: 15px;
     overflow: hidden;
     white-space: nowrap;
+    vertical-align: bottom;
+    font-size: var(--font-size);
 }
 
 .etamin {

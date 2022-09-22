@@ -35,12 +35,12 @@
     <div class="config">
         <div class="configBox">
             <div id="error" style="display: none"></div>
-            <span class="title lang-en">MTR PIDS Config</span>
-            <span class="title lang-zh">願景資訊顯示屏模擬器</span>
+            <span class="title lang lang-en">RV PIDS Config</span>
+            <span class="title lang lang-zh">願景資訊顯示屏模擬器</span>
             <button id="langchoose">EN</button>
             <div class="online">
-                <h1 class="secHeader lang-en">Lines</h1>
-                <h1 class="secHeader lang-zh">路線</h1>
+                <h1 class="secHeader lang lang-en">Lines</h1>
+                <h1 class="secHeader lang lang-zh">路線</h1>
                 <select class="route">
                     <option value="TCL">東涌綫 Tung Chung Line</option>
                     <option value="TML">屯馬綫 Tuen Ma Line</option>
@@ -51,13 +51,13 @@
                     <option value="LRT">輕鐵 Light Rail</option>
                 </select>
 
-                <h1 class="secHeader lang-en">Station</h1>
-                <h1 class="secHeader lang-zh">車站</h1>
+                <h1 class="secHeader lang lang-en">Station</h1>
+                <h1 class="secHeader lang lang-zh">車站</h1>
                 <select class="station">
                 </select>
 
-                <h1 class="secHeader lang-en">Direction</h1>
-                <h1 class="secHeader lang-zh">方向</h1>
+                <h1 class="secHeader lang lang-en">Direction</h1>
+                <h1 class="secHeader lang lang-zh">方向</h1>
                 <select class="direction">
                     <option value="UP"></option>
                     <option value="DOWN"></option>
@@ -66,15 +66,15 @@
             </div>
 
             <div class="offline" style="display: none;">
-                <h1 class="secHeader lang-en">ETA Data</h1>
-                <h1 class="secHeader lang-zh">下班列車資料</h1>
+                <h1 class="secHeader lang lang-en">ETA Data</h1>
+                <h1 class="secHeader lang lang-zh">下班列車資料</h1>
                 <table>
-                    <tr class="lang-en">
+                    <tr class="lang lang-en">
                         <td>Destination</td>
                         <td class="centeredItem">Platform</td>
                         <td class="centeredItem">ETA</td>
                     </tr>
-                    <tr class="lang-zh">
+                    <tr class="lang lang-zh">
                         <td>終點站</td>
                         <td class="centeredItem">月台</td>
                         <td class="centeredItem">到達時間</td>
@@ -112,21 +112,21 @@
                         </td>
                     </tr>
                 </table>
-                <h1 class="lang-en secHeader">Route Color (Hex)</h1>
-                <h1 class="lang-zh secHeader">路線顏色 (Hex)</h1>
+                <h1 class="lang lang-en secHeader">Route Color (Hex)</h1>
+                <h1 class="lang lang-zh secHeader">路線顏色 (Hex)</h1>
                 #<input type="text" maxlength="6" size="6" class="rtColor"></input>
                 <br>
-                <h1 class="lang-en secHeader">Font Ratio:</h1>
-                <h1 class="lang-zh secHeader">字體比例</h1>
+                <h1 class="lang lang-en secHeader">Font Ratio:</h1>
+                <h1 class="lang lang-zh secHeader">字體比例</h1>
                 <input type="number" class="fontRatioCustom" size="2" value="1"></input>
             </div>
 
-            <h1 class="secHeader lang-en">Special Message</h1>
-            <h1 class="secHeader lang-zh">特別信息</h1>
+            <h1 class="secHeader lang lang-en">Special Message</h1>
+            <h1 class="secHeader lang lang-zh">特別信息</h1>
             <select class="specialMsg"></select>
             <br>
-            <h1 class="secHeader lang-en">Display Mode</h1>
-            <h1 class="secHeader lang-zh">顯示模式</h1>
+            <h1 class="secHeader lang lang-en">Display Mode</h1>
+            <h1 class="secHeader lang lang-zh">顯示模式</h1>
             <select class="dpMode">
                 <option value="NORMAL">Normal 正常</option>
                 <option value="AD">Display Ads Only 只顯示廣告</option>
@@ -134,16 +134,16 @@
                 <option value="NT4">Next 4 Train 顯示下四班車</option>
             </select>
             <br>
-            <input type="checkbox" class="onlineMode translatable" checked></input><span class="lang-en">Use real-time train data</span><span class="lang-zh">使用實時到站資訊</span>
+            <input type="checkbox" class="onlineMode translatable" checked></input><span class="lang lang-en">Use real-time train data</span><span class="lang lang-zh">使用實時到站資訊</span>
             <br>
-            <input class="showPlat" type="checkbox" checked></input><span class="lang-en">Show Platform</span><span class="lang-zh">顯示月台</span>
+            <input class="showPlat" type="checkbox" checked></input><span class="lang lang-en">Show Platform</span><span class="lang lang-zh">顯示月台</span>
             <br>
             <br>
-            <button class="tfs lang-en">Toggle Fullscreen</button>
-            <button class="tfs lang-zh">切換全螢幕</button>
+            <button class="tfs lang lang-en">Toggle Fullscreen</button>
+            <button class="tfs lang lang-zh">切換全螢幕</button>
             <br>
-            <button class="saveCfg lang-en">Save & Close this page</button>
-            <button class="saveCfg lang-zh">套用設定及關閉此頁面</button>
+            <button class="saveCfg lang lang-en">Save & Close this page</button>
+            <button class="saveCfg lang lang-zh">套用設定及關閉此頁面</button>
             <a href="https://www.facebook.com/HKTransportSimulationStudio" class="footer">HKTSS 2022</a>
             <br>
         </div>
@@ -177,6 +177,18 @@
                 </tr>
             </table>
             <table id="arrivalOverlay">
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
             </table>
         </div>
     </div>
