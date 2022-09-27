@@ -1,3 +1,5 @@
+'use strict'
+
 let arrivalVisibility = [true, true, true, true];
 let nextAdvTime;
 let languageCycle = 0
@@ -6,7 +8,7 @@ let configOpened = false;
 let debugMode = false;
 let showingSpecialMessage = false;
 let currentAdvId = 0;
-let marqueeX = 100;
+let marqueeX = 0;
 
 let selectedData = {
     direction: 'UP',
@@ -48,6 +50,10 @@ function switchLang(str, isUI = false) {
 /* Hacky solution, but if it works then it works. */
 function adjustLayoutSize() {
     $('.destination').each(function() {
+        if(selectedData.stn.marquee) {
+            return;
+        }
+
         const ogSize = selectedData.uiPreset.fontRatio * parseInt($(this).css("font-size"));
         const PADDING = 80;
         const tdWidth = $(this).width() - PADDING;
@@ -85,7 +91,7 @@ function adjustLayoutSize() {
         etaMaxSize = Math.max(etaMaxSize, resultWidth);
     });
 
-    $('.eta').css("width", `${etaMaxSize}px`);
+    $('body').css("--eta-width", `${etaMaxSize}px`);
 }
 
 function parseQuery() {
@@ -105,6 +111,8 @@ function drawUI() {
     renderAdv();
     updateClock();
 
+    $("body").css("--route-color", `#${selectedData.route.color}`);
+
     let entryIndex = 0;
     $('#arrivalOverlay > tbody > tr').each(function (i) {
         let thisRowIsVisible = arrivalVisibility[i];
@@ -116,7 +124,13 @@ function drawUI() {
         }
 
         let entry = arrivalData[entryIndex];
-        let stationName = entry.via ? `${switchLang(entry.dest)}${switchLang(" 經| via ")}${switchLang(StationCodeList.get(entry.via).name)}` : switchLang(entry.dest);
+        let viaData = entry.via ? ViaData[selectedData.route.initials]?.[selectedData.stn.initials] : null;
+        let stationName;
+        if(entry.via) {
+            stationName = `${switchLang(entry.dest)}${switchLang(viaData.via)}${switchLang(viaData.name)}`;
+        } else {
+            stationName = switchLang(entry.dest);
+        }
 
         let timetext = "";
         let time = getETAmin(entry.ttnt, false);
@@ -139,7 +153,7 @@ function drawUI() {
 
         let tableRow = "";
         const lrtElement = entry.route.isLRT ? `<span class="lrtrt" style="border-color:#${entry.route.color}">${entry.route.initials}</span>` : ""
-        const platformElement = selectedData.showPlatform ? `<td width="10%"><span class="platcircle" style="background-color:#${selectedData.route.color}">${entry.plat}</span></td>` : ``
+        const platformElement = selectedData.showPlatform ? `<td class="plat"><span class="platcircle">${entry.plat}</span></td>` : `<td class="plat"></td>`
         const ETAElement = `<td class="eta scalable">${time} <span class="etamin">${switchLang(timetext)}</span></td>`
         const destElement = `<td class="destination scalable">${lrtElement}${stationName}</td>`
 
@@ -194,7 +208,7 @@ function updateUILanguage(lang) {
         $(this).text(switchLang(DisplayMode[$(this).val()], true))
     })
 
-    for (adv of advData.special) {
+    for (const adv of advData.special) {
         $(`.specialMsg > option[value="${adv.id}"]`).text(`${switchLang(adv.name, true)}`);
     }
 
@@ -227,14 +241,14 @@ async function updateWeather() {
     let weatherWarningList = weatherData.warning.details;
 
     $('.weatherIcon').empty()
-    for (iconID of weatherIconList) {
-        icon = WeatherIcon[iconID];
+    for (const iconID of weatherIconList) {
+        let icon = WeatherIcon[iconID];
         if (icon == null) continue;
         $('.weatherIcon').append(`<img src=${icon}>`);
     }
 
     if (weatherWarningList) {
-        for (warns of weatherWarningList) {
+        for (const warns of weatherWarningList) {
             let code = warns.subtype ? warns.subtype : warns.warningStatementCode
             let icon = WeatherIcon[code];
 
@@ -249,7 +263,7 @@ async function updateWeather() {
     let temperature = 0;
 
     /* Average the temperature collected from all stations */
-    for (place of temperatureData) {
+    for (const place of temperatureData) {
         temperature = temperature + parseInt(place.value);
     }
 
@@ -292,12 +306,12 @@ async function getETAData(direction) {
 
         if (api == ETA_API.MTR_LR) {
             let finalArray = []
-            for (platform of data.platform_list) {
+            for (const platform of data.platform_list) {
                 let currentPlatform = platform.platform_id
                 let isDeparture = false;
                 if (platform.end_service_status == 1) continue;
 
-                for (entry of platform.route_list) {
+                for (const entry of platform.route_list) {
                     /* Replace to only numbers, e.g. 2 min -> 2 */
                     let ttnt = entry.time_en.replace(/[^0-9.]/g, '')
                     if (!parseInt(ttnt)) {
@@ -352,7 +366,7 @@ async function getETAData(direction) {
             tempArray.sort((a, b) => a.ttnt - b.ttnt);
 
             /* Convert data to adapt to a standardized format */
-            for (entry of tempArray) {
+            for (const entry of tempArray) {
                 let isDeparture = false;
                 let route = RouteList[selectedData.route.initials];
                 let arrTime = new Date(entry.time.replace(/-/g, "/"));
@@ -398,7 +412,7 @@ async function getETAData(direction) {
             const data1 = await response1.json()
             const data2 = await response2.json()
 
-            for (entry of data1.eta) {
+            for (const entry of data1.eta) {
                 let station = null;
                 for (stn of StationCodeList.values()) {
                     if (stn.MRCode == entry.destination) {
@@ -412,7 +426,7 @@ async function getETAData(direction) {
                 finalArray.push(convertedEntry)
             }
 
-            for (entry of data2.eta) {
+            for (const entry of data2.eta) {
                 let station = null;
                 for (stn of StationCodeList.values()) {
                     if (stn.MRCode == entry.destination) {
@@ -434,7 +448,7 @@ async function getETAData(direction) {
         const response = await fetch(getAPIURL(api, selectedData.route.initials, selectedData.stn.MRCode, direction))
         const data = await response.json()
 
-        for (entry of data.eta) {
+        for (const entry of data.eta) {
             let station = null;
             for (stn of StationCodeList.values()) {
                 if (stn.MRCode == entry.destination) {
@@ -541,7 +555,8 @@ function renderAdv(firstLoad) {
     let nextAdCycle = advData.cycle[currentAdvId];
     if (Date.now() >= nextAdvTime) {
         cycleAdv();
-        renderAdv();
+        renderAdv(false);
+        cycleLanguage();
     }
 
     if (selectedData.dpMode == DisplayMode.NT4 && !showingSpecialMessage) {
@@ -566,11 +581,11 @@ function renderAdv(firstLoad) {
         nextAdCycle = advData.special.filter(e => e.id == selectedData.specialMsgID)[0];
     }
 
-    for (adv of advData.cycle) {
+    for (const adv of advData.cycle) {
         $(`.promo-${adv.id}`).hide()
     }
 
-    for (adv of advData.special) {
+    for (const adv of advData.special) {
         $(`.promo-${adv.id}`).hide()
     }
 
@@ -611,8 +626,8 @@ function renderAdv(firstLoad) {
 
     if (firstLoad) {
         $('#advertisement').empty();
-        for (let cate in advData) {
-            for (adv of advData[cate]) {
+        for (const cate in advData) {
+            for (const adv of advData[cate]) {
                 if (adv.framesrc != null) {
                     $('#advertisement').append(`<iframe style="display:block" class="promo-${adv.id} centeredItem" src=${adv.framesrc}></iframe>`);
                 }
@@ -645,14 +660,11 @@ function changeUIPreset() {
 
     $('#titleOverlay').css(`width`, `${preset.titleWidth}%`);
     $('#arrivalOverlay').css(`width`, `${preset.ETAWidth}%`);
-    $("#titlebar").css(`font-family`, preset.title);
-    $(".platcircle").css("font-family", preset.platformCircle);
-    $(".destination").css("font-family", preset.arrivals);
-    $(".eta").css("font-family", preset.eta);
-
-    $(".eta").each(function() {
-        $(this).css("font-weight", preset.fontWeight);
-    });
+    $("body").css("--font-weight", preset.fontWeight);
+    $("body").css("--platcircle-family", preset.platformCircle);
+    $("body").css(`--title-family`, preset.title);
+    $("body").css("--dest-family", preset.arrivals);
+    $("body").css("--eta-family", preset.eta);
 
     $(".destination").each(function() {
         let isChinese = Chinese.test($(this).text());
@@ -661,8 +673,6 @@ function changeUIPreset() {
         } else {
             $(this).css("letter-spacing", `normal`);
         }
-
-        $(this).css("font-weight", preset.fontWeight);
     });
 
     selectedData.uiPreset = preset;
@@ -671,7 +681,7 @@ function changeUIPreset() {
 function setupUI() {
     updateStation();
     $('.dpMode').empty()
-    for (mode in DisplayMode) {
+    for (const mode in DisplayMode) {
         let modeName = DisplayMode[mode];
         $('.dpMode').append(`<option value=${mode}>${switchLang(modeName, true)}</option>`)
     }
@@ -681,14 +691,14 @@ function setupUI() {
     }
 
     $('.route').empty()
-    for (key in RouteList) {
+    for (const key in RouteList) {
         if (RouteList[key].hidden) continue;
         $('.route').append(`<option value="${key}">${switchLang(RouteList[key].name)}</option>`)
     }
     selectedData.route = RouteList[$('.route').val()]
 
     $('.specialMsg').empty();
-    for (adv of advData.special) {
+    for (const adv of advData.special) {
         $('.specialMsg').append(`<option value="${adv.id}">${switchLang(adv.name, true)}`);
     }
 }
@@ -697,7 +707,7 @@ function updateStation() {
     /* Show the corresponding station list of the route */
     $('.station').empty();
 
-    for (stnCode of selectedData.route.stations) {
+    for (const stnCode of selectedData.route.stations) {
         $('.station').append(`<option value="${stnCode}">${switchLang(StationCodeList.get(stnCode).name, true)}`);
     }
     selectedData.stn = StationCodeList.get(selectedData.route.stations[0]);
@@ -716,7 +726,6 @@ $(document).ready(async function() {
     renderAdv(true);
     updateData(true);
     updateUILanguage(selectedData.UILang);
-    setInterval(cycleLanguage, 10 * 1000);
     setInterval(updateData, 10 * 1000, false);
     setInterval(drawUI, 1 * 1000);
     setInterval(updateWeather, 60 * 1000, false);
@@ -779,7 +788,6 @@ $(window).on('keydown', function(e) {
 
     /* G key */
     if (e.which == 71 && debugMode) {
-        cycleLanguage()
         cycleAdv()
         renderAdv()
         drawUI()

@@ -1,10 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400&family=Noto+Sans:wght@400;600&family=Noto+Serif+TC:wght@600;900&display=swap');
 :root {
-    --font-titlebar: "Myriad Pro", "Noto Sans", "Noto Serif TC";
     --font-arrivals: "Myriad Pro Semibold", "Myriad Pro", "Noto Sans", "Noto Serif TC";
     --font-platformcircle: "Myriad Pro", "Noto Sans";
-    --font-eta: "Myriad Pro Semibold", "Myriad Pro", "Noto Sans", "Noto Serif TC";
     --font-size: 12vmin;
+    --route-color: transparent;
+    --font-weight: 600;
+    --platcircle-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
+    --title-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
+    --dest-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
+    --eta-family: "Myriad Pro", "Noto Sans", "Noto Serif TC";
+    --eta-width: 260px;
     --aqua: #A8D9F2;
 }
 
@@ -64,7 +69,7 @@ button:hover {
     background-color: #153156;
     width: 100%;
     color: white;
-    font-family: var(--font-titlebar);
+    font-family: var(--title-family);
     font-size: 10vh;
     line-height: 13vh;
 }
@@ -76,6 +81,8 @@ button:hover {
 
 .weatherIcon img {
     vertical-align: middle;
+    padding-left: 15px;
+    padding-right: 15px;
     max-height: 14vh;
 }
 
@@ -173,8 +180,15 @@ button:hover {
 
 .destination {
     font-size: var(--font-size);
+    font-family: var(--dest-family);
+    font-weight: var(--font-weight);
     white-space: nowrap;
     overflow: hidden;
+}
+
+.plat {
+    width: 10%;
+    font-family: var(--platcircle-family);
 }
 
 .platcircle {
@@ -187,6 +201,7 @@ button:hover {
     border-radius: 50%;
     font-size: 10vmin;
     color: #fff;
+    background-color: var(--route-color);
 }
 
 #advertisement {
@@ -212,14 +227,14 @@ button:hover {
 }
 
 .eta {
-    font-family: var(--font-eta);
+    font-family: var(--eta-family);
+    font-weight: var(--font-weight);
+    font-size: var(--font-size);
+    width: var(--eta-width);
     text-align: right;
-    width: 17%;
-    padding-left: 15px;
     overflow: hidden;
     white-space: nowrap;
     vertical-align: bottom;
-    font-size: var(--font-size);
 }
 
 .etamin {
@@ -242,8 +257,4 @@ button:hover {
 .centeredItem {
     text-align: center;
     margin: auto;
-}
-
-.marquee {
-    white-space: nowrap;
 }

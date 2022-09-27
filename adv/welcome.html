@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@600&display=swap" rel="stylesheet">
+</head>
+
+<body style="overflow: hidden;background-color: white">
+    <div id="background"></div>
+    <div id="content">
+        <h1 class="header-zh">歡迎乘搭港鐵</h1>
+        <h1 class="header-en">Welcome to the MTR</h1>
+    </div>
+</body>
+
+<style>
+    body {
+        text-align: center;
+        font-family: "Myriad Pro Semibold", "Noto Sans", "Noto Serif TC";
+        color: #1A2B42;
+    }
+
+    #background {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-image: url("./city.jpg");
+        background-position: bottom;
+        background-repeat: no-repeat;
+        background-size: cover;
+        z-index: -2;
+    }
+    
+    #content {
+        position: absolute;
+        top: 50%;
+        left: 15%;
+        right: 15%;
+        margin-left: auto;
+        margin-right: auto;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+    
+    .header-zh {
+        font-size: calc(4.5 * (1vw + 1vh + 1vmin));
+        margin: 0;
+    }
+    
+    .header-en {
+        font-size: calc(3.7 * (1vw + 1vh + 1vmin));
+        letter-spacing: 3px;
+        margin: 0;
+    }
+</style>
+
+</html>

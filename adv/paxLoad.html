@@ -13,7 +13,7 @@
 </head>
 
 <body style="overflow: hidden;background-color: white">
-    <div id="content" style="display: table;margin: auto;">
+    <div id="content">
         <h1 class="header-zh">你可前往有較多空間的車廂</h1>
         <h1 class="header-en">Please move to Cars with more space</h1>
         <div id="pax">
@@ -41,16 +41,22 @@
     }
     
     #pax {
-        position: absolute;
         display: grid;
-        bottom: 0;
-        left: 0;
-        right: 0;
         margin-left: auto;
         margin-right: auto;
+        margin-top: 30px;
         table-layout: fixed;
         width: 95%;
         max-width: 95%;
+    }
+
+    #content {
+        position: absolute;
+        display: table;
+        margin: auto;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
     }
     
     .header-zh {
