@@ -2,7 +2,7 @@
 
 let arrivalVisibility = [true, true, true, true];
 let nextAdvTime;
-let languageCycle = 0
+let languageCycle = 0;
 let arrivalData = []
 let configOpened = false;
 let debugMode = false;
@@ -40,7 +40,7 @@ function switchLang(str, isUI = false) {
         }
     }
 
-    let targetLang = languageCycle
+    let targetLang = languageCycle;
 
     let name = str.split("|");
     return name[targetLang % name.length];
@@ -55,7 +55,7 @@ function adjustLayoutSize() {
         }
 
         const ogSize = selectedData.uiPreset.fontRatio * parseInt($(this).css("font-size"));
-        const PADDING = 80;
+        const PADDING = 80 * (window.innerWidth / 1920);
         const tdWidth = $(this).width() - PADDING;
         let percentW = 1;
 
@@ -78,7 +78,7 @@ function adjustLayoutSize() {
 
     $('.eta').each(function() {
         const ogSize = selectedData.uiPreset.fontRatio * parseInt($(this).css("font-size"));
-        const PADDING = 20;
+        const PADDING = 20 * (window.innerWidth / 1920);
         const tdWidth = $(this).width();
 
         $('.widthCheck').html($(this).html())
@@ -601,11 +601,6 @@ function renderAdv(firstLoad) {
     if (selectedData.dpMode == DisplayMode.AD) {
         arrivalVisibility = [false, false, false, false];
     }
-
-    const OneEntryRowHeight = $('#arrivalBackground tr td:first').height()
-    const TitleHeight = $('#titlebar').height();
-    const finalAdvHeight = $(window).height() - TitleHeight - (OneEntryRowHeight * arrivalVisibility.filter(visible => visible == true).length);
-    $('#advertisement').css("height", `${finalAdvHeight}px`);
 
     if (showingSpecialMessage) {
         let fullURL = nextAdCycle.framesrc + nextAdCycle.queryString;

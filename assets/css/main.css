@@ -5,6 +5,7 @@
     --font-size: 12vmin;
     --route-color: transparent;
     --font-weight: 600;
+    --title-height: 14vh;
     --platcircle-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
     --title-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
     --dest-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
@@ -65,12 +66,12 @@ button:hover {
 }
 
 #titlebar {
-    height: 14vh;
+    height: var(--title-height);
     background-color: #153156;
     width: 100%;
     color: white;
     font-family: var(--title-family);
-    font-size: 10vh;
+    font-size: calc((1vw + 1vh) * 3.4);
     line-height: 13vh;
 }
 
@@ -81,9 +82,11 @@ button:hover {
 
 .weatherIcon img {
     vertical-align: middle;
-    padding-left: 15px;
-    padding-right: 15px;
-    max-height: 14vh;
+    padding-left: 0.5%;
+    padding-right: 0.5%;
+    width: calc((1vw + 1vh) * 4.5);
+    max-width: var(--title-height);
+    max-height: var(--title-height);
 }
 
 .weather {
@@ -94,8 +97,8 @@ button:hover {
     position: absolute;
     table-layout: fixed;
     margin: auto;
-    height: calc(100vh - 14vh);
-    top: 14vh;
+    height: calc(100vh - var(--title-height));
+    top: var(--title-height);
     bottom: 0;
     left: 0;
     right: 0;
@@ -109,8 +112,9 @@ button:hover {
 }
 
 #arrivalBackground {
+    position: absolute;
     width: 100%;
-    height: calc(100vh - 14vh);
+    height: calc(100vh - var(--title-height));
 }
 
 #arrivalBackground tr:nth-child(even) {
@@ -207,9 +211,10 @@ button:hover {
 #advertisement {
     position: absolute;
     z-index: 2;
-    top: 14vh;
+    top: var(--title-height);
     left: 0;
     right: 0;
+    height: calc(100vh - var(--title-height) - ((100vh - var(--title-height)) / 4));
     background-color: #000000;
 }
 
@@ -249,9 +254,9 @@ button:hover {
 }
 
 .footer {
-    position: absolute;
-    right: 0;
-    bottom: 0;
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
 }
 
 .centeredItem {
