@@ -337,7 +337,7 @@ async function getETAData(direction) {
             let tempArray = []
             let finalArray = []
             let arrUP, arrDN;
-
+            
             if (direction == 'BOTH') {
                 if (data.data[routeAndStation].hasOwnProperty('UP')) {
                     arrUP = data.data[routeAndStation]['UP'];
@@ -361,6 +361,7 @@ async function getETAData(direction) {
                     tempArray = [];
                 }
             }
+
 
             /* Sort by ETA */
             tempArray.sort((a, b) => a.ttnt - b.ttnt);
