@@ -1,0 +1,88 @@
+:root {
+    --config-fonts: 'system-ui', 'Noto Sans HK'
+}
+
+.config {
+    position: absolute;
+    z-index: 200;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    color: white;
+    backdrop-filter: blur(6px);
+}
+
+.config * {
+    margin: 5px;
+}
+
+.configBox {
+    margin: 0;
+    padding: 0 10px 0 10px;
+    position: relative;
+    float: right;
+    height: 100%;
+    background-color: #f0f2f6;
+    color: black;
+    overflow-y: auto;
+    font-family: var(--config-fonts);
+    font-size: 18px;
+}
+
+.config select {
+    border: 0;
+    background-color: #e4e4e4;
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-family: 'Roboto', 'Noto Sans HK', sans-serif;
+}
+
+.config button {
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 5px;
+    font-family: var(--config-fonts);
+    font-size: 18px;
+    padding: 3px 15px 3px 15px;
+    transition: background-color 0.1s;
+}
+
+.config button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.title {
+    display: inline-block;
+    padding: .25em .25em .25em .25em;
+    text-align: center;
+    font-size: 3em;
+}
+
+#langchoose {
+    display: inline-block;
+}
+
+#error {
+    background-color: #C61700;
+    color: white;
+    font-size: 18px;
+    margin: 0;
+    padding: 5px 5px 5px 5px;
+}
+
+.secHeader {
+    font-size: 36px;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.footer {
+    position: fixed;
+    right: 1em;
+    bottom: 1em;
+}

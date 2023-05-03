@@ -1,4 +1,3 @@
-const WeatherUnit = "°C"
 const Chinese = /\p{Script=Han}/u;
 
 class Route {
@@ -12,12 +11,12 @@ class Route {
     stations;
     hidden;
     constructor(initials, api, name, color, isLRT, hasPaxLoad, directionInfo, stations, hidden) {
-        this.initials = initials
-        this.api = api
-        this.name = name
-        this.color = color
-        this.isLRT = isLRT
-        this.hasPaxLoad = hasPaxLoad
+        this.initials = initials;
+        this.api = api;
+        this.name = name;
+        this.color = color;
+        this.isLRT = isLRT;
+        this.hasPaxLoad = hasPaxLoad;
         this.directionInfo = directionInfo;
         this.stations = stations;
         this.hidden = hidden;
@@ -35,13 +34,13 @@ class ArrivalEntry {
     via;
     marquee;
     constructor(dest, ttnt, route, platforms, isLRT, isDeparture, paxLoad, firstClass, via, marquee) {
-        this.dest = dest
-        this.ttnt = ttnt
-        this.plat = platforms
-        this.isLRT = isLRT
+        this.dest = dest;
+        this.ttnt = ttnt;
+        this.plat = platforms;
+        this.isLRT = isLRT;
         this.paxLoad = paxLoad;
-        this.isDeparture = isDeparture
-        this.firstClassCar = firstClass
+        this.isDeparture = isDeparture;
+        this.firstClassCar = firstClass;
         this.route = route;
         this.via = via;
         this.marquee = marquee;
@@ -54,7 +53,7 @@ class Station {
     MRCode;
     platforms;
     marquee;
-    constructor(initials, name, MRCode, platforms, marquee) {
+    constructor(initials, name, MRCode, platforms, marquee = false) {
         this.name = name;
         this.initials = initials;
         this.MRCode = MRCode;
@@ -74,7 +73,7 @@ const ETA_API = {
     },
     MTR: {
         name: 'MTR',
-        url: "https://MTRData.kennymhhui.repl.co/mtr?line=${rt}&sta=${stn}"
+        url: "https://MTRData.kennymhhui.repl.co/mtr?line={rt}&sta={stn}"
     },
     MTR_OPEN: {
         name: "MTR Open Data",
@@ -84,21 +83,10 @@ const ETA_API = {
         name: "MTR Light Rail Data",
         url: "https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id={stn}"
     },
-}
-
-const WEATHER_API = {
-    HKO_RHRREAD: {
-        name: "HKO RHRREAD",
-        url: "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en"
-    },
-    HKO_WARNING_INFO: {
-        name: "HKO Warning Info",
-        url: "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warningInfo&lang=en"
+    HKT: {
+        name: "Hong Kong Tramways",
+        url: "https://mtrdata.kennymhhui.repl.co/tw?sta={stn}"
     }
-}
-
-function getAPIURL(api, rt, stn, dir) {
-    return api.url.replace("{rt}", rt).replace("{stn}", stn).replace("{dir}", dir);
 }
 
 const DisplayMode = {
@@ -134,7 +122,14 @@ const RouteList = {
     'LR706': new Route('706', ETA_API.MTR_LR, '輕鐵 706|Light Rail 706', 'B27AB4', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
     'LR751': new Route('751', ETA_API.MTR_LR, '輕鐵 751|Light Rail 751', 'f5821f', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
     'LR751P': new Route('751P', ETA_API.MTR_LR, '輕鐵 751P|Light Rail 751P', '000000', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
-    'LR761P': new Route('761P', ETA_API.MTR_LR, '輕鐵 761P|Light Rail 761P', '6f2b91', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true)
+    'LR761P': new Route('761P', ETA_API.MTR_LR, '輕鐵 761P|Light Rail 761P', '6f2b91', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
+    // 'HKT': new Route('HKT', ETA_API.HKT, '香港電車|HK Tramways', '007549', false, false, ["HKTE", "HKTW"], getTramwaysStations()),
+    // Tramways ETA is pretty much dead (As in the ETA doesn't move) 
+}
+
+function getTramwaysStations() {
+    let stnArray = Array.from(nextTramStopsW.values());
+    return stnArray.map(e => `T${e[0]}`);
 }
 
 let advData = {
@@ -325,54 +320,6 @@ const ViaData = {
     }
 }
 
-const WeatherIcon = {
-    '50': './assets/img/hko_icon/50.png',
-    '51': './assets/img/hko_icon/51.png',
-    '52': './assets/img/hko_icon/52.png',
-    '53': './assets/img/hko_icon/53.png',
-    '54': './assets/img/hko_icon/54.png',
-    '60': './assets/img/hko_icon/60.png',
-    '61': './assets/img/hko_icon/61.png',
-    '62': './assets/img/hko_icon/62.png',
-    '63': './assets/img/hko_icon/62.png',
-    '64': './assets/img/hko_icon/64.png',
-    '65': './assets/img/hko_icon/65.png',
-    '70': './assets/img/hko_icon/50.png',
-    '71': './assets/img/hko_icon/50.png',
-    '72': './assets/img/hko_icon/50.png',
-    '73': './assets/img/hko_icon/50.png',
-    '74': './assets/img/hko_icon/50.png',
-    '75': './assets/img/hko_icon/50.png',
-    '76': './assets/img/hko_icon/60.png',
-    '77': './assets/img/hko_icon/60.png',
-    '80': './assets/img/hko_icon/80.png',
-    '81': './assets/img/hko_icon/81.png',
-    '82': './assets/img/hko_icon/82.png',
-    '83': './assets/img/hko_icon/83.png',
-    '84': './assets/img/hko_icon/84.png',
-    '85': './assets/img/hko_icon/85.png',
-    '90': './assets/img/hko_icon/85.png',
-    '91': null,
-    '92': null,
-    '93': './assets/img/hko_icon/85.png',
-    'WTS': './assets/img/hko_icon/warning/WTS.png',
-    'WRAINA': './assets/img/hko_icon/warning/WRAINA.png',
-	'WRAINB': './assets/img/hko_icon/warning/WRAINB.png',
-	'WRAINR': './assets/img/hko_icon/warning/WRAINR.png',
-    'WL': './assets/img/hko_icon/warning/WL.png',
-    'WFIRER': './assets/img/hko_icon/warning/WFIRER.png',
-    'WFIREY': './assets/img/hko_icon/warning/WFIREY.png',
-	'WMSGNL': './assets/img/hko_icon/warning/WMSGNL.png',
-    'TC1': './assets/img/hko_icon/warning/TC1.png',
-    'TC3': './assets/img/hko_icon/warning/TC3.png',
-    'TC8NE': './assets/img/hko_icon/warning/TC8NE.png',
-    'TC8SE': './assets/img/hko_icon/warning/TC8SE.png',
-    'TC8NW': './assets/img/hko_icon/warning/TC8NW.png',
-    'TC8SW': './assets/img/hko_icon/warning/TC8SW.png',
-    'TC9': './assets/img/hko_icon/warning/TC9.png',
-    'TC10': './assets/img/hko_icon/warning/TC10.png'
-}
-
 const StationCodeList = new Map([
     /* Disneyland Resorts Line */
     ['DIS', new Station("DIS", "迪士尼|Disneyland Resort", 55, [], false)],
@@ -553,13 +500,24 @@ const StationCodeList = new Map([
     ["500", new Station("500", "天榮|Tin Wing", 1500, [6, 7], [], false)],
     ["510", new Station("510", "天悅|Tin Yuet", 1510, [1, 2], [], false)],
     ["520", new Station("520", "天秀|Tin Sau", 1520, [1, 2], [], false)],
-    ["530", new Station("530", "濕地公園|Wetland Park", 1530, [1, 2], [], false)],
-    ["540", new Station("540", "天恒|Tin Heng", 1540, [1, 2], [], false)],
-    ["550", new Station("550", "天逸|Tin Yat", 1550, [1, 2, 4, 5], [], false)],
-    ["560", new Station("560", "水邊圍|Shui Pin Wai", 1560, [1, 2], [], false)],
-    ["570", new Station("570", "豐年路|Fung Nin Road", 1570, [1, 2], [], false)],
-    ["580", new Station("580", "康樂路|Hong Lok Road", 1580, [1, 2], [], false)],
-    ["590", new Station("590", "大棠路|Tai Tong Road", 1590, [1, 2], [], false)],
-    ["600", new Station("600", "元朗|Yuen Long", 1660, [2, 3, 4, 5], [], false)],
-    ["920", new Station("920", "三聖|Sam Shing", 1920, [1, 3])]
-])
+    ["530", new Station("530", "濕地公園|Wetland Park", 1530, [1, 2], false)],
+    ["540", new Station("540", "天恒|Tin Heng", 1540, [1, 2], false)],
+    ["550", new Station("550", "天逸|Tin Yat", 1550, [1, 2, 4, 5], false)],
+    ["560", new Station("560", "水邊圍|Shui Pin Wai", 1560, [1, 2], false)],
+    ["570", new Station("570", "豐年路|Fung Nin Road", 1570, [1, 2], false)],
+    ["580", new Station("580", "康樂路|Hong Lok Road", 1580, [1, 2], false)],
+    ["590", new Station("590", "大棠路|Tai Tong Road", 1590, [1, 2], false)],
+    ["600", new Station("600", "元朗|Yuen Long", 1660, [2, 3, 4, 5], false)],
+    ["920", new Station("920", "三聖|Sam Shing", 1920, [1, 3], false)],
+    ["HKTE", new Station("HKTE", "東行|East Bound", 0, [], false)],
+    ["HKTW", new Station("HKTW", "西行|West Bound", 0, [], false)]
+]);
+
+/* Insert Tramways data from https://www.hktramways.com/js/nextTramData.js defined in index.html */
+for(tramStation of nextTramStopsW) {
+    let stnCode = tramStation[0];
+    let stnEN = tramStation[1];
+    let stnTC = tramStation[2];
+    let stnSC = tramStation[3]; // Unused at the moment
+    StationCodeList.set(`T${stnCode}`, new Station(`T${stnCode}`, `${stnTC}|${stnEN}`, 0, [], false));
+}

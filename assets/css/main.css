@@ -14,55 +14,8 @@
     --aqua: #C7EBFB;
 }
 
-input[type=text] {
-    font-family: 'Segoe UI', "Noto Sans HK", Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 14px;
-    background-color: white;
-    padding: 4px 8px 5px 8px;
-    border: 1px solid #bbb;
-    border-radius: 3px;
-}
-
-input[type=text]:focus {
-    padding: 4px 8px 3px 8px;
-    border-bottom: 2px solid #005FB8;
-    outline-width: 0;
-}
-
-select {
-    border: 0;
-    background-color: #e4e4e4;
-    padding: 5px 10px 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    font-family: 'Roboto', 'Noto Sans HK', 'Segoe UI', 'Arial', sans-serif;
-}
-
-button {
-    border: 1px solid #ccc;
-    background-color: white;
-    border-radius: 5px;
-    font-family: 'Segoe UI', "Noto Sans HK", Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 18px;
-    padding: 3px 15px 3px 15px;
-    transition: .1s
-}
-
-button:hover {
-    background-color: rgba(255, 255, 255, 0.6);
-}
-
 .main {
     font-family: var(--font-arrivals);
-}
-
-.title {
-    display: inline-block;
-    padding: 1vh 1vh 1vh 1vh;
-    text-align: center;
-    font-family: 'Segoe UI', "Noto Sans", Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 48px;
 }
 
 #titlebar {
@@ -121,10 +74,6 @@ button:hover {
     background-color: var(--aqua);
 }
 
-#langchoose {
-    display: inline-block;
-}
-
 .floatright {
     float: right;
 }
@@ -134,35 +83,6 @@ button:hover {
     visibility: hidden;
     overflow: visible;
     white-space: nowrap;
-}
-
-.config {
-    position: absolute;
-    z-index: 200;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: none;
-    color: white;
-    backdrop-filter: blur(6px);
-}
-
-.config * {
-    margin: 5px 5px 5px 5px
-}
-
-.configBox {
-    margin: 0;
-    padding: 0px 10px 0px 10px;
-    position: relative;
-    float: right;
-    height: 100%;
-    background-color: #f0f2f6;
-    color: black;
-    overflow-y: scroll;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .lrtrt {
@@ -223,14 +143,6 @@ button:hover {
     height: 100%;
 }
 
-#error {
-    background-color: #C61700;
-    color: white;
-    font-size: 18px;
-    margin: 0;
-    padding: 5px 5px 5px 5px;
-}
-
 .eta {
     font-family: var(--eta-family);
     font-weight: var(--font-weight);
@@ -244,22 +156,4 @@ button:hover {
 
 .etamin {
     font-size: 65%;
-}
-
-.secHeader {
-    font-family: 'Segoe UI Semibold', 'Noto Sans', 'Arial';
-    font-size: 36px;
-    font-weight: 600;
-    margin-top: 20px;
-}
-
-.footer {
-    position: fixed;
-    right: 10px;
-    bottom: 10px;
-}
-
-.centeredItem {
-    text-align: center;
-    margin: auto;
 }
