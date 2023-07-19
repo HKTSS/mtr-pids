@@ -11,7 +11,7 @@
     --dest-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
     --eta-family: "Myriad Pro", "Noto Sans", "Noto Serif TC";
     --eta-width: 260px;
-    --aqua: #C7EBFB;
+    --aqua: #c8ebfa;
 }
 
 .main {
@@ -20,7 +20,7 @@
 
 #titlebar {
     height: var(--title-height);
-    background-color: #153156;
+    background-color: #002b54;
     width: 100%;
     color: white;
     font-family: var(--title-family);
