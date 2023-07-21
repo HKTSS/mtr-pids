@@ -5,7 +5,7 @@
     --font-size: 12vmin;
     --route-color: transparent;
     --font-weight: 600;
-    --title-height: 14vh;
+    --title-height: 13.7vh;
     --platcircle-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
     --title-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
     --dest-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
@@ -24,7 +24,7 @@
     width: 100%;
     color: white;
     font-family: var(--title-family);
-    font-size: calc((1vw + 1vh) * 3.4);
+    font-size: calc((1vw + 1vh) * 3.2);
     line-height: 13vh;
 }
 

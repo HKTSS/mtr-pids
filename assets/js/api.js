@@ -82,7 +82,7 @@ async function getLightRail(route, stn) {
 
             for (const entry of platform.route_list) {
                 /* Replace to only numbers, e.g. 2 min -> 2 */
-                let ttnt = entry.time_en.replace(/[^0-9.]/g, '')
+                let ttnt = entry.time_en.replace(/[^0-9.]/g, '');
                 if (!parseInt(ttnt)) {
                     if (entry.time_en == "-") ttnt = 0;
                     if (entry.time_en == "Arriving") ttnt = 1;
@@ -92,6 +92,7 @@ async function getLightRail(route, stn) {
                 let convertedEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttnt, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "")
                 finalArray.push(convertedEntry)
             }
+            finalArray.sort((a, b) => a.ttnt - b.ttnt)
         }
         return finalArray;
 }
