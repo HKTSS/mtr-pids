@@ -344,7 +344,7 @@ function renderAdv(firstLoad) {
     if (nextAdCycle.isPaxLoad) {
         let paxArray = []
         if (arrivalData[0] ?.paxLoad ?.length > 1) {
-            for (pax of arrivalData[0].paxLoad) {
+            for (let pax of arrivalData[0].paxLoad) {
                 paxArray.push(pax.availability);
             }
             let firstClassCar = arrivalData[0].firstClassCar ? arrivalData[0].firstClassCar : 0;
