@@ -37,9 +37,10 @@
     vertical-align: middle;
     padding-left: 0.5%;
     padding-right: 0.5%;
+    padding-top: 0.5%;
     width: calc((1vw + 1vh) * 4.5);
-    max-width: var(--title-height);
-    max-height: var(--title-height);
+    max-width: calc(var(--title-height) - 20px);
+    max-height: calc(var(--title-height) - 20px);
 }
 
 .weather {
