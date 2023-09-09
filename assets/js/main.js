@@ -144,6 +144,7 @@ function getETAmin(eta, departure) {
     if (eta == 0 || (eta == 1 && !departure)) {
         return "";
     }
+    if(eta > 99) return "99";
     return eta;
 }
 
