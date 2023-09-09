@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400&family=Noto+Sans:wght@400;600&family=Noto+Serif+TC:wght@600;900&display=swap');
 :root {
-    --font-arrivals: "Myriad Pro Semibold", "Myriad Pro", "Noto Sans", "Noto Serif TC";
+    --font-arrivals: "Myriad Pro", "Noto Sans", "Noto Serif TC";
     --font-platformcircle: "Myriad Pro", "Noto Sans";
     --font-size: 12vmin;
     --route-color: transparent;
@@ -24,27 +24,28 @@
     width: 100%;
     color: white;
     font-family: var(--title-family);
-    font-size: calc((1vw + 1vh) * 3.2);
-    line-height: 13vh;
+    font-weight: 600;
+    font-size: 9.25vh;
 }
 
 #titleOverlay {
-    width: 95%;
-    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 5.208%;
+    padding-right: 5.208%;
+    height: var(--title-height);
+}
+
+.weathers {
+    display: inline;
 }
 
 .weatherIcon img {
     vertical-align: middle;
-    padding-left: 0.5%;
-    padding-right: 0.5%;
-    padding-top: 0.5%;
     width: calc((1vw + 1vh) * 4.5);
     max-width: calc(var(--title-height) - 20px);
     max-height: calc(var(--title-height) - 20px);
-}
-
-.weather {
-    vertical-align: top;
 }
 
 #arrivalOverlay {
@@ -56,6 +57,7 @@
     bottom: 0;
     left: 0;
     right: 0;
+    width: calc(100vw - 5.208% - 5.208%);
     background: transparent;
 }
 

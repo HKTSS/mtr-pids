@@ -365,13 +365,13 @@ function renderAdv(firstLoad) {
 function changeUIPreset() {
     let preset = UIPreset[SETTINGS.route.initials] || UIPreset["default"];
 
-    $('#titleOverlay').css(`width`, `${preset.titleWidth}%`);
-    $('#arrivalOverlay').css(`width`, `${preset.ETAWidth}%`);
+    // $('#titleOverlay').css(`width`, `${preset.titleWidth}%`);
+    // $('#arrivalOverlay').css(`width`, `${preset.ETAWidth}%`);
     $("body").css("--font-weight", preset.fontWeight);
     $("body").css("--platcircle-family", preset.platformCircle);
-    $("body").css(`--title-family`, preset.title);
-    $("body").css("--dest-family", preset.arrivals);
-    $("body").css("--eta-family", preset.eta);
+    // $("body").css(`--title-family`, preset.title);
+    // $("body").css("--dest-family", preset.arrivals);
+    // $("body").css("--eta-family", preset.eta);
 
     $(".destination").each(function() {
         let isChinese = Chinese.test($(this).text());
