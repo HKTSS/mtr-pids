@@ -4,8 +4,8 @@ import { WEATHER_API, WeatherIcon, WeatherUnit } from './static/weatherdata.js'
 
 function updateClock() {
     let currDate = new Date();
-    let strMin = `${currDate.getMinutes()}`.padStart(2, '0');
-    let strHour = `${currDate.getHours()}`.padStart(2, '0');
+    let strMin = currDate.toLocaleTimeString('en-US', {minute: '2-digit', timeZone: 'Asia/Hong_Kong'});
+    let strHour = currDate.toLocaleTimeString('en-US', {hour: '2-digit', hour12: false, timeZone: 'Asia/Hong_Kong'});
     $('.clock').text(`${strHour}:${strMin}`);
 }
 
