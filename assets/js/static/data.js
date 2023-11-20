@@ -26,6 +26,7 @@ class Route {
 class ArrivalEntry {
     dest;
     ttnt;
+    time;
     plat;
     isLRT;
     paxLoad;
@@ -33,9 +34,10 @@ class ArrivalEntry {
     firstClassCar;
     via;
     marquee;
-    constructor(dest, ttnt, route, platforms, isLRT, isDeparture, paxLoad, firstClass, via, marquee) {
+    constructor(dest, ttnt, time, route, platforms, isLRT, isDeparture, paxLoad, firstClass, via, marquee) {
         this.dest = dest;
         this.ttnt = ttnt;
+        this.time = time;
         this.plat = platforms;
         this.isLRT = isLRT;
         this.paxLoad = paxLoad;
@@ -93,7 +95,8 @@ const DisplayMode = {
     NORMAL: "正常|Normal",
     AD: "只有廣告|Only Ads",
     ADNT1: "廣告+下一班車|Ads + Next 1 Train",
-    NT4: "下四班車|Next 4 Trains"
+    NT4: "下四班車|Next 4 Trains",
+    NT4_CT: "下四班車(時刻)|Next 4 Trains (Clock Time)"
 }
 
 const Lang = {

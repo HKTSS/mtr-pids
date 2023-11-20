@@ -174,7 +174,7 @@ async function getMTRHeavyRail(api, route, stn, direction) {
             }
         }
 
-        let convertedEntry = new ArrivalEntry(destName, ttnt, routeData, entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass, entry.route, false);
+        let convertedEntry = new ArrivalEntry(destName, ttnt, arrTime, routeData, entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass, entry.route, false);
         finalArray.push(convertedEntry);
     }
 

@@ -102,21 +102,27 @@ function drawUI() {
         }
 
         let timetext = "";
-        let time = getETAmin(entry.ttnt, false);
+        let time = "";
 
-        if (entry.isDeparture == true) {
-            if (entry.ttnt == 0) {
-                timetext = "正在離開|Departing";
-            } else {
-                timetext = "分鐘|min";
-            }
+        if (SETTINGS.dpMode == DisplayMode.NT4_CT) {
+            time = getETAtime(entry.time, false);
         } else {
-            if (entry.ttnt == 0) {
-                timetext = "";
-            } else if (entry.ttnt == 1) {
-                timetext = "即將抵達|Arriving";
+            time = getETAmin(entry.ttnt, false);
+
+            if (entry.isDeparture == true) {
+                if (entry.ttnt == 0) {
+                    timetext = "正在離開|Departing";
+                } else {
+                    timetext = "分鐘|min";
+                }
             } else {
-                timetext = "分鐘|min";
+                if (entry.ttnt == 0) {
+                    timetext = "";
+                } else if (entry.ttnt == 1) {
+                    timetext = "即將抵達|Arriving";
+                } else {
+                    timetext = "分鐘|min";
+                }
             }
         }
 
@@ -146,6 +152,14 @@ function getETAmin(eta, departure) {
     }
     if(eta > 99) return "99";
     return eta;
+}
+
+function getETAtime(time, departure) {
+    return time.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: false
+    });
 }
 
 function cycleLanguage() {
@@ -271,7 +285,7 @@ function renderAdv(firstLoad) {
         cycleLanguage();
     }
 
-    if (SETTINGS.dpMode == DisplayMode.NT4 && !SETTINGS.showingSpecialMessage) {
+    if ((SETTINGS.dpMode == DisplayMode.NT4 || SETTINGS.dpMode == DisplayMode.NT4_CT) && !SETTINGS.showingSpecialMessage) {
         arrivalVisibility = [true, true, true, true];
         $('#advertisement').hide();
         return;
