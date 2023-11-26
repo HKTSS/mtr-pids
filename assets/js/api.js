@@ -18,8 +18,9 @@ async function getMetroRide(route, MRCode, direction) {
                 }
             }
             if (station == null) return [];
-
-            let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, RouteList[route], entry.platform, false);
+            
+            let time = new Date(new Date().getTime() + (entry.ttnt * 60 * 1000));
+            let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, time, RouteList[route], entry.platform, false);
             finalArray.push(convertedEntry)
         }
 
@@ -32,8 +33,9 @@ async function getMetroRide(route, MRCode, direction) {
                 }
             }
             if (station == null) return [];
-
-            let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, RouteList[route], entry.platform, false, false, null, 0, "");
+            
+            let time = new Date(new Date().getTime() + (entry.ttnt * 60 * 1000));
+            let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, time, RouteList[route], entry.platform, false, false, null, 0, "");
             finalArray.push(convertedEntry)
         }
 
@@ -53,8 +55,9 @@ async function getMetroRide(route, MRCode, direction) {
             }
         }
         if (station == null) return [];
-
-        let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, RouteList[route], entry.platform, false)
+        
+        let time = new Date(new Date().getTime() + (entry.ttnt * 60 * 1000));
+        let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, time, RouteList[route], entry.platform, false)
         finalArray.push(convertedEntry)
     }
     return finalArray;
@@ -88,8 +91,9 @@ async function getLightRail(route, stn) {
                     if (entry.time_en == "Arriving") ttnt = 1;
                     if (entry.time_en == "Departing") isDeparture = true;
                 }
-
-                let convertedEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttnt, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "")
+                
+                let time = new Date(new Date().getTime() + (ttnt * 60 * 1000));
+                let convertedEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttnt, time, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "")
                 finalArray.push(convertedEntry)
             }
             finalArray.sort((a, b) => a.ttnt - b.ttnt)
