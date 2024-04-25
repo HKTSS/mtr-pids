@@ -18,9 +18,7 @@ async function updateWeather() {
 
     $('.weatherIcon').empty();
     for (const iconID of weatherIconList) {
-        let icon = WeatherIcon[iconID];
-        if (icon == null) continue;
-        $('.weatherIcon').append(`<img src=${icon}>`);
+        $('.weatherIcon').append(`<img src=./assets/img/w_icon/${iconID}.png>`);
     }
 
     if (weatherWarningList) {
