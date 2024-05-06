@@ -29,13 +29,9 @@ async function updateWeather() {
     if (weatherWarningList) {
         for (const warns of weatherWarningList) {
             let code = warns.subtype ? warns.subtype : warns.warningStatementCode;
-            let icon = WeatherIcon[code];
-
-            /* Skip if there's no corresponding icon */
-            if (!icon) continue;
             wIconCount++;
             if(wIconCount > 4) continue;
-            $('.weatherIcon').append(`<img src='${icon}'>`);
+            $('.weatherIcon').append(`<img src=./assets/img/w_icon/${code}.png>`);
         }
     }
 
