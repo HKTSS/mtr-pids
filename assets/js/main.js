@@ -81,8 +81,9 @@ function drawUI() {
     window.focus();
     
     $("body").css("--route-color", `#${SETTINGS.route.color}`);
-    renderAdv();
     TITLEBAR.draw();
+    renderAdv();
+    
 
     let entryIndex = 0;
     $('#arrivalOverlay > tbody > tr').each(function (i) {
@@ -275,7 +276,7 @@ function cycleAdv() {
     nextAdvTime = Date.now() + nextAdCycle.duration;
 }
 
-function renderAdv(firstLoad) {
+function renderAdv(firstLoad = false) {
     if (firstLoad) {
         nextAdvTime = Date.now();
     }
@@ -283,8 +284,8 @@ function renderAdv(firstLoad) {
     let nextAdCycle = advData.cycle[currentAdvId];
     if (Date.now() >= nextAdvTime) {
         cycleAdv();
-        renderAdv(false);
         cycleLanguage();
+        renderAdv();
     }
 
     if ((SETTINGS.dpMode == DisplayMode.NT4 || SETTINGS.dpMode == DisplayMode.NT4_CT) && !SETTINGS.showingSpecialMessage) {
