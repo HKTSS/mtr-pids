@@ -1,6 +1,8 @@
 'use strict'
 
-import { WEATHER_API, WeatherIcon, WeatherUnit } from './static/weatherdata.js'
+import { WEATHER_API, WeatherIcon, WeatherUnit } from './static/weatherdata.js';
+import SETTINGS from './static/settings.js';
+import MAIN from './main.js';
 
 function updateClock() {
     let currDate = new Date();
@@ -15,9 +17,12 @@ async function updateWeather() {
     /* Update weather icon */
     let weatherIconList = weatherData.rhrread.icon;
     let weatherWarningList = weatherData.warning.details;
-
+    
+    let wIconCount = 0;
     $('.weatherIcon').empty();
     for (const iconID of weatherIconList) {
+        wIconCount++;
+        if(wIconCount > 4) continue;
         $('.weatherIcon').append(`<img src=./assets/img/w_icon/${iconID}.png>`);
     }
 
@@ -28,6 +33,8 @@ async function updateWeather() {
 
             /* Skip if there's no corresponding icon */
             if (!icon) continue;
+            wIconCount++;
+            if(wIconCount > 4) continue;
             $('.weatherIcon').append(`<img src='${icon}'>`);
         }
     }
@@ -59,9 +66,30 @@ async function fetchWeatherData() {
     }
 }
 
-$(document).ready(function() {
-    updateWeather();
+function updateHeader() {
+    if(SETTINGS.rtHeader) {
+        $('.t1').hide();
+        $('.t2').show();
+        $("#titlebar").addClass("rtcolor");
+        $(".rtname").text(MAIN.switchLang(SETTINGS.route.name));
+        $('body').css("--title-height", `17vh`);
+    } else {
+        $('.t2').hide();
+        $('.t1').show();
+        $("#titlebar").removeClass("rtcolor");
+        $('body').css("--title-height", `13.7vh`);
+    }
+}
+
+function draw() {
+    updateHeader();
     updateClock();
+}
+
+$(document).ready(function() {
+    draw();
+    updateWeather();
     setInterval(updateWeather, 60 * 1000, false);
-    setInterval(updateClock, 1000, false);
 });
+
+export default {draw: draw}

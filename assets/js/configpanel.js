@@ -119,7 +119,8 @@ function saveConfig() {
         SETTINGS.showingSpecialMessage = false;
         SETTINGS.specialMsgID = "NONE";
     }
-
+    
+    SETTINGS.rtHeader = $('#routeheader').is(':checked')
     SETTINGS.dpMode = DisplayMode[$('.dpMode').val()];
     SETTINGS.showPlatform = $('.showPlat').is(':checked')
 }

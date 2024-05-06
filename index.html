@@ -148,6 +148,10 @@
             <label for="showplatform" class="lang lang-en">Show Platform</label>
             <label for="showplatform" class="lang lang-zh">顯示月台</label>
             <br>
+            <input id="routeheader" type="checkbox" class="translatable"></input>
+            <label for="routeheader" class="lang lang-en">Show route in header bar</label>
+            <label for="routeheader" class="lang lang-zh">顯示路線名稱</label>
+            <br>
             <br>
             <button class="tfs lang lang-en">Toggle Fullscreen</button>
             <button class="tfs lang lang-zh">切換全螢幕</button>
@@ -161,14 +165,15 @@
 
     <div class="main">
         <div id="titlebar">
-            <div id="titleOverlay">
-                <div class="weathers">
-                    <span class="weatherIcon"><noscript>Javascript is required for this page</noscript></span>
-                    <span class="weather notranslate"></span>
-                </div>
-                <div class="topbar-clock">
-                    <span class="clock"></span>
-                </div>
+            <div class="t1 weathers">
+                <span class="weatherIcon"><noscript>Javascript is required for this page</noscript></span>
+                <span class="weather notranslate"></span>
+            </div>
+            <div class="t1 topbar-clock">
+                <span class="clock"></span>
+            </div>
+            <div class="t2">
+                <span class="rtname">Kwun Tong Line</span>
             </div>
         </div>
 

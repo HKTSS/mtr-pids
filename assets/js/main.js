@@ -2,6 +2,7 @@
 
 import SETTINGS from './static/settings.js';
 import API from './api.js'
+import TITLEBAR from './titlebar.js'
 
 let arrivalVisibility = [true, true, true, true];
 let nextAdvTime;
@@ -78,9 +79,10 @@ function parseQuery() {
 function drawUI() {
     /* Draw focus back to the main window instead of the advertisement iframe */
     window.focus();
-    renderAdv();
-
+    
     $("body").css("--route-color", `#${SETTINGS.route.color}`);
+    renderAdv();
+    TITLEBAR.draw();
 
     let entryIndex = 0;
     $('#arrivalOverlay > tbody > tr').each(function (i) {
@@ -128,7 +130,7 @@ function drawUI() {
 
         let tableRow = "";
         const lrtElement = entry.route.isLRT ? `<span class="lrtrt" style="border-color:#${entry.route.color}">${entry.route.initials}</span>` : ""
-        const platformElement = SETTINGS.showPlatform ? `<td class="plat"><span class="platcircle">${entry.plat}</span></td>` : `<td class="plat"></td>`
+        const platformElement = SETTINGS.showPlatform ? `<td class="plat"><span class="platcircle rtcolor">${entry.plat}</span></td>` : `<td class="plat"></td>`
         const ETAElement = `<td class="eta scalable">${time} <span class="etamin">${switchLang(timetext)}</span></td>`
         const destElement = `<td class="destination scalable">${lrtElement}${stationName}</td>`
 
@@ -416,3 +418,5 @@ $(window).on('keydown', function(e) {
         drawUI()
     }
 })
+
+export default {switchLang: switchLang};

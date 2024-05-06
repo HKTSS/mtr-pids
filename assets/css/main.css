@@ -1,15 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400&family=Noto+Sans:wght@400;600&family=Noto+Serif+TC:wght@600;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+HK:wght@200..900&display=swap');
 :root {
-    --font-arrivals: "Myriad Pro", "Noto Sans", "Noto Serif TC";
+    --font-arrivals: "Myriad Pro", "Noto Sans", "Noto Serif HK";
     --font-platformcircle: "Myriad Pro", "Noto Sans";
     --font-size: 12vmin;
     --route-color: transparent;
     --font-weight: 600;
     --title-height: 13.7vh;
-    --platcircle-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
-    --title-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
-    --dest-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif TC';
-    --eta-family: "Myriad Pro", "Noto Sans", "Noto Serif TC";
+    --platcircle-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif HK';
+    --title-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif HK';
+    --dest-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif HK';
+    --eta-family: "Myriad Pro", "Noto Sans", "Noto Serif HK";
     --eta-width: 260px;
     --aqua: #c8ebfa;
 }
@@ -19,22 +19,16 @@
 }
 
 #titlebar {
+    display: flex;
+    justify-content: space-between;
     height: var(--title-height);
     background-color: #002b54;
-    width: 100%;
+    align-items: center;
     color: white;
     font-family: var(--title-family);
     font-weight: 600;
+    padding: 0 5.208%;
     font-size: 9.25vh;
-}
-
-#titleOverlay {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 5.208%;
-    padding-right: 5.208%;
-    height: var(--title-height);
 }
 
 .weathers {
@@ -128,7 +122,10 @@
     border-radius: 50%;
     font-size: 10vmin;
     color: #fff;
-    background-color: var(--route-color);
+}
+
+.rtcolor {
+    background-color: var(--route-color) !important;
 }
 
 #advertisement {

@@ -11,6 +11,7 @@ let settings = {
     specialMsgID: "NONE",
     showingSpecialMessage: false,
     uiPreset: null,
+    rtHeader: false,
     UILang: 'en'
 }
 
