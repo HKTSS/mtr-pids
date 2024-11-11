@@ -325,7 +325,10 @@ function renderPromo() {
     }
 
     if (SETTINGS.dpMode == DisplayMode.AD) {
+        $('#promo').addClass("promo-full");
         arrivalVisibility = [false, false, false, false];
+    } else {
+        $('#promo').removeClass("promo-full");
     }
 
     if (SETTINGS.showingSpecialMessage) {

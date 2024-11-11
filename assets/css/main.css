@@ -139,6 +139,10 @@
     background-color: #000000;
 }
 
+#promo.promo-full {
+    height: calc(100vh - var(--title-height));
+}
+
 #promo iframe {
     width: 100%;
     height: 100%;
