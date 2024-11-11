@@ -72,16 +72,12 @@ function saveConfig() {
         SETTINGS.stn = StationCodeList.get($('.station').val())
     } else {
         let customFontRatio = $('.fontRatioCustom').val()
-        let customRTColor = $('.rtColor').val()
+        let customRTColor = $('.rtColor').val().substring(1);
 
         if (!parseFloat(customFontRatio)) {
             customFontRatio = 1;
         } else {
             customFontRatio = parseFloat(customFontRatio)
-        }
-
-        if (!$('.rtColor').val()) {
-            customRTColor = '000000';
         }
 
         SETTINGS.route = new Route("CUSTOM", ETA_API.NONE, "Custom Route", customRTColor, false, false)
@@ -104,7 +100,7 @@ function saveConfig() {
             if (!platform) platform = 1;
             if (!timetilnexttrain) timetilnexttrain = 0;
 
-            customArrivalData.push(new ArrivalEntry(destination, timetilnexttrain, SETTINGS.route, platform, false, false));
+            customArrivalData.push(new ArrivalEntry(destination, timetilnexttrain, new Date(), SETTINGS.route, platform, false, false));
         }
 
         SETTINGS.customArrivalData = customArrivalData;
