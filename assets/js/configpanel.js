@@ -98,7 +98,7 @@ function saveConfig() {
             if (!platform) platform = 1;
             if (!timetilnexttrain) timetilnexttrain = 0;
 
-            customArrivalData.push(new ArrivalEntry(destination, timetilnexttrain, new Date(), SETTINGS.route, platform, false, false));
+            customArrivalData.push(new ArrivalEntry(destination, timetilnexttrain, new Date(Date.now() + (timetilnexttrain * 1000 * 60)), SETTINGS.route, platform, false, false));
         }
 
         SETTINGS.customArrivalData = customArrivalData;
