@@ -3,8 +3,6 @@
 import SETTINGS from './static/settings.js';
 import { updateData } from './main.js';
 
-let languageCycle = 0;
-
 function switchLang(str) {
     let targetLang = SETTINGS.UILang;
     if (targetLang == Lang.ENGLISH) {
@@ -44,8 +42,8 @@ function updateUILanguage(lang) {
         $(this).text(switchLang(DisplayMode[$(this).val()]))
     })
 
-    for (const adv of advData.special) {
-        $(`.specialMsg > option[value="${adv.id}"]`).text(`${switchLang(adv.name)}`);
+    for (const promo of promotionData.special) {
+        $(`.specialMsg > option[value="${promo.id}"]`).text(`${switchLang(promo.name)}`);
     }
 
     $('.direction > option').each(function() {
@@ -142,8 +140,8 @@ function setupUI() {
     }
 
     $('.specialMsg').empty();
-    for (const adv of advData.special) {
-        $('.specialMsg').append(`<option value="${adv.id}">${switchLang(adv.name)}`);
+    for (const promo of promotionData.special) {
+        $('.specialMsg').append(`<option value="${promo.id}">${switchLang(promo.name)}`);
     }
 
     /* Debug mode, also show the Config UI by default */

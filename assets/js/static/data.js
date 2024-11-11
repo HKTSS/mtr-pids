@@ -137,7 +137,7 @@ function getTramwaysStations() {
     return stnArray.map(e => `T${e[0]}`);
 }
 
-let advData = {
+let promotionData = {
     cycle: [{
             id: 0,
             framesrc: null,
@@ -145,33 +145,33 @@ let advData = {
         },
         {
             id: 1,
-            framesrc: './adv/paxLoad.html',
+            framesrc: './promo/paxLoad.html',
             duration: 10000,
             isPaxLoad: true
         },
         {
             id: 2,
-            framesrc: './adv/0.html',
+            framesrc: './promo/0.html',
             duration: 10000
         },
         {
             id: 3,
-            framesrc: './adv/1.html',
+            framesrc: './promo/1.html',
             duration: 10000
         },
         {
             id: 4,
-            framesrc: './adv/2.html',
+            framesrc: './promo/2.html',
             duration: 10000
         },
         {
             id: 5,
-            framesrc: './adv/3.html',
+            framesrc: './promo/3.html',
             duration: 10000
         },
         {
             id: 6,
-            framesrc: './adv/4.html',
+            framesrc: './promo/4.html',
             duration: 10000
         }
     ],
@@ -184,31 +184,31 @@ let advData = {
         {
             id: "STANDBACK_TRAIN",
             name: "請勿靠近車門|Stand back from the train doors",
-            framesrc: './adv/custom_msg.html',
+            framesrc: './promo/custom_msg.html',
             queryString: '?zh=請勿靠近車門&en=Please stand back from the train doors.'
         },
         {
             id: "STANDBACK_PSD",
             name: "請勿靠近幕門|Stand back from the platform doors",
-            framesrc: './adv/custom_msg.html',
+            framesrc: './promo/custom_msg.html',
             queryString: '?zh=請勿靠近幕門&en=Please stand back from the platform doors.'
         },
         {
             id: "STANDBACK_APG",
             name: "請勿靠近閘門|Stand back from the platform gates",
-            framesrc: './adv/custom_msg.html',
+            framesrc: './promo/custom_msg.html',
             queryString: '?zh=請勿靠近閘門&en=Please stand back from the platform gates.'
         },
         {
             id: "HUH_TML",
             name: "舊紅磡站西鐵月台|Old Hung Hom WRL Platform",
-            framesrc: './adv/HUH_TML.html',
+            framesrc: './promo/HUH_TML.html',
             queryString: ''
         },
         {
             id: "WELCOME_MTR",
             name: "歡迎乘搭港鐵|Welcome to the MTR",
-            framesrc: './adv/welcome.html',
+            framesrc: './promo/welcome.html',
             queryString: ''
         }
     ]

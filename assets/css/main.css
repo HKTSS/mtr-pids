@@ -129,7 +129,7 @@
     background-color: var(--route-color) !important;
 }
 
-#advertisement {
+#promo {
     position: absolute;
     z-index: 2;
     top: var(--title-height);
@@ -139,7 +139,7 @@
     background-color: #000000;
 }
 
-#advertisement iframe {
+#promo iframe {
     width: 100%;
     height: 100%;
 }

@@ -5,10 +5,10 @@ import API from './api.js'
 import TITLEBAR from './titlebar.js'
 
 let arrivalVisibility = [true, true, true, true];
-let nextAdvTime = 0;
+let nextPromoSwap = 0;
 let languageCycle = 0;
 let arrivalData = [];
-let currentAdvId = 0;
+let currentPromoScreen = 0;
 
 function switchLang(str) {
     let targetLang = languageCycle;
@@ -77,12 +77,12 @@ function parseQuery() {
 }
 
 function drawUI() {
-    /* Draw focus back to the main window instead of the advertisement iframe */
+    /* Draw focus back to the main window instead of the promotion iframe */
     window.focus();
     
     $("body").css("--route-color", `#${SETTINGS.route.color}`);
     TITLEBAR.draw();
-    renderAdv();
+    renderPromo();
     
 
     let entryIndex = 0;
@@ -266,61 +266,61 @@ function setDefaultConfig() {
     SETTINGS.showPlatform = $('.showPlat').is(':checked')
 }
 
-function cycleAdv() {
-    if (currentAdvId + 1 < advData.cycle.length) {
-        currentAdvId++
+function cyclePromo() {
+    if (currentPromoScreen + 1 < promotionData.cycle.length) {
+        currentPromoScreen++
     } else {
-        currentAdvId = 0;
+        currentPromoScreen = 0;
     }
-    let nextAdCycle = advData.cycle[currentAdvId]
-    nextAdvTime = Date.now() + nextAdCycle.duration;
+    let nextPromo = promotionData.cycle[currentPromoScreen]
+    nextPromoSwap = Date.now() + nextPromo.duration;
 }
 
-function renderAdv() {
-    let nextAdCycle = advData.cycle[currentAdvId];
-    let needRefresh = false;
-    if (Date.now() >= nextAdvTime) {
-        cycleAdv();
+function renderPromo() {
+    let nextPromoCycle = promotionData.cycle[currentPromoScreen];
+    let needRerender = false;
+    if (Date.now() >= nextPromoSwap) {
+        cyclePromo();
         cycleLanguage();
-        needRefresh = true;
+        needRerender = true;
     }
 
     if ((SETTINGS.dpMode == DisplayMode.NT4 || SETTINGS.dpMode == DisplayMode.NT4_CT) && !SETTINGS.showingSpecialMessage) {
         arrivalVisibility = [true, true, true, true];
-        $('#advertisement').hide();
+        $('#promo').hide();
         return;
     } else {
-        $('#advertisement').show();
+        $('#promo').show();
     }
 
-    if (nextAdCycle.isPaxLoad && !SETTINGS.route.hasPaxLoad) {
-        cycleAdv();
-        needRefresh = true;
+    if (nextPromoCycle.isPaxLoad && !SETTINGS.route.hasPaxLoad) {
+        cyclePromo();
+        needRerender = true;
     }
 
-    if (nextAdCycle.framesrc == null && (SETTINGS.dpMode == DisplayMode.AD || SETTINGS.dpMode == DisplayMode.ADNT1)) {
-        cycleAdv();
-        needRefresh = true;
+    if (nextPromoCycle.framesrc == null && (SETTINGS.dpMode == DisplayMode.AD || SETTINGS.dpMode == DisplayMode.ADNT1)) {
+        cyclePromo();
+        needRerender = true;
     }
 
     if (SETTINGS.showingSpecialMessage) {
-        nextAdCycle = advData.special.filter(e => e.id == SETTINGS.specialMsgID)[0];
+        nextPromoCycle = promotionData.special.filter(e => e.id == SETTINGS.specialMsgID)[0];
     }
 
-    for (const adv of advData.cycle) {
-        $(`.promo-${adv.id}`).hide()
+    for (const promo of promotionData.cycle) {
+        $(`.promo-${promo.id}`).hide()
     }
 
-    for (const adv of advData.special) {
-        $(`.promo-${adv.id}`).hide()
+    for (const promo of promotionData.special) {
+        $(`.promo-${promo.id}`).hide()
     }
 
-    if (nextAdCycle.framesrc == null && !SETTINGS.showingSpecialMessage) {
+    if (nextPromoCycle.framesrc == null && !SETTINGS.showingSpecialMessage) {
         arrivalVisibility = [true, true, true, true];
-        $('#advertisement').hide();
+        $('#promo').hide();
     } else {
-        $('#advertisement').show();
-        $(`.promo-${nextAdCycle.id}`).show();
+        $('#promo').show();
+        $(`.promo-${nextPromoCycle.id}`).show();
         arrivalVisibility = [false, false, false, true];
     }
 
@@ -329,22 +329,22 @@ function renderAdv() {
     }
 
     if (SETTINGS.showingSpecialMessage) {
-        let fullURL = nextAdCycle.framesrc + nextAdCycle.queryString;
-        let needRefreshAdv = false;
-        $('#advertisement').show();
-        if ($(`.promo-${nextAdCycle.id}`).length > 0) {
-            if (fullURL != $(`.promo-${nextAdCycle.id}`).attr("src")) {
-                needRefreshAdv = true;
+        let fullURL = nextPromoCycle.framesrc + nextPromoCycle.queryString;
+        let needRefreshPromoSrc = false;
+        $('#promo').show();
+        if ($(`.promo-${nextPromoCycle.id}`).length > 0) {
+            if (fullURL != $(`.promo-${nextPromoCycle.id}`).attr("src")) {
+                needRefreshPromoSrc = true;
             }
         }
 
-        if (needRefreshAdv) {
-            $(`.promo-${nextAdCycle.id}`).attr("src", fullURL);
-            $(`.promo-${nextAdCycle.id}`).show();
+        if (needRefreshPromoSrc) {
+            $(`.promo-${nextPromoCycle.id}`).attr("src", fullURL);
+            $(`.promo-${nextPromoCycle.id}`).show();
         }
     }
 
-    if (nextAdCycle.isPaxLoad) {
+    if (nextPromoCycle.isPaxLoad) {
         let paxArray = []
         if (arrivalData[0] ?.paxLoad ?.length > 1) {
             for (let pax of arrivalData[0].paxLoad) {
@@ -352,19 +352,19 @@ function renderAdv() {
             }
             let firstClassCar = arrivalData[0].firstClassCar ? arrivalData[0].firstClassCar : 0;
 
-            let curURL = $(`.promo-${nextAdCycle.id}`).attr("src");
-            let fullURL = `${nextAdCycle.framesrc}?data=${paxArray.join(",")}&firstClass=${firstClassCar}`
+            let curURL = $(`.promo-${nextPromoCycle.id}`).attr("src");
+            let fullURL = `${nextPromoCycle.framesrc}?data=${paxArray.join(",")}&firstClass=${firstClassCar}`
             if (curURL == fullURL) return;
 
-            $(`.promo-${nextAdCycle.id}`).attr("src", fullURL);
+            $(`.promo-${nextPromoCycle.id}`).attr("src", fullURL);
         } else {
-            cycleAdv();
-            needRefresh = true;
+            cyclePromo();
+            needRerender = true;
         }
     }
 
-    if(needRefresh) {
-        renderAdv();
+    if(needRerender) {
+        renderPromo();
         return;
     }
 }
@@ -397,11 +397,11 @@ $(document).ready(function() {
     setDefaultConfig();
     updateData(true);
 
-    $('#advertisement').empty();
-    for (const cate in advData) {
-        for (const adv of advData[cate]) {
-            if (adv.framesrc != null) {
-                $('#advertisement').append(`<iframe style="display:block" class="promo-${adv.id} centeredItem" src=${adv.framesrc}></iframe>`);
+    $('#promo').empty();
+    for (const cate in promotionData) {
+        for (const promo of promotionData[cate]) {
+            if (promo.framesrc != null) {
+                $('#promo').append(`<iframe style="display:block" class="promo-${promo.id} centeredItem" src=${promo.framesrc}></iframe>`);
             }
         }
     }
@@ -414,8 +414,8 @@ $(document).ready(function() {
 $(window).on('keydown', function(e) {
     /* G key */
     if (e.which == 71 && SETTINGS.debugMode) {
-        cycleAdv()
-        renderAdv()
+        cyclePromo()
+        renderPromo()
         drawUI()
     }
 })
