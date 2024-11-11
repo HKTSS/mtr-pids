@@ -5,7 +5,7 @@ import API from './api.js'
 import TITLEBAR from './titlebar.js'
 
 let arrivalVisibility = [true, true, true, true];
-let nextAdvTime;
+let nextAdvTime = 0;
 let languageCycle = 0;
 let arrivalData = [];
 let currentAdvId = 0;
@@ -276,16 +276,13 @@ function cycleAdv() {
     nextAdvTime = Date.now() + nextAdCycle.duration;
 }
 
-function renderAdv(firstLoad = false) {
-    if (firstLoad) {
-        nextAdvTime = Date.now();
-    }
-
+function renderAdv() {
     let nextAdCycle = advData.cycle[currentAdvId];
+    let needRefresh = false;
     if (Date.now() >= nextAdvTime) {
         cycleAdv();
         cycleLanguage();
-        renderAdv();
+        needRefresh = true;
     }
 
     if ((SETTINGS.dpMode == DisplayMode.NT4 || SETTINGS.dpMode == DisplayMode.NT4_CT) && !SETTINGS.showingSpecialMessage) {
@@ -298,12 +295,12 @@ function renderAdv(firstLoad = false) {
 
     if (nextAdCycle.isPaxLoad && !SETTINGS.route.hasPaxLoad) {
         cycleAdv();
-        renderAdv();
+        needRefresh = true;
     }
 
     if (nextAdCycle.framesrc == null && (SETTINGS.dpMode == DisplayMode.AD || SETTINGS.dpMode == DisplayMode.ADNT1)) {
         cycleAdv();
-        renderAdv();
+        needRefresh = true;
     }
 
     if (SETTINGS.showingSpecialMessage) {
@@ -333,29 +330,17 @@ function renderAdv(firstLoad = false) {
 
     if (SETTINGS.showingSpecialMessage) {
         let fullURL = nextAdCycle.framesrc + nextAdCycle.queryString;
-        let needRefresh = false;
-        $('#advertisement').show()
+        let needRefreshAdv = false;
+        $('#advertisement').show();
         if ($(`.promo-${nextAdCycle.id}`).length > 0) {
             if (fullURL != $(`.promo-${nextAdCycle.id}`).attr("src")) {
-                needRefresh = true;
+                needRefreshAdv = true;
             }
         }
 
-        if (needRefresh) {
+        if (needRefreshAdv) {
             $(`.promo-${nextAdCycle.id}`).attr("src", fullURL);
             $(`.promo-${nextAdCycle.id}`).show();
-        }
-        return;
-    }
-
-    if (firstLoad) {
-        $('#advertisement').empty();
-        for (const cate in advData) {
-            for (const adv of advData[cate]) {
-                if (adv.framesrc != null) {
-                    $('#advertisement').append(`<iframe style="display:block" class="promo-${adv.id} centeredItem" src=${adv.framesrc}></iframe>`);
-                }
-            }
         }
     }
 
@@ -374,8 +359,13 @@ function renderAdv(firstLoad = false) {
             $(`.promo-${nextAdCycle.id}`).attr("src", fullURL);
         } else {
             cycleAdv();
-            renderAdv();
+            needRefresh = true;
         }
+    }
+
+    if(needRefresh) {
+        renderAdv();
+        return;
     }
 }
 
@@ -405,10 +395,20 @@ function changeUIPreset() {
 $(document).ready(function() {
     parseQuery();
     setDefaultConfig();
-    renderAdv(true);
     updateData(true);
+
+    $('#advertisement').empty();
+    for (const cate in advData) {
+        for (const adv of advData[cate]) {
+            if (adv.framesrc != null) {
+                $('#advertisement').append(`<iframe style="display:block" class="promo-${adv.id} centeredItem" src=${adv.framesrc}></iframe>`);
+            }
+        }
+    }
+
     setInterval(updateData, 10 * 1000, false);
-    setInterval(drawUI, 1 * 1000);
+    setInterval(drawUI, 1 * 1000, true);
+    drawUI();
 })
 
 $(window).on('keydown', function(e) {
