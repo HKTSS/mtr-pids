@@ -176,18 +176,15 @@ async function fetchETAData() {
  
     if(api == ETA_API.MTR_LR) {
         return API.getLightRail(SETTINGS.route.initials, SETTINGS.stn.initials);
-    }
-
-    if (api == ETA_API.MTR_OPEN || api == ETA_API.MTR) {
+    } else if (api == ETA_API.MTR_OPEN || api == ETA_API.MTR) {
         return API.getMTRHeavyRail(api, SETTINGS.route.initials, SETTINGS.stn.initials, SETTINGS.direction);
-    }
-
-    if (api == ETA_API.METRO_RIDE) {
+    } else if (api == ETA_API.METRO_RIDE) {
         return API.getMetroRide(SETTINGS.route.initials, SETTINGS.stn.MRCode, SETTINGS.direction);
-    }
-
-    if(api == ETA_API.HKT) {
+    } else if(api == ETA_API.HKT) {
         return API.getHKTramways(SETTINGS.stn.initials, SETTINGS.direction);
+    } else {
+        console.warn("Unknown API!")
+        return null;
     }
 }
 
@@ -291,11 +288,6 @@ function renderPromo() {
         return;
     } else {
         $('#promo').show();
-    }
-
-    if (nextPromoCycle.isPaxLoad && !SETTINGS.route.hasPaxLoad) {
-        cyclePromo();
-        needRerender = true;
     }
 
     if (nextPromoCycle.framesrc == null && (SETTINGS.dpMode == DisplayMode.AD || SETTINGS.dpMode == DisplayMode.ADNT1)) {

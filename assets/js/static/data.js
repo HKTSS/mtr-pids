@@ -75,7 +75,7 @@ const ETA_API = {
     },
     MTR: {
         name: 'MTR',
-        url: "https://MTRData.kennymhhui.repl.co/mtr?line={rt}&sta={stn}"
+        url: "https://rp.lx86.workers.dev/mtr?line={rt}&sta={stn}"
     },
     MTR_OPEN: {
         name: "MTR Open Data",
@@ -105,16 +105,16 @@ const Lang = {
 }
 
 const RouteList = {
-    'TCL': new Route('TCL', ETA_API.MTR_OPEN, '東涌綫|Tung Chung Line', 'f7943e', false, false, ["TUC", "HOK"], ["HOK", "KOW", "OLY", "NAC", "LAK", "TSY", "SUN", "TUC"]),
-    'WRL': new Route('WRL', ETA_API.MTR_OPEN, '屯馬綫|Tuen Ma Line', '923011', false, true, ["TUM", "WKS"], ["TUM", "SIH", "TIS", "LOP", "YUL", "KSR", "TWW", "MEF", "NAC", "AUS", "ETS", "HUH", "HOM", "TKW", "SUW", "KAT", "DIH", "HIK", "TAW", "CKT", "STW", "CIO", "SHM", "TSH", "HEO", "MOS", "WKS"]),
-    'AEL': new Route('AEL', ETA_API.MTR_OPEN, '機場快綫|Airport Express', '00888a', false, false, ["AWE", "HOK"], ["HOK", "KOW", "TSY", "AIR", "AWE"]),
-    'EAL': new Route('EAL', ETA_API.MTR_OPEN, '東鐵綫|East Rail Line', '53b7e8', false, false, ["LOW", "ADM"], ["ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "RAC", "FOT", "UNI", "TAP", "TWO", "FAN", "SHS", "LOW", "LMC"]),
+    'TCL': new Route('TCL', ETA_API.MTR, '東涌綫|Tung Chung Line', 'f7943e', false, false, ["TUC", "HOK"], ["HOK", "KOW", "OLY", "NAC", "LAK", "TSY", "SUN", "TUC"]),
+    'TML': new Route('TML', ETA_API.MTR, '屯馬綫|Tuen Ma Line', '923011', false, true, ["TUM", "WKS"], ["TUM", "SIH", "TIS", "LOP", "YUL", "KSR", "TWW", "MEF", "NAC", "AUS", "ETS", "HUH", "HOM", "TKW", "SUW", "KAT", "DIH", "HIK", "TAW", "CKT", "STW", "CIO", "SHM", "TSH", "HEO", "MOS", "WKS"]),
+    'AEL': new Route('AEL', ETA_API.MTR, '機場快綫|Airport Express', '00888a', false, false, ["AWE", "HOK"], ["HOK", "KOW", "TSY", "AIR", "AWE"]),
+    'EAL': new Route('EAL', ETA_API.MTR, '東鐵綫|East Rail Line', '53b7e8', false, false, ["LOW", "ADM"], ["ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "RAC", "FOT", "UNI", "TAP", "TWO", "FAN", "SHS", "LOW", "LMC"]),
     'DRL': new Route('DRL', ETA_API.METRO_RIDE, '迪士尼綫|Disneyland Resorts Line', 'f173ac', false, false, ["SUN", "DIS"], ["SUN", "DIS"]),
-    'TKL': new Route('TKL', ETA_API.MTR_OPEN, '將軍澳綫|Tsueng Kwan O Line', '7d499d', false, false, ["POA", "NOP"], ["NOP", "QUB", "YAT", "TIK", "TKO", "LHP", "HAH", "POA"]),
-    'TWL': new Route('TWL', ETA_API.MTR_OPEN, '荃灣綫|Tsuen Wan Line', 'ff0000', false, false, ["TSW", "CEN"], ["CEN", "ADM", "TST", "JOR", "YMT", "MOK", "PRE", "SSP", "CSW", "LCK", "MEF", "LAK", "KWF", "KWH", "TWH", "TSW"]),
-    'KTL': new Route('KTL', ETA_API.MTR_OPEN, '觀塘綫|Kwun Tong Line', '1a9431', false, false, ["TIK", "WHA"], ["TIK", "YAT", "LAT", "KWT", "NTK", "KOB", "CHH", "DIH", "WTS", "LOF", "KOT", "SKM", "PRE", "MOK", "YMT", "HOM", "WHA"]),
-    'ISL': new Route('ISL', ETA_API.MTR_OPEN, '港島綫|Island Line', '007dc5', false, false, ["KET", "CHW"], ["KET", "HKU", "SYP", "SHW", "CEN", "ADM", "WAC", "CAB", "TIH", "FOH", "NOP", "QUB", "SWH", "SKW", "HFC", "CHW"]),
-    'SIL': new Route('SIL', ETA_API.MTR_OPEN, '南港島綫|South Island Line', 'bac429', false, false, ["SOH", "ADM"], ["ADM", "OCP", "WCH", "LET", "SOH"]),
+    'TKL': new Route('TKL', ETA_API.MTR, '將軍澳綫|Tsueng Kwan O Line', '7d499d', false, false, ["POA", "NOP"], ["NOP", "QUB", "YAT", "TIK", "TKO", "LHP", "HAH", "POA"]),
+    'TWL': new Route('TWL', ETA_API.MTR, '荃灣綫|Tsuen Wan Line', 'ff0000', false, false, ["TSW", "CEN"], ["CEN", "ADM", "TST", "JOR", "YMT", "MOK", "PRE", "SSP", "CSW", "LCK", "MEF", "LAK", "KWF", "KWH", "TWH", "TSW"]),
+    'KTL': new Route('KTL', ETA_API.MTR, '觀塘綫|Kwun Tong Line', '1a9431', false, false, ["TIK", "WHA"], ["TIK", "YAT", "LAT", "KWT", "NTK", "KOB", "CHH", "DIH", "WTS", "LOF", "KOT", "SKM", "PRE", "MOK", "YMT", "HOM", "WHA"]),
+    'ISL': new Route('ISL', ETA_API.MTR, '港島綫|Island Line', '007dc5', false, false, ["KET", "CHW"], ["KET", "HKU", "SYP", "SHW", "CEN", "ADM", "WAC", "CAB", "TIH", "FOH", "NOP", "QUB", "SWH", "SKW", "HFC", "CHW"]),
+    'SIL': new Route('SIL', ETA_API.MTR, '南港島綫|South Island Line', 'bac429', false, false, ["SOH", "ADM"], ["ADM", "OCP", "WCH", "LET", "SOH"]),
     'LRT': new Route('LRT', ETA_API.MTR_LR, '輕鐵|Light Rail', 'd3a809', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"]),
     'LR505': new Route('505', ETA_API.MTR_LR, '輕鐵 505|Light Rail 505', 'da2128', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
     'LR507': new Route('507', ETA_API.MTR_LR, '輕鐵 507|Light Rail 507', '00a650', true, false, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),

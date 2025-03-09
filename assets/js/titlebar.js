@@ -5,9 +5,9 @@ import SETTINGS from './static/settings.js';
 import MAIN from './main.js';
 
 function updateClock() {
-    let currDate = new Date();
-    let strMin = currDate.toLocaleTimeString('en-US', {minute: '2-digit', hour12: false, timeZone: 'Asia/Hong_Kong'}).padStart(2, '0');
-    let strHour = currDate.toLocaleTimeString('en-US', {hour: '2-digit', hour12: false, timeZone: 'Asia/Hong_Kong'}).padStart(2, '0');
+    let currDate = new Date(2024, 7, 7, 8, 7, 0);
+    let strMin = currDate.toLocaleTimeString('en-US', {hour: '2-digit', hour12: false, timeZone: 'Asia/Hong_Kong'});
+    let strHour = currDate.toLocaleTimeString('en-US', {hour: '2-digit', hour12: false, timeZone: 'Asia/Hong_Kong'});
     $('.clock').text(`${strHour}:${strMin}`);
 }
 
