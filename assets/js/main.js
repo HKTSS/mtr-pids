@@ -84,6 +84,11 @@ function drawUI() {
     TITLEBAR.draw();
     renderPromo();
     
+    if(arrivalData[0]?.paxLoad?.length == 1) {
+        $(".notice-paxload").css('visibility', 'visible');
+    } else {
+        $(".notice-paxload").css('visibility', 'hidden');
+    }
 
     let entryIndex = 0;
     $('#arrivalOverlay > tbody > tr').each(function (i) {
@@ -108,24 +113,16 @@ function drawUI() {
         let time = "";
 
         if (SETTINGS.dpMode == DisplayMode.NT4_CT) {
-            time = getETAtime(entry.time, false);
+            time = getETAtime(entry.time, entry.isDeparture);
         } else {
-            time = getETAmin(entry.ttnt, false);
+            time = getETAmin(entry.ttnt, entry.isDeparture);
 
-            if (entry.isDeparture == true) {
-                if (entry.ttnt == 0) {
-                    timetext = "正在離開|Departing";
-                } else {
-                    timetext = "分鐘|min";
-                }
+            if(entry.ttnt == 0) {
+                timetext = entry.isDeparture ? "正在離開|Departing" : "";
+            } else if(entry.ttnt == 1) {
+                timetext = entry.isDeparture ? "分鐘|min" : "即將抵達|Arriving";
             } else {
-                if (entry.ttnt == 0) {
-                    timetext = "";
-                } else if (entry.ttnt == 1) {
-                    timetext = "即將抵達|Arriving";
-                } else {
-                    timetext = "分鐘|min";
-                }
+                timetext = "分鐘|min";
             }
         }
 
@@ -401,7 +398,7 @@ $(document).ready(function() {
         }
     }
 
-    setInterval(updateData, 10 * 1000, false);
+    setInterval(updateData, 15 * 1000, false);
     setInterval(drawUI, 1 * 1000, true);
     drawUI();
 })

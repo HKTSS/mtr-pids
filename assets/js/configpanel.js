@@ -162,11 +162,6 @@ function updateStationList() {
     SETTINGS.stn = StationCodeList.get(SETTINGS.route.stations[0]);
 }
 
-function error(text) {
-    $('#error').show();
-    $('#error').text(text);
-}
-
 function registerUIControlEvent() {
     $('.onlineMode').on('change', function() {
         SETTINGS.onlineMode = $(this).is(':checked')

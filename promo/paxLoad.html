@@ -14,49 +14,75 @@
 
 <body style="overflow: hidden;background-color: white">
     <div id="content">
-        <h1 class="header-zh">你可前往有較多空間的車廂</h1>
-        <h1 class="header-en">Please move to Cars with more space</h1>
-        <div id="pax">
-            <table>
-                <tr class="paxIcon">
-                </tr>
-            </table>
-
-            <table>
-                <tr class="paxIcon hidden">
-                </tr>
-                <tr id="carNum">
-                </tr>
-            </table>
+        <div>
+            <h1 class="header-zh">你可前往有較多空間的車廂</h1>
+            <h1 class="header-en">Please move to Cars with more space</h1>
+            <div id="pax"></div>
         </div>
     </div>
 </body>
 
 <style>
-    body {
+    html, body {
         text-align: center;
         font-family: "Myriad Pro Semibold", "Myriad Pro", "Noto Sans", "Noto Serif TC";
         font-weight: 600;
         color: #1A2B42;
+        width: 100%;
+        height: 100%;
     }
     
     #pax {
-        display: grid;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 30px;
-        table-layout: fixed;
-        width: 95%;
+        overflow: hidden;
+        margin: auto;
+        margin-top: calc(1vw + 1vh);
+        display: flex;
+        width: fit-content;
         max-width: 95%;
+        gap: 0.75rem;
+    }
+
+    .pax-child {
+        flex: 1;
+        flex-shrink: 0;
+        min-width: 0;
+    }
+
+    .pax-child.head {
+        flex: 1.25;
+    }
+
+    .pax-child p {
+        font-size: calc(calc(1vw + 1vh) * 5);
+        margin-top: 2rem;
+        padding: 0;
+        width: 100%;
+        text-wrap: nowrap;
+    }
+
+    .pax-child .firstclass-zh {
+        margin: 0;
+        margin-top: 1rem;
+        text-align: center;
+        font-size: calc(calc(1vw + 1vh) * 2.6);
+        font-weight: 500;
+        font-family: "Noto Sans HK", "Noto Sans TC", sans-serif;
+    }
+
+    .pax-child .firstclass-en {
+        margin: 0;
+        text-align: center;
+        font-size: calc(calc(1vw + 1vh) * 1.25);
+        letter-spacing: 1px;
     }
 
     #content {
-        position: absolute;
-        display: table;
-        margin: auto;
-        top: 50%;
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
     
     .header-zh {
@@ -79,12 +105,12 @@
     }
     
     .scalable {
-        width: 95%;
+        width: 100%;
         display: block;
     }
     
     .firstclass {
-        font-family: "Myriad Pro", "Noto Sans", "Noto Sans TC";
+        font-family: "Myriad Pro", "Noto Sans", "Noto Serif TC";
         font-size: 2.6vw;
         width: 2.6vw;
         white-space: nowrap;
@@ -92,7 +118,7 @@
     }
     
     #carNum {
-        font-size: calc((1vw + 1vh) * 4.5)
+        font-size: 750%;
     }
     
     .hidden {

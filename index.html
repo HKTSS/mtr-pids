@@ -40,9 +40,29 @@
     <div class="config">
         <div class="configBox">
             <div id="error" style="display: none"></div>
-            <span class="title lang lang-en">RV PIDS Config</span>
-            <span class="title lang lang-zh">願景資訊顯示屏模擬器</span>
-            <button id="langchoose">EN</button>
+            <div class="title-div">
+                <span class="title lang lang-en">PIDS Config</span>
+                <span class="title lang lang-zh">願景資訊顯示屏模擬器</span>
+                <div>
+                    <button id="langchoose">EN</button>
+                </div>
+            </div>
+            <div class="banner">
+                <div class="notice-box notice lang lang-en">
+                    <h1>Note</h1>
+                    <p>The font 'Myriad Pro' as used in real-life is not shipped<br>with this site.<br>If you wish to use the font, please obtain your own copy<br> of the font and install it on your system.</p>
+                </div>
+                <div class="notice-box notice lang lang-zh">
+                    <h1>注意</h1>
+                    <p>本網頁不會提供港鐵顯示屏使用的 'Myriad Pro' 字體。<br>如需要顯示該字體，請安裝有關字體在你的系統上。</p>
+                </div>
+                <div class="notice-box live notice-paxload lang lang-en">
+                    <p>Passenger load for the next train is being updated...</p>
+                </div>
+                <div class="notice-box live notice-paxload lang lang-zh">
+                    <p>下一班列車的載客量資訊正在更新中...</p>
+                </div>
+            </div>
             <div class="online">
                 <h1 class="secHeader lang lang-en">Lines</h1>
                 <h1 class="secHeader lang lang-zh">路線</h1>
@@ -52,7 +72,6 @@
                     <option value="TKL">將軍澳綫 Tsueng Kwan O Line</option>
                     <option value="AEL">機場快綫 Airport Express</option>
                     <option value="EAL">東鐵綫 East Rail Line</option>
-                    <option value="DRL">迪士尼綫 Disneyland Resort Line</option>
                     <option value="LRT">輕鐵 Light Rail</option>
                 </select>
 
@@ -153,13 +172,12 @@
             <label for="routeheader" class="lang lang-en">Show route in header bar</label>
             <label for="routeheader" class="lang lang-zh">顯示路線名稱</label>
             <br>
-            <br>
             <button class="tfs lang lang-en">Toggle Fullscreen</button>
             <button class="tfs lang lang-zh">切換全螢幕</button>
             <br>
             <button class="saveCfg lang lang-en">Save & Close this page</button>
             <button class="saveCfg lang lang-zh">套用設定及關閉此頁面</button>
-            <a href="https://www.facebook.com/HKTransportSimulationStudio" class="footer">HKTSS 2023</a>
+            <a href="https://hktss.github.io" class="footer">HKTSS 2025</a>
             <br>
         </div>
     </div>

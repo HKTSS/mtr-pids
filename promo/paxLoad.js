@@ -26,20 +26,20 @@ function updateData() {
     if (paxData.length == 0) return;
     let paxLoadEntry = paxData.split(",");
 
-    $('.paxIcon').empty()
-    $('#carNum').empty()
+    // $("#pax").empty();
 
     let car = 1;
     for (paxLoad of paxLoadEntry) {
+        let elem;
         if (car == 1) {
-            $('.paxIcon').append(`<td class="head"><img class="scalable" src="./Pax${paxLoad}H.png"></td>`)
+            elem = $(`<div class="pax-child head"><img class="scalable" src="./Pax${paxLoad}H.png"></div>`);
         } else {
-            $('.paxIcon').append(`<td><img class="scalable" src="./Pax${paxLoad}.png"></td>`)
+            elem = $(`<div class="pax-child"><img class="scalable" src="./Pax${paxLoad}.png"></div>`);
         }
-
-        let carElement = car == firstClassCar ? `<td class="firstclass">頭等<br>First Class</td>` : `<td>${car}</td>`
-        $('#carNum').append(carElement)
-        car++
+        let carElement = car == firstClassCar ? `<p class="firstclass-zh">頭等</p><p class="firstclass-en">First Class</p>` : `<p>${car}</p>`;
+        elem.append(carElement);
+        $('#pax').append(elem);
+        car++;
     }
 }
 

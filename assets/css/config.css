@@ -1,5 +1,5 @@
 :root {
-    --config-fonts: 'system-ui', 'Noto Sans HK'
+    --config-fonts: 'sans-serif', 'Noto Sans HK', 'Noto Sans TC'
 }
 
 .config {
@@ -13,10 +13,45 @@
     display: none;
     color: white;
     backdrop-filter: blur(6px);
+    font-family: var(--config-fonts) !important;
 }
 
 .config * {
     margin: 5px;
+}
+
+.notice-box {
+    padding: 0.4rem;
+    border-radius: 0.25rem;
+}
+
+.notice-box.notice {
+    background-color: rgba(100, 150, 255, 0.25);
+    border-left: 0.35rem solid rgb(100, 150, 255);
+}
+
+.notice-box.live {
+    background-color: rgba(253, 171, 77, 0.25);
+    border-left: 0.35rem solid rgb(253, 171, 77);
+}
+
+.title-div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 3.25rem;
+    margin: 1rem 0.5rem;
+}
+
+.notice-box h1 {
+    font-weight: 600;
+}
+
+.notice-box p {
+    font-size: 0.95rem;
+}
+
+.notice-paxload {
+    visibility: hidden;
 }
 
 .configBox {
@@ -28,39 +63,31 @@
     background-color: #f0f2f6;
     color: black;
     overflow-y: auto;
-    font-family: var(--config-fonts);
+    
     font-size: 18px;
+}
+
+select, button {
+    font-size: 1rem;
+    border-radius: 5px;
+    font-family: inherit;
+    border: 1px solid #aaa;
+    cursor: pointer;
 }
 
 .config select {
-    border: 0;
-    background-color: #e4e4e4;
+    background-color: #eaeaea;
     padding: 5px 10px 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    font-family: 'Roboto', 'Noto Sans HK', sans-serif;
 }
 
 .config button {
-    border: 1px solid #ccc;
     background-color: white;
-    border-radius: 5px;
-    font-family: var(--config-fonts);
-    font-size: 18px;
-    padding: 3px 15px 3px 15px;
+    padding: 5px 15px 5px 15px;
     transition: background-color 0.1s;
 }
 
 .config button:hover {
     background-color: rgba(0, 0, 0, 0.05);
-}
-
-.title {
-    display: inline-block;
-    padding: .25em .25em .25em .25em;
-    text-align: center;
-    font-size: 3em;
 }
 
 #langchoose {
@@ -76,9 +103,9 @@
 }
 
 .secHeader {
-    font-size: 36px;
+    font-size: 2rem;
     font-weight: 500;
-    margin-top: 20px;
+    margin-top: 0.75rem;
 }
 
 .footer {
