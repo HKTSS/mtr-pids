@@ -38,7 +38,7 @@
         margin-top: calc(1vw + 1vh);
         display: flex;
         width: fit-content;
-        max-width: 95%;
+        max-width: min(calc(calc(1vh) * 230), 95%);
         gap: 0.75rem;
     }
 
@@ -84,13 +84,18 @@
         align-items: center;
         flex-direction: column;
     }
+
+    #content > div {
+        width: 100%;
+        height: 100%;
+    }
     
     .header-zh {
-        font-size: calc((1vw + 1vh) * 4.5);
+        font-size: calc((1vw + 1vh) * 4.3);
     }
     
     .header-en {
-        font-size: calc((1vw + 1vh) * 3.4);
+        font-size: calc((1vw + 1vh) * 3.3);
     }
     
     .header-zh,
