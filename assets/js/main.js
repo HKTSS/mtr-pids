@@ -170,19 +170,8 @@ function cycleLanguage() {
 async function fetchETAData() {
     let api = SETTINGS.route.api;
     if (SETTINGS.configOpened || api == ETA_API.NONE || SETTINGS.dpMode == DisplayMode.AD) return;
- 
-    if(api == ETA_API.MTR_LR) {
-        return API.getLightRail(SETTINGS.route.initials, SETTINGS.stn.initials);
-    } else if (api == ETA_API.MTR_OPEN || api == ETA_API.MTR) {
-        return API.getMTRHeavyRail(api, SETTINGS.route.initials, SETTINGS.stn.initials, SETTINGS.direction);
-    } else if (api == ETA_API.METRO_RIDE) {
-        return API.getMetroRide(SETTINGS.route.initials, SETTINGS.stn.MRCode, SETTINGS.direction);
-    } else if(api == ETA_API.HKT) {
-        return API.getHKTramways(SETTINGS.stn.initials, SETTINGS.direction);
-    } else {
-        console.warn("Unknown API!")
-        return null;
-    }
+
+    return API.fetchData(api, SETTINGS.route.initials, SETTINGS.stn.initials, SETTINGS.direction);
 }
 
 export async function updateData(forced) {

@@ -1,124 +1,46 @@
 /* This class is responsible for fetching the ETA Information via the respective API */
 
-async function getMetroRide(route, MRCode, direction) {
-    let finalArray = [];
-
-    if (direction == "BOTH") {
-        const response1 = await fetch(`https://MTRData.kennymhhui.repl.co/metroride?line=${route}&sta=${MRCode}&dir=UP`)
-        const response2 = await fetch(`https://MTRData.kennymhhui.repl.co/metroride?line=${route}&sta=${MRCode}&dir=DOWN`)
-        const data1 = await response1.json()
-        const data2 = await response2.json()
-
-        for (const entry of data1.eta) {
-            let station = null;
-            for (stn of StationCodeList.values()) {
-                if (stn.MRCode == entry.destination) {
-                    station = stn;
-                    break;
-                }
-            }
-            if (station == null) return [];
-            
-            let time = new Date(new Date().getTime() + (entry.ttnt * 60 * 1000));
-            let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, time, RouteList[route], entry.platform, false);
-            finalArray.push(convertedEntry)
-        }
-
-        for (const entry of data2.eta) {
-            let station = null;
-            for (stn of StationCodeList.values()) {
-                if (stn.MRCode == entry.destination) {
-                    station = stn;
-                    break;
-                }
-            }
-            if (station == null) return [];
-            
-            let time = new Date(new Date().getTime() + (entry.ttnt * 60 * 1000));
-            let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, time, RouteList[route], entry.platform, false, false, null, 0, "");
-            finalArray.push(convertedEntry)
-        }
-
-        finalArray.sort((a, b) => a.ttnt - b.ttnt)
-        return finalArray;
-    }
-
-    const response = await fetch(getAPIURL(ETA_API.METRO_RIDE, route, MRCode, direction));
-    const data = await response.json()
-
-    for (const entry of data.eta) {
-        let station = null;
-        for (const stn of StationCodeList.values()) {
-            if (stn.MRCode == entry.destination) {
-                station = stn;
-                break;
-            }
-        }
-        if (station == null) return [];
-        
-        let time = new Date(new Date().getTime() + (entry.ttnt * 60 * 1000));
-        let convertedEntry = new ArrivalEntry(station.name, entry.ttnt, time, RouteList[route], entry.platform, false)
-        finalArray.push(convertedEntry)
-    }
-    return finalArray;
-}
-
-async function getLightRail(route, stn) {
-    const response = await fetch(getAPIURL(ETA_API.MTR_LR, route, stn, null));
-        if (!response.ok) {
-            // error(`Cannot fetch arrival data (${response.status}).`)
-            return [];
-        }
-
-        const data = await response.json();
-
-        if (data.status == 0) {
-            // error(`No ETA Available:\n${data.message}`)
-            return [];
-        }
-
-        let finalArray = [];
-        for (const platform of data.platform_list) {
-            let currentPlatform = platform.platform_id
-            let isDeparture = false;
-            if (platform.end_service_status == 1) continue;
-
-            for (const entry of platform.route_list) {
-                /* Replace to only numbers, e.g. 2 min -> 2 */
-                let ttnt = entry.time_en.replace(/[^0-9.]/g, '');
-                if (!parseInt(ttnt)) {
-                    if (entry.time_en == "-") ttnt = 0;
-                    if (entry.time_en == "Arriving") ttnt = 1;
-                    if (entry.time_en == "Departing") isDeparture = true;
-                }
-                
-                let time = new Date(new Date().getTime() + (ttnt * 60 * 1000));
-                let convertedEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttnt, time, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "")
-                finalArray.push(convertedEntry)
-            }
-            finalArray.sort((a, b) => a.ttnt - b.ttnt)
-        }
-        return finalArray;
-}
-
-async function getMTRHeavyRail(api, route, stn, direction) {
-    const response = await fetch(getAPIURL(api, route, stn, null));
-    if (!response.ok) {
-        // error(`Cannot fetch arrival data (${response.status}).`)
+async function processLightRailData(data) {
+    if (data.status == 0) {
+        console.error(`No ETA Available: ${data.message}`)
         return [];
     }
 
-    const data = await response.json();
+    let finalData = [];
+    for (const platform of data.platform_list) {
+        let currentPlatform = platform.platform_id
+        let isDeparture = false;
+        if (platform.end_service_status == 1) continue;
 
+        for (const entry of platform.route_list) {
+            /* Replace to only numbers, e.g. 2 min -> 2 */
+            const ttnt = entry.time_en.replace(/[^0-9.]/g, '');
+            let ttntNum = parseInt(ttnt);
+            if (isNaN(ttntNum)) {
+                if (entry.time_en == "-") ttntNum = 0;
+                if (entry.time_en == "Arriving" || entry.time_en == "Departing") ttntNum = 1;
+                if (entry.time_en == "Departing") isDeparture = true;
+            }
+            
+            let time = new Date(new Date().getTime() + (ttntNum * 60 * 1000));
+            let arrivalEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttntNum, time, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "");
+            finalData.push(arrivalEntry);
+        }
+        finalData.sort((a, b) => a.ttnt - b.ttnt)
+    }
+    return finalData;
+}
+
+async function processHeavyRailData(data, route, stn, direction) {
     if (data.status == 0) {
-        // error(`No ETA Available:\n${data.message}`)
+        console.error(`No ETA Available: ${data.message}`)
         return [];
     }
 
     const routeAndStation = `${route}-${stn}`
 
     let tempArray = [];
-    let finalArray = [];
+    let finalData = [];
     let arrUP, arrDN;
     
     if (direction == 'BOTH') {
@@ -178,39 +100,50 @@ async function getMTRHeavyRail(api, route, stn, direction) {
             }
         }
 
-        let convertedEntry = new ArrivalEntry(destName, ttnt, arrTime, routeData, entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass, entry.route, false);
-        finalArray.push(convertedEntry);
+        let arrivalEntry = new ArrivalEntry(destName, ttnt, arrTime, routeData, entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass, entry.route, false);
+        finalData.push(arrivalEntry);
     }
 
-    // $('#error').hide()
-    return finalArray;
+    return finalData;
 }
 
-async function getHKTramways(stn) {
-    const trimmedStn = stn.substring(1);
-    const fetchURL = getAPIURL(ETA_API.HKT, null, trimmedStn, null);
-	const response = await fetch(fetchURL);
-    const data = await response.text();
-
-    const parser = new DOMParser();
-    const ETAData = parser.parseFromString(data, "text/xml");
-    const entries = ETAData.getElementsByTagName("metadata");
-
-    let finalArray = [];
-    for(const entry of entries) {
-        let tramId = entry.getAttribute("tram_id");
-        let isArrived = entry.getAttribute("is_arrived") == "1";
-        let minArrival = parseInt(entry.getAttribute("arrive_in_minute"));
-        let ttnt = isArrived ? 0 : Math.max(1, minArrival);
-        let destName = `${entry.getAttribute("tram_dest_tc")}|${entry.getAttribute("tram_dest_en")}`;
-
-        finalArray.push(new ArrivalEntry(destName, ttnt, RouteList.HKT, 1, false));
+async function fetchData(api, route, stn, direction) {
+    if(api != ETA_API.MTR_LR && api != ETA_API.MTR_OPEN) {
+        console.warn("Unknown API: " + api)
+        return null;
     }
-    return finalArray;
+
+    let data = null;
+    for(let url of api.urls) {
+        let transformedURL = transformURL(url, route, stn, null);
+        try {
+            const response = await fetch(transformedURL);
+            if (!response.ok) {
+                console.warn(`Cannot fetch from URL:\n${transformedURL}\n(${response.status}).`);
+                continue;
+            }
+            data = await response.json();
+            break;
+        } catch {
+            console.warn(`Cannot fetch from URL:\n${transformedURL}.`);
+            continue;
+        }
+    }
+
+    if(data == null) {
+        console.error(`Failed to fetch any ETAs from ${api.name}!.`);
+        return [];
+    }
+
+    if(api == ETA_API.MTR_LR) {
+        return processLightRailData(data);
+    } else if(api == ETA_API.MTR_OPEN) {
+        return processHeavyRailData(data, route, stn, direction);
+    }
 }
 
-function getAPIURL(api, rt, stn, dir) {
-    return api.url.replace("{rt}", rt).replace("{stn}", stn).replace("{dir}", dir);
+function transformURL(url, rt, stn, dir) {
+    return url.replace("{rt}", rt).replace("{stn}", stn).replace("{dir}", dir);
 }
 
-export default { getHKTramways, getLightRail, getMetroRide, getMTRHeavyRail };
+export default { fetchData };

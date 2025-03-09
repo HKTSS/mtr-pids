@@ -1,6 +1,5 @@
 # MTR Railway Vision PIDS Simulator
-This is an attempt at recreating the Hong Kong Railway Vision PIDS.  
-Note: A new Railway Vision PIDS Simulator written from scratch is planned, this project is now in maintenance mode.
+This is an attempt at recreating the Hong Kong Railway Vision PIDS.
 
 ## Fonts
 By default, DFLiSong-Md (Chinese) and Myriad Pro (English) will always be preferred if installed on user computer.  

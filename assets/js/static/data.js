@@ -65,23 +65,20 @@ class Station {
 const ETA_API = {
     NONE: {
         name: "None",
-        url: ""
-    },
-    MTR: {
-        name: 'MTR',
-        url: "https://rp.lx86.workers.dev/mtr?line={rt}&sta={stn}"
+        urls: ""
     },
     MTR_OPEN: {
         name: "MTR Open Data",
-        url: "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line={rt}&sta={stn}"
+        urls: [
+            "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line={rt}&sta={stn}",
+            "https://rp.lx86.workers.dev/mtr?line={rt}&sta={stn}" // Fallback cf worker reverse proxy in-case of CORS misconfiguration. Consider spinning up your own instance if you chose to fork.
+        ]
     },
     MTR_LR: {
         name: "MTR Light Rail Data",
-        url: "https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id={stn}"
-    },
-    HKT: {
-        name: "Hong Kong Tramways",
-        url: "https://mtrdata.kennymhhui.repl.co/tw?sta={stn}"
+        urls: [
+            "https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id={stn}"
+        ]
     }
 }
 
@@ -99,15 +96,15 @@ const Lang = {
 }
 
 const RouteList = {
-    'TCL': new Route('TCL', ETA_API.MTR, '東涌綫|Tung Chung Line', 'f7943e', false, ["TUC", "HOK"], ["HOK", "KOW", "OLY", "NAC", "LAK", "TSY", "SUN", "TUC"]),
-    'TML': new Route('TML', ETA_API.MTR, '屯馬綫|Tuen Ma Line', '923011', false, ["TUM", "WKS"], ["TUM", "SIH", "TIS", "LOP", "YUL", "KSR", "TWW", "MEF", "NAC", "AUS", "ETS", "HUH", "HOM", "TKW", "SUW", "KAT", "DIH", "HIK", "TAW", "CKT", "STW", "CIO", "SHM", "TSH", "HEO", "MOS", "WKS"]),
-    'AEL': new Route('AEL', ETA_API.MTR, '機場快綫|Airport Express', '00888a', false, ["AWE", "HOK"], ["HOK", "KOW", "TSY", "AIR", "AWE"]),
-    'EAL': new Route('EAL', ETA_API.MTR, '東鐵綫|East Rail Line', '53b7e8', false, ["LOW", "ADM"], ["ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "RAC", "FOT", "UNI", "TAP", "TWO", "FAN", "SHS", "LOW", "LMC"]),
-    'TKL': new Route('TKL', ETA_API.MTR, '將軍澳綫|Tsueng Kwan O Line', '7d499d', false, ["POA", "NOP"], ["NOP", "QUB", "YAT", "TIK", "TKO", "LHP", "HAH", "POA"]),
-    'TWL': new Route('TWL', ETA_API.MTR, '荃灣綫|Tsuen Wan Line', 'ff0000', false, ["TSW", "CEN"], ["CEN", "ADM", "TST", "JOR", "YMT", "MOK", "PRE", "SSP", "CSW", "LCK", "MEF", "LAK", "KWF", "KWH", "TWH", "TSW"]),
-    'KTL': new Route('KTL', ETA_API.MTR, '觀塘綫|Kwun Tong Line', '1a9431', false, ["TIK", "WHA"], ["TIK", "YAT", "LAT", "KWT", "NTK", "KOB", "CHH", "DIH", "WTS", "LOF", "KOT", "SKM", "PRE", "MOK", "YMT", "HOM", "WHA"]),
-    'ISL': new Route('ISL', ETA_API.MTR, '港島綫|Island Line', '007dc5', false, ["KET", "CHW"], ["KET", "HKU", "SYP", "SHW", "CEN", "ADM", "WAC", "CAB", "TIH", "FOH", "NOP", "QUB", "SWH", "SKW", "HFC", "CHW"]),
-    'SIL': new Route('SIL', ETA_API.MTR, '南港島綫|South Island Line', 'bac429', false, ["SOH", "ADM"], ["ADM", "OCP", "WCH", "LET", "SOH"]),
+    'TCL': new Route('TCL', ETA_API.MTR_OPEN, '東涌綫|Tung Chung Line', 'f7943e', false, ["TUC", "HOK"], ["HOK", "KOW", "OLY", "NAC", "LAK", "TSY", "SUN", "TUC"]),
+    'TML': new Route('TML', ETA_API.MTR_OPEN, '屯馬綫|Tuen Ma Line', '923011', false, ["TUM", "WKS"], ["TUM", "SIH", "TIS", "LOP", "YUL", "KSR", "TWW", "MEF", "NAC", "AUS", "ETS", "HUH", "HOM", "TKW", "SUW", "KAT", "DIH", "HIK", "TAW", "CKT", "STW", "CIO", "SHM", "TSH", "HEO", "MOS", "WKS"]),
+    'AEL': new Route('AEL', ETA_API.MTR_OPEN, '機場快綫|Airport Express', '00888a', false, ["AWE", "HOK"], ["HOK", "KOW", "TSY", "AIR", "AWE"]),
+    'EAL': new Route('EAL', ETA_API.MTR_OPEN, '東鐵綫|East Rail Line', '53b7e8', false, ["LOW", "ADM"], ["ADM", "EXC", "HUH", "MKK", "KOT", "TAW", "SHT", "RAC", "FOT", "UNI", "TAP", "TWO", "FAN", "SHS", "LOW", "LMC"]),
+    'TKL': new Route('TKL', ETA_API.MTR_OPEN, '將軍澳綫|Tsueng Kwan O Line', '7d499d', false, ["POA", "NOP"], ["NOP", "QUB", "YAT", "TIK", "TKO", "LHP", "HAH", "POA"]),
+    'TWL': new Route('TWL', ETA_API.MTR_OPEN, '荃灣綫|Tsuen Wan Line', 'ff0000', false, ["TSW", "CEN"], ["CEN", "ADM", "TST", "JOR", "YMT", "MOK", "PRE", "SSP", "CSW", "LCK", "MEF", "LAK", "KWF", "KWH", "TWH", "TSW"]),
+    'KTL': new Route('KTL', ETA_API.MTR_OPEN, '觀塘綫|Kwun Tong Line', '1a9431', false, ["TIK", "WHA"], ["TIK", "YAT", "LAT", "KWT", "NTK", "KOB", "CHH", "DIH", "WTS", "LOF", "KOT", "SKM", "PRE", "MOK", "YMT", "HOM", "WHA"]),
+    'ISL': new Route('ISL', ETA_API.MTR_OPEN, '港島綫|Island Line', '007dc5', false, ["KET", "CHW"], ["KET", "HKU", "SYP", "SHW", "CEN", "ADM", "WAC", "CAB", "TIH", "FOH", "NOP", "QUB", "SWH", "SKW", "HFC", "CHW"]),
+    'SIL': new Route('SIL', ETA_API.MTR_OPEN, '南港島綫|South Island Line', 'bac429', false, ["SOH", "ADM"], ["ADM", "OCP", "WCH", "LET", "SOH"]),
     'LRT': new Route('LRT', ETA_API.MTR_LR, '輕鐵|Light Rail', 'd3a809', true, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"]),
     'LR505': new Route('505', ETA_API.MTR_LR, '輕鐵 505|Light Rail 505', 'da2128', true, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
     'LR507': new Route('507', ETA_API.MTR_LR, '輕鐵 507|Light Rail 507', '00a650', true, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
@@ -120,14 +117,7 @@ const RouteList = {
     'LR706': new Route('706', ETA_API.MTR_LR, '輕鐵 706|Light Rail 706', 'B27AB4', true, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
     'LR751': new Route('751', ETA_API.MTR_LR, '輕鐵 751|Light Rail 751', 'f5821f', true, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
     'LR751P': new Route('751P', ETA_API.MTR_LR, '輕鐵 751P|Light Rail 751P', '000000', true, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
-    'LR761P': new Route('761P', ETA_API.MTR_LR, '輕鐵 761P|Light Rail 761P', '6f2b91', true, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true),
-    // 'HKT': new Route('HKT', ETA_API.HKT, '香港電車|HK Tramways', '007549', false, false, ["HKTE", "HKTW"], getTramwaysStations()),
-    // Tramways ETA is pretty much dead (As in the ETA doesn't move) 
-}
-
-function getTramwaysStations() {
-    let stnArray = Array.from(nextTramStopsW.values());
-    return stnArray.map(e => `T${e[0]}`);
+    'LR761P': new Route('761P', ETA_API.MTR_LR, '輕鐵 761P|Light Rail 761P', '6f2b91', true, [], ["1", "10", "15", "20", "30", "40", "50", "60", "70", "75", "80", "90", "100", "110", "120", "130", "140", "150", "160", "170", "180", "190", "200", "212", "220", "230", "240", "250", "260", "265", "270", "275", "280", "295", "300", "310", "320", "330", "340", "350", "360", "370", "380", "390", "400", "425", "430", "435", "445", "448", "450", "455", "460", "468", "480", "490", "500", "510", "520", "530", "540", "550", "560", "570", "580", "590", "600", "920"], true)
 }
 
 let promotionData = {
@@ -517,16 +507,5 @@ const StationCodeList = new Map([
     ["580", new Station("580", "康樂路|Hong Lok Road", 1580, [1, 2], false)],
     ["590", new Station("590", "大棠路|Tai Tong Road", 1590, [1, 2], false)],
     ["600", new Station("600", "元朗|Yuen Long", 1660, [2, 3, 4, 5], false)],
-    ["920", new Station("920", "三聖|Sam Shing", 1920, [1, 3], false)],
-    ["HKTE", new Station("HKTE", "東行|East Bound", 0, [], false)],
-    ["HKTW", new Station("HKTW", "西行|West Bound", 0, [], false)]
+    ["920", new Station("920", "三聖|Sam Shing", 1920, [1, 3], false)]
 ]);
-
-/* Insert Tramways data from https://www.hktramways.com/js/nextTramData.js defined in index.html */
-for(tramStation of nextTramStopsW) {
-    let stnCode = tramStation[0];
-    let stnEN = tramStation[1];
-    let stnTC = tramStation[2];
-    let stnSC = tramStation[3]; // Unused at the moment
-    StationCodeList.set(`T${stnCode}`, new Station(`T${stnCode}`, `${stnTC}|${stnEN}`, 0, [], false));
-}
