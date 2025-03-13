@@ -68,6 +68,17 @@
     animation: t0 0.45s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+.footer {
+    display: flex;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    justify-content: space-between;
+}
+
+.footer img {
+    height: 2.75rem;
+}
+
 @keyframes t0 {
     0% {
         transform: translate(100%, 0);
