@@ -38,8 +38,11 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
     }
     
     $('#promo').show();
+    
+    let firstTrainTooLong = SETTINGS.debugMode ? false : etaData[0]?.ttnt > 20; // 4 row ttnt not displayed if first train over 20min
 
-    if (shouldShowTtnt && (SETTINGS.dpMode == DisplayMode.AD || SETTINGS.dpMode == DisplayMode.ADNT1)) {
+    if (shouldShowTtnt && (SETTINGS.dpMode == DisplayMode.AD || SETTINGS.dpMode == DisplayMode.ADNT1 || firstTrainTooLong)) {
+        // Skip 4 row arrival
         cycle();
         needRerender = true;
     }

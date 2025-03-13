@@ -75,9 +75,10 @@ function drawUI() {
     let entryIndex = 0;
     $('#arrivalOverlay > tbody > tr').each(function (i) {
         let thisRowIsVisible = arrivalVisibility[i];
-        let arrivalEntryValid = entryIndex <= arrivalData.length - 1 && arrivalData[entryIndex] != null;
+        let thisRowHaveETA = entryIndex <= arrivalData.length - 1 && arrivalData[entryIndex] != null;
+        let arrivalEntryValid = SETTINGS.debugMode ? true : arrivalData[0]?.ttnt <= 20; // ETA is not displayed if first train is over 20 min.
 
-        if (!thisRowIsVisible || !arrivalEntryValid) {
+        if (!thisRowIsVisible || !thisRowHaveETA || !arrivalEntryValid) {
             $(this).replaceWith(`<tr><td class="destination">&nbsp;</td><td style="width:10%">&nbsp;</td><td class="eta">&nbsp;</td></tr>`);
             return;
         }
@@ -265,7 +266,8 @@ $(window).on('keydown', function(e) {
     if (e.which == 71 && SETTINGS.debugMode) {
         PROMO.cycle()
         PROMO.draw(arrivalData, cycleLanguage, (newVisibility) => arrivalVisibility = newVisibility)
-        drawUI()
+        cycleLanguage();
+        drawUI();
     }
 })
 
