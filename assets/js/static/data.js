@@ -96,8 +96,8 @@ const Lang = {
 }
 
 const RouteList = {
-    'KTL': new Route('KTL', ETA_API.MTR_OPEN, '觀塘綫|Kwun Tong Line', '1a9431', false, ["TIK", "WHA"], ["TIK", "YAT", "LAT", "KWT", "NTK", "KOB", "CHH", "DIH", "WTS", "LOF", "KOT", "SKM", "PRE", "MOK", "YMT", "HOM", "WHA"]),
     'TWL': new Route('TWL', ETA_API.MTR_OPEN, '荃灣綫|Tsuen Wan Line', 'ff0000', false, ["TSW", "CEN"], ["CEN", "ADM", "TST", "JOR", "YMT", "MOK", "PRE", "SSP", "CSW", "LCK", "MEF", "LAK", "KWF", "KWH", "TWH", "TSW"]),
+    'KTL': new Route('KTL', ETA_API.MTR_OPEN, '觀塘綫|Kwun Tong Line', '1a9431', false, ["TIK", "WHA"], ["TIK", "YAT", "LAT", "KWT", "NTK", "KOB", "CHH", "DIH", "WTS", "LOF", "KOT", "SKM", "PRE", "MOK", "YMT", "HOM", "WHA"]),
     'ISL': new Route('ISL', ETA_API.MTR_OPEN, '港島綫|Island Line', '007dc5', false, ["KET", "CHW"], ["KET", "HKU", "SYP", "SHW", "CEN", "ADM", "WAC", "CAB", "TIH", "FOH", "NOP", "QUB", "SWH", "SKW", "HFC", "CHW"]),
     'TKL': new Route('TKL', ETA_API.MTR_OPEN, '將軍澳綫|Tsueng Kwan O Line', '7d499d', false, ["POA", "NOP"], ["NOP", "QUB", "YAT", "TIK", "TKO", "LHP", "HAH", "POA"]),
     

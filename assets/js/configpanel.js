@@ -120,7 +120,13 @@ function saveConfig() {
 }
 
 function setupUI() {
+    $('.route').empty()
+    for (const key in RouteList) {
+        if (RouteList[key].hidden) continue;
+        $('.route').append(`<option value="${key}">${switchLang(RouteList[key].name)}</option>`)
+    }
     SETTINGS.route = RouteList[$('.route').val()];
+    
     updateStationList();
 
     $('.dpMode').empty()
@@ -131,12 +137,6 @@ function setupUI() {
 
     if (!document.fullscreenEnabled) {
         $('.tfs').hide();
-    }
-
-    $('.route').empty()
-    for (const key in RouteList) {
-        if (RouteList[key].hidden) continue;
-        $('.route').append(`<option value="${key}">${switchLang(RouteList[key].name)}</option>`)
     }
 
     $('.specialMsg').empty();

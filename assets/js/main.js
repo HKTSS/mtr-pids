@@ -191,10 +191,10 @@ export async function updateData(forced) {
 
 function setDefaultConfig() {
     if (SETTINGS.onlineMode) {
-        SETTINGS.route = RouteList.TCL;
+        SETTINGS.route = Object.values(RouteList)[0];
+        SETTINGS.stn = StationCodeList.get(SETTINGS.route.stations[0]);
         SETTINGS.uiPreset = UIPreset.default;
         SETTINGS.direction = "UP";
-        SETTINGS.stn = StationCodeList.get("HOK");
     } else {
         let customFontRatio = $('.fontRatioCustom').val();
         let customRTColor = $('.rtColor').val();
