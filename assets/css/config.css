@@ -12,7 +12,7 @@
     background-color: rgba(0, 0, 0, 0.8);
     display: none;
     backdrop-filter: blur(6px);
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .notice-box {
@@ -61,6 +61,7 @@
     color: black;
     font-family: var(--config-fonts);
     line-height: 1.25;
+    overflow: auto;
 }
 
 .config-box {
