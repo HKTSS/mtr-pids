@@ -129,11 +129,7 @@ const RouteList = {
 }
 
 let promotionData = {
-    cycle: [{
-            id: 0,
-            framesrc: null,
-            duration: 10000
-        },
+    cycle: [
         {
             id: 1,
             framesrc: './promo/paxLoad.html',

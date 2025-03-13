@@ -37,7 +37,7 @@
 <body>
     <span id="widthCheck"></span>
     <div class="config">
-        <div class="configBox">
+        <div class="config-box">
             <div class="title-div">
                 <span class="title lang lang-en">PIDS Config</span>
                 <span class="title lang lang-zh">願景資訊顯示屏模擬器</span>
@@ -54,31 +54,41 @@
                     <h1>注意</h1>
                     <p>本網頁不會提供港鐵顯示屏使用的 'Myriad Pro' 字體。<br>如需要顯示該字體，請安裝有關字體在你的系統上。</p>
                 </div>
-                <div class="notice-box live notice-paxload lang lang-en">
+                <div class="notice-box notice lang lang-en">
+                    <p>Press 'Esc' key or click the header bar to return to this menu</p>
+                </div>
+                <div class="notice-box notice lang lang-zh">
+                    <p>如需返回此頁面，請按 Esc 鍵 或在標題列的空餘位置按下</p>
+                </div>
+<!--                <div class="notice-box live notice-paxload lang lang-en">
                     <p>Passenger load for the next train is being updated...</p>
                 </div>
                 <div class="notice-box live notice-paxload lang lang-zh">
                     <p>下一班列車的載客量資訊正在更新中...</p>
-                </div>
+                </div>-->
             </div>
             <div class="online">
-                <h1 class="secHeader lang lang-en">Lines</h1>
-                <h1 class="secHeader lang lang-zh">路線</h1>
-                <select class="route">
-                </select>
-
-                <h1 class="secHeader lang lang-en">Station</h1>
-                <h1 class="secHeader lang lang-zh">車站</h1>
-                <select class="station">
-                </select>
-
-                <h1 class="secHeader lang lang-en">Direction</h1>
-                <h1 class="secHeader lang lang-zh">方向</h1>
-                <select class="direction">
-                    <option value="UP"></option>
-                    <option value="DOWN"></option>
-                    <option value="BOTH"></option>
-                </select>
+                <section>
+                    <h1 class="secHeader lang lang-en">Line</h1>
+                    <h1 class="secHeader lang lang-zh">路線</h1>
+                    <select class="route">
+                    </select>
+                </section>
+                <section>
+                    <h1 class="secHeader lang lang-en">Station</h1>
+                    <h1 class="secHeader lang lang-zh">車站</h1>
+                    <select class="station">
+                    </select>
+                </section>
+                <section>
+                    <h1 class="secHeader lang lang-en">Direction</h1>
+                    <h1 class="secHeader lang lang-zh">方向</h1>
+                    <select class="direction">
+                        <option value="UP"></option>
+                        <option value="DOWN"></option>
+                        <option value="BOTH"></option>
+                    </select>
+                </section>
             </div>
 
             <div class="offline" style="display: none;">
@@ -137,54 +147,62 @@
                 <h1 class="lang lang-zh secHeader">字體比例</h1>
                 <input type="number" class="fontRatioCustom" size="2" step="0.1" value="1"></input>
             </div>
+            <div>
+                <section>
+                    <h1 class="secHeader lang lang-en">Special Message</h1>
+                    <h1 class="secHeader lang lang-zh">特別信息</h1>
+                    <select class="specialMsg"></select>
+                </section>
+                <section>
+                    <h1 class="secHeader lang lang-en">Display Mode</h1>
+                    <h1 class="secHeader lang lang-zh">顯示模式</h1>
+                    <select class="dpMode">
+                        <option value="NORMAL">Normal 正常</option>
+                        <option value="AD">Display Ads Only 只顯示廣告</option>
+                        <option value="ADNT1">Ads+Next Train 廣告+下一班車</option>
+                        <option value="NT4">Next 4 Train 顯示下四班車</option>
+                        <option value="NT4_CT">Next 4 Train (Clock Time) 顯示下四班車(時刻)</option>
+                    </select>
+                </section>
+            </div>
+            <div>
+                <input type="checkbox" id="onlinemode" class="onlineMode translatable" checked></input>
+                <label for="onlinemode" class="lang lang-en">Use real-time train data</label>
+                <label for="onlinemode" class="lang lang-zh">使用實時到站資訊</label>
+                <br>
+                <input class="showPlat" id="showplatform" type="checkbox" checked></input>
+                <label for="showplatform" class="lang lang-en">Display platform number</label>
+                <label for="showplatform" class="lang lang-zh">顯示月台號碼</label>
+                <br>
+                <input id="routeheader" type="checkbox" class="translatable"></input>
+                <label for="routeheader" class="lang lang-en">Show line name in header</label>
+                <label for="routeheader" class="lang lang-zh">顯示路線名稱</label>
+                <br>
+                <button class="tfs lang lang-en">Toggle Fullscreen</button>
+                <button class="tfs lang lang-zh">切換全螢幕</button>
+                <br>
+                <button class="saveCfg lang lang-en">Save & Close this page</button>
+                <button class="saveCfg lang lang-zh">套用設定及關閉此頁面</button>
+            </div>
 
-            <h1 class="secHeader lang lang-en">Special Message</h1>
-            <h1 class="secHeader lang lang-zh">特別信息</h1>
-            <select class="specialMsg"></select>
-            <br>
-            <h1 class="secHeader lang lang-en">Display Mode</h1>
-            <h1 class="secHeader lang lang-zh">顯示模式</h1>
-            <select class="dpMode">
-                <option value="NORMAL">Normal 正常</option>
-                <option value="AD">Display Ads Only 只顯示廣告</option>
-                <option value="ADNT1">Ads+Next Train 廣告+下一班車</option>
-                <option value="NT4">Next 4 Train 顯示下四班車</option>
-                <option value="NT4_CT">Next 4 Train (Clock Time) 顯示下四班車(時刻)</option>
-            </select>
-            <br>
-            <input type="checkbox" id="onlinemode" class="onlineMode translatable" checked></input>
-            <label for="onlinemode" class="lang lang-en">Use real-time train data</label>
-            <label for="onlinemode" class="lang lang-zh">使用實時到站資訊</label>
-            <br>
-            <input class="showPlat" id="showplatform" type="checkbox" checked></input>
-            <label for="showplatform" class="lang lang-en">Show Platform</label>
-            <label for="showplatform" class="lang lang-zh">顯示月台</label>
-            <br>
-            <input id="routeheader" type="checkbox" class="translatable"></input>
-            <label for="routeheader" class="lang lang-en">Show route in header bar</label>
-            <label for="routeheader" class="lang lang-zh">顯示路線名稱</label>
-            <br>
-            <button class="tfs lang lang-en">Toggle Fullscreen</button>
-            <button class="tfs lang lang-zh">切換全螢幕</button>
-            <br>
-            <button class="saveCfg lang lang-en">Save & Close this page</button>
-            <button class="saveCfg lang lang-zh">套用設定及關閉此頁面</button>
-            <a href="https://hktss.github.io" class="footer">HKTSS 2025</a>
+            
+            <a href="https://hktss.github.io">HKTSS 2025</a>
             <br>
         </div>
     </div>
 
     <div class="main">
         <div id="titlebar">
+            <div class="t2">
+                <span class="rtname"></span>
+            </div>
             <div class="t1 weathers">
                 <span class="weatherIcon"><noscript>Javascript is required for this page</noscript></span>
                 <span class="weather notranslate"></span>
             </div>
+            <button id="configure-button" title="Configure PIDS">Configure PIDS</button>
             <div class="t1 topbar-clock">
                 <span class="clock"></span>
-            </div>
-            <div class="t2">
-                <span class="rtname">Kwun Tong Line</span>
             </div>
         </div>
 

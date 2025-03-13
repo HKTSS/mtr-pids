@@ -3,6 +3,7 @@
     --font-arrivals: "Myriad Pro", "Noto Sans", "Noto Serif HK";
     --font-platformcircle: "Myriad Pro", "Noto Sans";
     --font-size: 12vmin;
+    --eta-font-size: 13vmin;
     --route-color: transparent;
     --font-weight: 600;
     --title-height: 13.7vh;
@@ -20,7 +21,6 @@
 
 #titlebar {
     display: flex;
-    justify-content: space-between;
     height: var(--title-height);
     background-color: #002b54;
     align-items: center;
@@ -31,16 +31,29 @@
     font-size: 9.25vh;
 }
 
+#configure-button {
+    flex: 1;
+    height: 100%;
+    border: none;
+    background: none;
+    font-size: inherit;
+    color: transparent;
+}
+
+#configure-button:focus-visible {
+    color: white;
+}
+
 .weathers {
-    display: inline;
+    display: flex;
+    align-items: center;
+    gap: 2.5vw;
 }
 
 .weatherIcon img {
-    vertical-align: middle;
     width: calc((1vw + 1vh) * 4.5);
     max-width: calc(var(--title-height) - 20px);
     max-height: calc(var(--title-height) - 20px);
-    margin-right: 32px;
 }
 
 #arrivalOverlay {
@@ -105,7 +118,7 @@
 }
 
 .plat {
-    width: 10vmin;
+    width: 11vmin;
     font-family: var(--platcircle-family);
 }
 
@@ -114,8 +127,8 @@
     align-items: center;
     justify-content: center;
     margin: auto;
-    height: 10vmin;
-    width: 10vmin;
+    height: 11vmin;
+    width: 11vmin;
     border-radius: 50%;
     line-height: 0;
     font-size: 10vmin;
@@ -148,8 +161,8 @@
 .eta {
     font-family: var(--eta-family);
     font-weight: var(--font-weight);
-    font-size: var(--font-size);
-    min-width: fit-content;
+    font-size: var(--eta-font-size);
+    min-width: max-content;
     width: calc(calc(1vw + 1vh) * 14.5);
     text-align: right;
     overflow: hidden;

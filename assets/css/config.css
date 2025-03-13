@@ -1,5 +1,5 @@
 :root {
-    --config-fonts: 'sans-serif', 'Noto Sans HK', 'Noto Sans TC'
+    --config-fonts: 'Noto Sans HK', 'Noto Sans TC', sans-serif;
 }
 
 .config {
@@ -11,18 +11,15 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.8);
     display: none;
-    color: white;
     backdrop-filter: blur(6px);
-    font-family: var(--config-fonts) !important;
-}
-
-.config * {
-    margin: 5px;
+    overflow-x: hidden;
 }
 
 .notice-box {
-    padding: 0.4rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
     border-radius: 0.25rem;
+    line-height: 1.4;
 }
 
 .notice-box.notice {
@@ -54,17 +51,37 @@
     visibility: hidden;
 }
 
-.configBox {
-    margin: 0;
-    padding: 0 10px 0 10px;
-    position: relative;
-    float: right;
-    height: 100%;
+.config-box {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 1rem 0 1rem;
     background-color: #f0f2f6;
     color: black;
-    overflow-y: auto;
-    
-    font-size: 18px;
+    font-family: var(--config-fonts);
+    line-height: 1.25;
+}
+
+.config-box {
+    animation: t0 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes t0 {
+    0% {
+        transform: translate(100%, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+section > h1 {
+    margin: 0.25rem 0;
+}
+
+.config-box button {
+    margin: 0.25rem 0;
 }
 
 select, button {
@@ -73,6 +90,10 @@ select, button {
     font-family: inherit;
     border: 1px solid #aaa;
     cursor: pointer;
+}
+
+table tr td {
+    padding: 0.25rem;
 }
 
 .config select {
@@ -108,8 +129,8 @@ select, button {
     margin-top: 0.75rem;
 }
 
-.footer {
-    position: fixed;
-    right: 1em;
-    bottom: 1em;
+@media only screen and (max-width: 600px) {
+    .config-box {
+        left: 0;
+    }
 }

@@ -13,7 +13,7 @@ function switchLang(str) {
 }
 
 function toggleVisibility() {
-    $('.config').fadeToggle(150, function() {
+    $('.config').fadeToggle(150, 'swing', function () {
         if (this.style.display == 'block') {
             SETTINGS.configOpened = true;
         } else {
@@ -216,7 +216,9 @@ $(document).ready(async function() {
 
 $(window).on('keydown', function(e) {
     /* Enter key */
-    if (e.which == 13) {
-        toggleVisibility()
+    if (e.key == "Escape") {
+        toggleVisibility();
     }
 })
+
+export default { toggle: toggleVisibility }

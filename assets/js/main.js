@@ -3,12 +3,12 @@
 import SETTINGS from './static/settings.js';
 import API from './api.js'
 import TITLEBAR from './titlebar.js'
+import PROMO from './promo.js'
 
 let arrivalVisibility = [true, true, true, true];
-let nextPromoSwap = 0;
 let languageCycle = 0;
 let arrivalData = [];
-let currentPromoScreen = 0;
+let cycleShowTtnt = false;
 
 function switchLang(str) {
     let targetLang = languageCycle;
@@ -63,7 +63,8 @@ function drawUI() {
     $('body').css('--route-color', "#" + SETTINGS.route.color);
     
     TITLEBAR.draw();
-    renderPromo();
+    PROMO.draw(arrivalData, cycleLanguage, (newVisibility) => arrivalVisibility = newVisibility);
+    
     
     if(arrivalData[0]?.paxLoad?.length == 1) {
         $(".notice-paxload").css('visibility', 'visible');
@@ -231,107 +232,6 @@ function setDefaultConfig() {
     SETTINGS.showPlatform = $('.showPlat').is(':checked')
 }
 
-function cyclePromo() {
-    if (currentPromoScreen + 1 < promotionData.cycle.length) {
-        currentPromoScreen++
-    } else {
-        currentPromoScreen = 0;
-    }
-    let nextPromo = promotionData.cycle[currentPromoScreen]
-    nextPromoSwap = Date.now() + nextPromo.duration;
-}
-
-function renderPromo() {
-    let nextPromoCycle = promotionData.cycle[currentPromoScreen];
-    let needRerender = false;
-    if (Date.now() >= nextPromoSwap) {
-        cyclePromo();
-        cycleLanguage();
-        needRerender = true;
-    }
-
-    if ((SETTINGS.dpMode == DisplayMode.NT4 || SETTINGS.dpMode == DisplayMode.NT4_CT) && !SETTINGS.showingSpecialMessage) {
-        arrivalVisibility = [true, true, true, true];
-        $('#promo').hide();
-        return;
-    } else {
-        $('#promo').show();
-    }
-
-    if (nextPromoCycle.framesrc == null && (SETTINGS.dpMode == DisplayMode.AD || SETTINGS.dpMode == DisplayMode.ADNT1)) {
-        cyclePromo();
-        needRerender = true;
-    }
-
-    if (SETTINGS.showingSpecialMessage) {
-        nextPromoCycle = promotionData.special.filter(e => e.id == SETTINGS.specialMsgID)[0];
-    }
-
-    for (const promo of promotionData.cycle) {
-        $(`.promo-${promo.id}`).hide()
-    }
-
-    for (const promo of promotionData.special) {
-        $(`.promo-${promo.id}`).hide()
-    }
-
-    if (nextPromoCycle.framesrc == null && !SETTINGS.showingSpecialMessage) {
-        arrivalVisibility = [true, true, true, true];
-        $('#promo').hide();
-    } else {
-        $('#promo').show();
-        $(`.promo-${nextPromoCycle.id}`).show();
-        arrivalVisibility = [false, false, false, true];
-    }
-    
-    if (SETTINGS.dpMode == DisplayMode.AD) {
-        $('#promo').addClass("promo-full");
-        arrivalVisibility = [false, false, false, false];
-    } else {
-        $('#promo').removeClass("promo-full");
-    }
-
-    if (SETTINGS.showingSpecialMessage) {
-        let fullURL = nextPromoCycle.framesrc + nextPromoCycle.queryString;
-        let needRefreshPromoSrc = false;
-        $('#promo').show();
-        if ($(`.promo-${nextPromoCycle.id}`).length > 0) {
-            if (fullURL != $(`.promo-${nextPromoCycle.id}`).attr("src")) {
-                needRefreshPromoSrc = true;
-            }
-        }
-
-        if (needRefreshPromoSrc) {
-            $(`.promo-${nextPromoCycle.id}`).attr("src", fullURL);
-            $(`.promo-${nextPromoCycle.id}`).show();
-        }
-    }
-
-    if (nextPromoCycle.isPaxLoad) {
-        let paxArray = []
-        if (arrivalData[0] ?.paxLoad ?.length > 1) {
-            for (let pax of arrivalData[0].paxLoad) {
-                paxArray.push(pax.availability);
-            }
-            let firstClassCar = arrivalData[0].firstClassCar ? arrivalData[0].firstClassCar : 0;
-
-            let curURL = $(`.promo-${nextPromoCycle.id}`).attr("src");
-            let fullURL = `${nextPromoCycle.framesrc}?data=${paxArray.join(",")}&firstClass=${firstClassCar}`
-            if (curURL == fullURL) return;
-
-            $(`.promo-${nextPromoCycle.id}`).attr("src", fullURL);
-        } else {
-            cyclePromo();
-            needRerender = true;
-        }
-    }
-
-    if(needRerender) {
-        renderPromo();
-        return;
-    }
-}
-
 function changeUIPreset() {
     let preset = UIPreset[SETTINGS.route.initials] ?? UIPreset["default"];
 
@@ -355,15 +255,6 @@ $(document).ready(function() {
     setDefaultConfig();
     updateData(true);
 
-    $('#promo').empty();
-    for (const cate in promotionData) {
-        for (const promo of promotionData[cate]) {
-            if (promo.framesrc != null) {
-                $('#promo').append(`<iframe style="display:block" class="promo-${promo.id} centeredItem" src=${promo.framesrc}></iframe>`);
-            }
-        }
-    }
-
     setInterval(updateData, 15 * 1000, false);
     setInterval(drawUI, 1 * 1000, true);
     drawUI();
@@ -372,8 +263,8 @@ $(document).ready(function() {
 $(window).on('keydown', function(e) {
     /* G key */
     if (e.which == 71 && SETTINGS.debugMode) {
-        cyclePromo()
-        renderPromo()
+        PROMO.cycle()
+        PROMO.draw(arrivalData, cycleLanguage, (newVisibility) => arrivalVisibility = newVisibility)
         drawUI()
     }
 })

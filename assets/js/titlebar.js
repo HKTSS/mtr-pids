@@ -2,6 +2,7 @@
 
 import { WEATHER_API, WeatherIcon, WeatherUnit } from './static/weatherdata.js';
 import SETTINGS from './static/settings.js';
+import CONFIG_PANEL from './configpanel.js';
 import MAIN from './main.js';
 
 function updateClock() {
@@ -85,6 +86,7 @@ function draw() {
 $(document).ready(function() {
     draw();
     updateWeather();
+    $("#configure-button").click(() => CONFIG_PANEL.toggle())
     setInterval(updateWeather, 60 * 1000, false);
 });
 
