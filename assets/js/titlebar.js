@@ -66,13 +66,13 @@ function updateHeader() {
     if(SETTINGS.rtHeader) {
         $('.t1').hide();
         $('.t2').show();
-        $("#titlebar").addClass("rtcolor");
+        $("#titlebar").addClass("route-color");
         $(".rtname").text(MAIN.switchLang(SETTINGS.route.name));
         $('body').css("--title-height", `17vh`);
     } else {
         $('.t2').hide();
         $('.t1').show();
-        $("#titlebar").removeClass("rtcolor");
+        $("#titlebar").removeClass("route-color");
         $('body').css("--title-height", `13.7vh`);
     }
 }

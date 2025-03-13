@@ -72,25 +72,20 @@
     background-color: var(--aqua);
 }
 
-.floatright {
-    float: right;
-}
-
-.widthCheck {
+#widthCheck {
     position: absolute;
     visibility: hidden;
     overflow: visible;
     white-space: nowrap;
 }
 
-.lrtrt {
+.lrt-route {
     display: inline-block;
     width: 11vw;
-    min-width: 120px;
+    min-width: 128px;
     text-align: center;
     vertical-align: middle;
     background-color: white;
-    font-family: "Myriad Pro Semibold", "Noto Sans";
     font-size: 6vh;
     color: black;
     overflow: visible;
@@ -104,16 +99,17 @@
     font-size: var(--font-size);
     font-family: var(--dest-family);
     font-weight: var(--font-weight);
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
 }
 
 .plat {
-    width: 10%;
+    width: 10vmin;
     font-family: var(--platcircle-family);
 }
 
-.platcircle {
+.plat-circle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -121,12 +117,9 @@
     height: 10vmin;
     width: 10vmin;
     border-radius: 50%;
+    line-height: 0;
     font-size: 10vmin;
     color: #fff;
-}
-
-.rtcolor {
-    background-color: var(--route-color) !important;
 }
 
 #promo {
@@ -148,11 +141,16 @@
     height: 100%;
 }
 
+#titlebar.route-color {
+    background-color: var(--route-color);
+}
+
 .eta {
     font-family: var(--eta-family);
     font-weight: var(--font-weight);
     font-size: var(--font-size);
-    width: var(--eta-width);
+    min-width: fit-content;
+    width: calc(calc(1vw + 1vh) * 14.5);
     text-align: right;
     overflow: hidden;
     white-space: nowrap;

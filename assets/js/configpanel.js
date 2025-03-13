@@ -78,11 +78,11 @@ function saveConfig() {
             customFontRatio = parseFloat(customFontRatio)
         }
 
-        SETTINGS.route = new Route("CUSTOM", ETA_API.NONE, "Custom Route", customRTColor, false, false)
+        SETTINGS.route = new Route("CST", ETA_API.NONE, "Custom Route", customRTColor, customRTColor, false);
 
-        let defPreset = UIPreset["default"]
-        defPreset.fontRatio = customFontRatio
-        SETTINGS.uiPreset = defPreset;
+        let defaultPreset = UIPreset["default"];
+        defaultPreset.fontRatio = customFontRatio;
+        SETTINGS.uiPreset = defaultPreset;
 
         let customArrivalData = [];
         for (let i = 0; i < 4; i++) {

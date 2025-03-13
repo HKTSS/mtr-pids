@@ -30,13 +30,13 @@ function adjustLayoutSize() {
         const tdWidth = $(this).width() - PADDING;
         let percentW = 1;
 
-        $('.widthCheck').html($(this).html())
-        $('.widthCheck').css("font-size", ogSize);
-        $('.widthCheck').css("font-family", $(this).css("font-family"));
-        $(".widthCheck").css("letter-spacing", $(this).css("letter-spacing"));
-        $(".widthCheck").css("font-weight", $(this).css("font-weight"));
+        $('#widthCheck').html($(this).html())
+        $('#widthCheck').css("font-size", ogSize);
+        $('#widthCheck').css("font-family", $(this).css("font-family"));
+        $("#widthCheck").css("letter-spacing", $(this).css("letter-spacing"));
+        $("#widthCheck").css("font-weight", $(this).css("font-weight"));
 
-        let resultWidth = $('.widthCheck').width();
+        let resultWidth = $('#widthCheck').width();
 
         if (resultWidth > tdWidth) {
             percentW = (tdWidth / resultWidth);
@@ -44,25 +44,6 @@ function adjustLayoutSize() {
 
         $(this).css("font-size", `${ogSize * (percentW)}px`);
     });
-
-    let etaMaxSize = 0;
-
-    $('.eta').each(function() {
-        const ogSize = SETTINGS.uiPreset.fontRatio * parseInt($(this).css("font-size"));
-        const PADDING = 20 * (window.innerWidth / 1920);
-        const tdWidth = $(this).width();
-
-        $('.widthCheck').html($(this).html())
-        $('.widthCheck').css("font-size", ogSize);
-        $('.widthCheck').css("font-family", $(this).css("font-family"));
-        $(".widthCheck").css("letter-spacing", $(this).css("letter-spacing"));
-        $(".widthCheck").css("font-weight", $(this).css("font-weight"));
-
-        let resultWidth = Math.max($('.widthCheck').width() + PADDING, tdWidth);
-        etaMaxSize = Math.max(etaMaxSize, resultWidth);
-    });
-
-    $('body').css("--eta-width", `${etaMaxSize}px`);
 }
 
 function parseQuery() {
@@ -79,8 +60,8 @@ function parseQuery() {
 function drawUI() {
     /* Draw focus back to the main window instead of the promotion iframe */
     window.focus();
+    $('body').css('--route-color', "#" + SETTINGS.route.color);
     
-    $("body").css("--route-color", `#${SETTINGS.route.color}`);
     TITLEBAR.draw();
     renderPromo();
     
@@ -127,8 +108,8 @@ function drawUI() {
         }
 
         let tableRow = "";
-        const lrtElement = entry.route.isLRT ? `<span class="lrtrt" style="border-color:#${entry.route.color}">${entry.route.initials}</span>` : ""
-        const platformElement = SETTINGS.showPlatform ? `<td class="plat"><span class="platcircle rtcolor">${entry.plat}</span></td>` : `<td class="plat"></td>`
+        const lrtElement = entry.route.isLRT ? `<span class="lrt-route" style="border-color:#${entry.route.secondaryColor}">${entry.route.initials}</span>` : ""
+        const platformElement = SETTINGS.showPlatform ? `<td class="plat"><span class="plat-circle" style="background-color: #${entry.route.color}">${entry.plat}</span></td>` : `<td class="plat"></td>`
         const ETAElement = `<td class="eta scalable">${time} <span class="etamin">${switchLang(timetext)}</span></td>`
         const destElement = `<td class="destination scalable">${lrtElement}${stationName}</td>`
 
@@ -150,6 +131,7 @@ function getETAmin(eta, departure) {
     if (eta == 0 || (eta == 1 && !departure)) {
         return "";
     }
+    // MTR PIDS clamp eta at 99
     if(eta > 99) return "99";
     return eta;
 }
@@ -211,9 +193,9 @@ function setDefaultConfig() {
 
         SETTINGS.route = new Route("CUSTOM", ETA_API.NONE, "Custom Route", customRTColor, false, false);
 
-        let defPreset = UIPreset.default;
-        defPreset.fontRatio = customFontRatio;
-        SETTINGS.uiPreset = defPreset;
+        let defaultPreset = UIPreset.default;
+        defaultPreset.fontRatio = customFontRatio;
+        SETTINGS.uiPreset = defaultPreset;
 
         let customArrivalData = [];
         for (let i = 0; i < 4; i++) {
@@ -301,7 +283,7 @@ function renderPromo() {
         $(`.promo-${nextPromoCycle.id}`).show();
         arrivalVisibility = [false, false, false, true];
     }
-
+    
     if (SETTINGS.dpMode == DisplayMode.AD) {
         $('#promo').addClass("promo-full");
         arrivalVisibility = [false, false, false, false];
@@ -351,15 +333,10 @@ function renderPromo() {
 }
 
 function changeUIPreset() {
-    let preset = UIPreset[SETTINGS.route.initials] || UIPreset["default"];
+    let preset = UIPreset[SETTINGS.route.initials] ?? UIPreset["default"];
 
-    // $('#titleOverlay').css(`width`, `${preset.titleWidth}%`);
-    // $('#arrivalOverlay').css(`width`, `${preset.ETAWidth}%`);
     $("body").css("--font-weight", preset.fontWeight);
     $("body").css("--platcircle-family", preset.platformCircle);
-    // $("body").css(`--title-family`, preset.title);
-    // $("body").css("--dest-family", preset.arrivals);
-    // $("body").css("--eta-family", preset.eta);
 
     $(".destination").each(function() {
         let isChinese = Chinese.test($(this).text());
