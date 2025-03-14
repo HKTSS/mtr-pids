@@ -478,7 +478,7 @@ const StationCodeList = new Map([
     ["295", new Station("295", "屯門|Tuen Mun", 1295, [1, 2], false)],
     ["300", new Station("300", "杯渡|Pui To", 1300, [1, 2], false)],
     ["310", new Station("310", "何福堂|Hoh Fuk Tong", 1310, [1, 2], false)],
-    ["320", new Station("320", "新墟|San Hui", 1320, [1, 2], [], false)],
+    ["320", new Station("320", "新墟|San Hui", 1320, [1, 2], false)],
     ["330", new Station("330", "景峰|Prime View", 1330, [1, 2], false)],
     ["340", new Station("340", "鳳地|Fung Tei", 1340, [1, 2], false)],
     ["350", new Station("350", "藍地|Lam Tei", 1350, [1, 2], false)],

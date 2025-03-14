@@ -1,7 +1,7 @@
 :root {
 /*    --route-color: transparent;*/
     --title-weight: 600;
-    --title-height: calc(13.7vh);
+    --title-height: 13.7vh;
     --title-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif HK';
 }
 
