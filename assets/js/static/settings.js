@@ -1,5 +1,4 @@
 let settings = {
-    configOpened: false,
     direction: 'UP',
     debugMode: false,
     dpMode: DisplayMode.NORMAL,

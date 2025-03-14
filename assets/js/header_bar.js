@@ -3,13 +3,12 @@
 import { WEATHER_API, WeatherIcon, WeatherUnit } from './static/weatherdata.js';
 import SETTINGS from './static/settings.js';
 import CONFIG_PANEL from './configpanel.js';
-import MAIN from './main.js';
+import UI from './ui.js';
 
 function updateClock() {
     let currDate = new Date();
-    let strMin = currDate.toLocaleTimeString('en-US', {hour: '2-digit', hour12: false, timeZone: 'Asia/Hong_Kong'});
-    let strHour = currDate.toLocaleTimeString('en-US', {hour: '2-digit', hour12: false, timeZone: 'Asia/Hong_Kong'});
-    $('.clock').text(`${strHour}:${strMin}`);
+
+    $('.clock').text(currDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }));
 }
 
 async function updateWeather() {
@@ -67,13 +66,13 @@ function updateHeader() {
     if(SETTINGS.rtHeader) {
         $('.t1').hide();
         $('.t2').show();
-        $("#titlebar").addClass("route-color");
-        $(".rtname").text(MAIN.switchLang(SETTINGS.route.name));
+        $("#header-bar").addClass("route-color");
+        $(".rtname").text(UI.switchLang(SETTINGS.route.name));
         $('body').css("--title-height", `17vh`);
     } else {
         $('.t2').hide();
         $('.t1').show();
-        $("#titlebar").removeClass("route-color");
+        $("#header-bar").removeClass("route-color");
         $('body').css("--title-height", `13.7vh`);
     }
 }
@@ -83,11 +82,10 @@ function draw() {
     updateClock();
 }
 
-$(document).ready(function() {
-    draw();
+function setup() {
     updateWeather();
-    $("#configure-button").click(() => CONFIG_PANEL.toggle())
     setInterval(updateWeather, 60 * 1000, false);
-});
+    $("#configure-button").click(() => CONFIG_PANEL.toggle());
+}
 
-export default {draw: draw}
+export default {setup: setup, draw: draw};

@@ -6,9 +6,7 @@
     --eta-font-size: 13vmin;
     --route-color: transparent;
     --font-weight: 600;
-    --title-height: 13.7vh;
     --platcircle-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif HK';
-    --title-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif HK';
     --dest-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif HK';
     --eta-family: "Myriad Pro", "Noto Sans", "Noto Serif HK";
     --eta-width: 260px;
@@ -17,43 +15,6 @@
 
 .main {
     font-family: var(--font-arrivals);
-}
-
-#titlebar {
-    display: flex;
-    height: var(--title-height);
-    background-color: #002b54;
-    align-items: center;
-    color: white;
-    font-family: var(--title-family);
-    font-weight: 600;
-    padding: 0 5.208%;
-    font-size: 9.25vh;
-}
-
-#configure-button {
-    flex: 1;
-    height: 100%;
-    border: none;
-    background: none;
-    font-size: inherit;
-    color: transparent;
-}
-
-#configure-button:focus-visible {
-    color: white;
-}
-
-.weathers {
-    display: flex;
-    align-items: center;
-    gap: 2.5vw;
-}
-
-.weatherIcon img {
-    width: calc((1vw + 1vh) * 4.5);
-    max-width: calc(var(--title-height) - 20px);
-    max-height: calc(var(--title-height) - 20px);
 }
 
 #arrivals {
@@ -169,10 +130,6 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-}
-
-#titlebar.route-color {
-    background-color: var(--route-color);
 }
 
 .eta {

@@ -127,14 +127,6 @@ table tr td {
     display: inline-block;
 }
 
-#error {
-    background-color: #C61700;
-    color: white;
-    font-size: 18px;
-    margin: 0;
-    padding: 5px 5px 5px 5px;
-}
-
 .secHeader {
     font-size: 2rem;
     font-weight: 500;

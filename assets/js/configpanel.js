@@ -1,7 +1,10 @@
 'use strict'
 
 import SETTINGS from './static/settings.js';
+import UI from './ui.js';
 import { updateData } from './main.js';
+
+let configOpened = false;
 
 function switchLang(str) {
     let targetLang = SETTINGS.UILang;
@@ -15,13 +18,15 @@ function switchLang(str) {
 function toggleVisibility() {
     $('.config').fadeToggle(150, 'swing', function () {
         if (this.style.display == 'block') {
-            SETTINGS.configOpened = true;
+            configOpened = true;
         } else {
-            SETTINGS.configOpened = false;
+            configOpened = false;
             saveConfig();
-            updateData(true);
+            updateData();
+            UI.draw();
         }
     });
+    
 
     updateUILanguage(SETTINGS.UILang);
 }
@@ -211,18 +216,18 @@ function registerUIControlEvent() {
     });
 }
 
-$(document).ready(async function() {
+function setup() {
     setupUI();
     saveConfig();
     registerUIControlEvent();
     updateUILanguage(SETTINGS.UILang);
-});
+    
+    $(window).on('keydown', function(e) {
+        /* Enter key */
+        if (e.key == "Escape") {
+            toggleVisibility();
+        }
+    });
+}
 
-$(window).on('keydown', function(e) {
-    /* Enter key */
-    if (e.key == "Escape") {
-        toggleVisibility();
-    }
-})
-
-export default { toggle: toggleVisibility }
+export default { setup: setup, toggle: toggleVisibility }

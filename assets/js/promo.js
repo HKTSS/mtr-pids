@@ -123,7 +123,7 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
     }
 }
 
-$(document).ready(function() {
+function setup() {
     $('#promo').empty();
     for (const cate in promotionData) {
         for (const promo of promotionData[cate]) {
@@ -132,6 +132,6 @@ $(document).ready(function() {
             }
         }
     }
-})
+}
 
-export default {cycle: cycle, draw: draw};
+export default {setup: setup, cycle: cycle, draw: draw};
