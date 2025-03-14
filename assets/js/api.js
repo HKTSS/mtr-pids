@@ -1,6 +1,6 @@
 /* This class is responsible for fetching the ETA Information via the respective API */
 
-async function processLightRailData(data) {
+function processLightRailData(data) {
     if (data.status == 0) {
         console.error(`No ETA Available: ${data.message}`)
         return [];
@@ -31,7 +31,7 @@ async function processLightRailData(data) {
     return finalData;
 }
 
-async function processHeavyRailData(data, route, stn, direction) {
+function processHeavyRailData(data, route, stn, direction) {
     if (data.status == 0) {
         console.error(`No ETA Available: ${data.message}`)
         return [];
@@ -41,35 +41,42 @@ async function processHeavyRailData(data, route, stn, direction) {
 
     let tempArray = [];
     let finalData = [];
-    let arrUP, arrDN;
+    let arrUP = [];
+    let arrDN = [];
     
-    if (direction == 'BOTH') {
+    if (direction == 'BOTH' || direction == 'BOTH_SPLIT') {
         if (data.data[routeAndStation].hasOwnProperty('UP')) {
             arrUP = data.data[routeAndStation]['UP'];
-        } else {
-            arrUP = [];
         }
-
         if (data.data[routeAndStation].hasOwnProperty('DOWN')) {
             arrDN = data.data[routeAndStation]['DOWN'];
-        } else {
-            arrDN = [];
         }
-
+        
+        arrUP.sort((a, b) => a.ttnt - b.ttnt);
+        arrDN.sort((a, b) => a.ttnt - b.ttnt);
+        
+        if(direction == 'BOTH_SPLIT') {
+            arrUP = arrUP.slice(0, 2);
+            arrDN = arrDN.slice(0, 2);
+        }
+        
         /* Merge array from both directions */
         tempArray = arrUP.concat(arrDN);
-
+        
+        if(direction != 'BOTH_SPLIT') {
+            /* Sort all by ETA */
+            tempArray.sort((a, b) => a.ttnt - b.ttnt);
+        }
     } else if (routeAndStation in data.data) {
         if (direction in data.data[routeAndStation]) {
             tempArray = data.data[routeAndStation][direction]
         } else {
             tempArray = [];
         }
+        
+        /* Sort by ETA */
+        tempArray.sort((a, b) => a.ttnt - b.ttnt);
     }
-
-
-    /* Sort by ETA */
-    tempArray.sort((a, b) => a.ttnt - b.ttnt);
 
     /* Convert data to adapt to a standardized format */
     for (const entry of tempArray) {

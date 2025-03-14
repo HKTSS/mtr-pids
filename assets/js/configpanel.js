@@ -48,16 +48,20 @@ function updateUILanguage(lang) {
 
     $('.direction > option').each(function() {
         if (!SETTINGS.route.directionInfo || SETTINGS.route.directionInfo.length < 2) return;
-        let UPTerminus = StationCodeList.get(SETTINGS.route.directionInfo[0]);
-        let DNTerminus = StationCodeList.get(SETTINGS.route.directionInfo[1]);
-        let Text = switchLang("往 |To ")
-
-        if ($(this).val() == "UP") {
-            $(this).text(Text + switchLang(UPTerminus.name));
-        } else if ($(this).val() == "DOWN") {
-            $(this).text(Text + switchLang(DNTerminus.name));
-        } else {
+        const UPTerminus = StationCodeList.get(SETTINGS.route.directionInfo[0]);
+        const DNTerminus = StationCodeList.get(SETTINGS.route.directionInfo[1]);
+        const toText = switchLang("往 |To ");
+        
+        const thisValue = $(this).val();
+        
+        if (thisValue == "UP") {
+            $(this).text(toText + switchLang(UPTerminus.name));
+        } else if (thisValue == "DOWN") {
+            $(this).text(toText + switchLang(DNTerminus.name));
+        } else if (thisValue == "BOTH") {
             $(this).text(switchLang("雙向|Both"));
+        } else {
+            $(this).text(switchLang("雙向 (分開)|Both (Split)"));
         }
     });
 }

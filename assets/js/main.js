@@ -49,34 +49,40 @@ function adjustLayoutSize() {
 function parseQuery() {
     let params = (new URL(document.location)).searchParams;
     let lang = params.get("lang");
-    if (lang == null) return;
 
     if (lang == 'en' || lang == 'zh') {
         SETTINGS.UILang = lang;
         $(`#langchoose`).text(lang == 'EN' ? 'EN' : '中');
     }
+    
+    if(params.has("debug")) {
+        SETTINGS.debugMode = true;
+    }
 }
 
 function drawUI() {
-    /* Draw focus back to the main window instead of the promotion iframe */
-    window.focus();
+    // Promo is responsive for cycling the language, so let it go first
+    PROMO.draw(arrivalData, cycleLanguage, (newVisibility) => arrivalVisibility = newVisibility);
+    TITLEBAR.draw();
+    
     $('body').css('--route-color', "#" + SETTINGS.route.color);
     
-    TITLEBAR.draw();
-    PROMO.draw(arrivalData, cycleLanguage, (newVisibility) => arrivalVisibility = newVisibility);
-    
-    
-    if(arrivalData[0]?.paxLoad?.length == 1) {
-        $(".notice-paxload").css('visibility', 'visible');
+    if(SETTINGS.direction == "BOTH_SPLIT") {
+        $(".divider").show();
     } else {
-        $(".notice-paxload").css('visibility', 'hidden');
+        $(".divider").hide();
     }
+    
+    const isPaxUpdating = arrivalData[0]?.paxLoad?.length == 1;
+    $(".notice-paxload").css('visibility', isPaxUpdating ? 'visible' : 'hidden');
 
     let entryIndex = 0;
-    $('#arrivalOverlay > tbody > tr').each(function (i) {
-        let thisRowIsVisible = arrivalVisibility[i];
-        let thisRowHaveETA = entryIndex <= arrivalData.length - 1 && arrivalData[entryIndex] != null;
-        let arrivalEntryValid = SETTINGS.debugMode ? true : arrivalData[0]?.ttnt <= 20; // ETA is not displayed if first train is over 20 min.
+    $('#arrivalOverlay > tbody > tr').each(function(i) {
+        const thisRowIsVisible = arrivalVisibility[i];
+        const thisRowHaveETA = entryIndex <= arrivalData.length - 1 && arrivalData[entryIndex] != null;
+        
+        // ETA is not displayed if first train is over 20 min.
+        const arrivalEntryValid = SETTINGS.debugMode ? true : arrivalData[0]?.ttnt <= 20; 
 
         if (!thisRowIsVisible || !thisRowHaveETA || !arrivalEntryValid) {
             $(this).replaceWith(`<tr><td class="destination">&nbsp;</td><td style="width:10%">&nbsp;</td><td class="eta">&nbsp;</td></tr>`);
@@ -110,10 +116,10 @@ function drawUI() {
         }
 
         let tableRow = "";
-        const lrtElement = entry.route.isLRT ? `<span class="lrt-route" style="border-color:#${entry.route.secondaryColor}">${entry.route.initials}</span>` : ""
-        const platformElement = SETTINGS.showPlatform ? `<td class="plat"><span class="plat-circle" style="background-color: #${entry.route.color}">${entry.plat}</span></td>` : `<td class="plat"></td>`
+        const lrtElement = entry.route.isLRT ? `<span class="lrt-route" style="border-color:#${entry.route.secondaryColor}">${entry.route.initials}</span>` : "";
+        const platformElement = SETTINGS.showPlatform ? `<td class="plat"><span class="plat-circle" style="background-color: #${entry.route.color}">${entry.plat}</span></td>` : `<td class="plat"></td>`;
         const ETAElement = `<td class="eta scalable">${time} <span class="etamin">${switchLang(timetext)}</span></td>`
-        const destElement = `<td class="destination scalable">${lrtElement}${stationName}</td>`
+        const destElement = `<td class="destination scalable">${lrtElement}${stationName}</td>`;
 
         tableRow += destElement;
         tableRow += platformElement;
@@ -148,7 +154,6 @@ function getETAtime(time, departure) {
 
 function cycleLanguage() {
     languageCycle++;
-    changeUIPreset();
 }
 
 async function fetchETAData() {
