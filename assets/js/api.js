@@ -2,7 +2,7 @@
 
 function processLightRailData(data) {
     if (data.status == 0) {
-        console.error(`No ETA Available: ${data.message}`)
+        console.error(`No ETA Available: ${data.message}`);
         return [];
     }
 
@@ -19,25 +19,25 @@ function processLightRailData(data) {
             if (isNaN(ttntNum)) {
                 if (entry.time_en == "-") ttntNum = 0;
                 if (entry.time_en == "Arriving" || entry.time_en == "Departing") ttntNum = 1;
-                if (entry.time_en == "Departing") isDeparture = true;
+                isDeparture = entry.time_en == "Departing";
             }
             
             let time = new Date(new Date().getTime() + (ttntNum * 60 * 1000));
             let arrivalEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttntNum, time, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "");
             finalData.push(arrivalEntry);
         }
-        finalData.sort((a, b) => a.ttnt - b.ttnt)
+        finalData.sort((a, b) => a.ttnt - b.ttnt);
     }
     return finalData;
 }
 
 function processHeavyRailData(data, route, stn, direction) {
     if (data.status == 0) {
-        console.error(`No ETA Available: ${data.message}`)
+        console.error(`No ETA Available: ${data.message}`);
         return [];
     }
 
-    const routeAndStation = `${route}-${stn}`
+    const routeAndStation = `${route}-${stn}`;
 
     let tempArray = [];
     let finalData = [];
