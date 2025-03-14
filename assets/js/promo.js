@@ -5,6 +5,7 @@ import SETTINGS from './static/settings.js';
 let nextPromoSwap = 0;
 let currentPromoScreen = 0;
 let shouldShowTtnt = false;
+let languageCounter = 0;
 
 function cycle() {
     if(!shouldShowTtnt) {
@@ -26,8 +27,14 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
     let nextPromoCycle = promotionData.cycle[currentPromoScreen];
     let needRerender = false;
     if (Date.now() >= nextPromoSwap) {
+        languageCounter++;
         cycle();
-        cycleLanguage();
+        
+        if(languageCounter >= 2) {
+            cycleLanguage();
+            languageCounter = 0;
+        }
+        
         needRerender = true;
     }
 
