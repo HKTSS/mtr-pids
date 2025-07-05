@@ -50,19 +50,19 @@ function updatePanel(lang) {
     for (const promo of promotionData.special) {
         $(`.specialMsg > option[value="${promo.id}"]`).text(`${switchLang(promo.name)}`);
     }
+    
+    if (!SETTINGS.route.directionInfo || SETTINGS.route.directionInfo.length < 2) return;
+    const UPTerminus = StationCodeList.get(SETTINGS.route.directionInfo[0]);
+    const DNTerminus = StationCodeList.get(SETTINGS.route.directionInfo[1]);
+    const toText = switchLang("往 |To ");
 
     $('.direction > option').each(function() {
-        if (!SETTINGS.route.directionInfo || SETTINGS.route.directionInfo.length < 2) return;
-        const UPTerminus = StationCodeList.get(SETTINGS.route.directionInfo[0]);
-        const DNTerminus = StationCodeList.get(SETTINGS.route.directionInfo[1]);
-        const toText = switchLang("往 |To ");
-        
         const thisValue = $(this).val();
-        
-        if (thisValue == "UP") {
-            $(this).text(toText + switchLang(UPTerminus.name));
-        } else if (thisValue == "DOWN") {
-            $(this).text(toText + switchLang(DNTerminus.name));
+
+        if (thisValue == "UP" || thisValue == "DOWN") {
+            const terminus = thisValue == "UP" ? UPTerminus : DNTerminus;
+            if(terminus != SETTINGS.stn) $(this).prop('selected', true); // Preselect direction that don't go to the station we're in, since that's useless
+            $(this).text(toText + switchLang(terminus.name));
         } else if (thisValue == "BOTH") {
             $(this).text(switchLang("雙向|Both"));
         } else {
