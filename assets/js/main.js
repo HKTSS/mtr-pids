@@ -1,7 +1,7 @@
 'use strict'
 
 import API from './api.js'
-import CONFIG_PANEL from './configpanel.js'
+import CONFIG_PANEL from './config_panel.js'
 import SETTINGS from './static/settings.js';
 import UI from './ui.js'
 

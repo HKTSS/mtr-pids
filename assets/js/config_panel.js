@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 import SETTINGS from './static/settings.js';
 import UI from './ui.js';
@@ -28,12 +28,12 @@ function toggleVisibility() {
     });
     
 
-    updateUILanguage(SETTINGS.UILang);
+    updatePanel(SETTINGS.UILang);
 }
 
-function updateUILanguage(lang) {
-    $('.lang').hide()
-    $('.lang-' + lang).show()
+function updatePanel(lang) {
+    $('.lang').hide();
+    $('.lang-' + lang).show();
 
     $('.route > option').each(function() {
         $(this).text(switchLang(RouteList[$(this).val()].name));
@@ -44,7 +44,7 @@ function updateUILanguage(lang) {
     });
 
     $('.dpMode > option').each(function() {
-        $(this).text(switchLang(DisplayMode[$(this).val()]))
+        $(this).text(switchLang(DisplayMode[$(this).val()]));
     })
 
     for (const promo of promotionData.special) {
@@ -73,12 +73,12 @@ function updateUILanguage(lang) {
 
 function saveConfig() {
     if (SETTINGS.onlineMode) {
-        SETTINGS.route = RouteList[$(`.route`).val()]
-        SETTINGS.uiPreset = UIPreset[SETTINGS.route.initials]
-        SETTINGS.direction = $('.direction').val()
-        SETTINGS.stn = StationCodeList.get($('.station').val())
+        SETTINGS.route = RouteList[$(`.route`).val()];
+        SETTINGS.uiPreset = UIPreset[SETTINGS.route.initials];
+        SETTINGS.direction = $('.direction').val();
+        SETTINGS.stn = StationCodeList.get($('.station').val());
     } else {
-        let customFontRatio = $('.fontRatioCustom').val()
+        let customFontRatio = $('.fontRatioCustom').val();
         let customRTColor = $('.rtColor').val().substring(1);
 
         if (!parseFloat(customFontRatio)) {
@@ -100,7 +100,7 @@ function saveConfig() {
             let timetilnexttrain = $(`#ttnt${i + 1}`).val();
 
             if (!destination && !platform && !timetilnexttrain) {
-                customArrivalData.push(null)
+                customArrivalData.push(null);
                 continue;
             }
 
@@ -123,25 +123,25 @@ function saveConfig() {
         SETTINGS.specialMsgID = "NONE";
     }
     
-    SETTINGS.rtHeader = $('#routeheader').is(':checked')
+    SETTINGS.rtHeader = $('#routeheader').is(':checked');
     SETTINGS.dpMode = DisplayMode[$('.dpMode').val()];
-    SETTINGS.showPlatform = $('.showPlat').is(':checked')
+    SETTINGS.showPlatform = $('.showPlat').is(':checked');
 }
 
 function setupUI() {
-    $('.route').empty()
+    $('.route').empty();
     for (const key in RouteList) {
         if (RouteList[key].hidden) continue;
-        $('.route').append(`<option value="${key}">${switchLang(RouteList[key].name)}</option>`)
+        $('.route').append(`<option value="${key}">${switchLang(RouteList[key].name)}</option>`);
     }
     SETTINGS.route = RouteList[$('.route').val()];
     
     updateStationList();
 
-    $('.dpMode').empty()
+    $('.dpMode').empty();
     for (const mode in DisplayMode) {
         let modeName = DisplayMode[mode];
-        $('.dpMode').append(`<option value=${mode}>${switchLang(modeName)}</option>`)
+        $('.dpMode').append(`<option value=${mode}>${switchLang(modeName)}</option>`);
     }
 
     if (!document.fullscreenEnabled) {
@@ -157,7 +157,7 @@ function setupUI() {
     if (!SETTINGS.debugMode) {
         toggleVisibility();
     } else {
-        SETTINGS.dpMode = DisplayMode.NT4
+        SETTINGS.dpMode = DisplayMode.NT4;
     }
 }
 
@@ -175,19 +175,19 @@ function registerUIControlEvent() {
     $('.onlineMode').on('change', function() {
         SETTINGS.onlineMode = $(this).is(':checked')
         if (SETTINGS.onlineMode) {
-            $(".online").show()
-            $(".offline").hide()
+            $(".online").show();
+            $(".offline").hide();
             SETTINGS.route = RouteList[$('.route').val()];
         } else {
-            $(".online").hide()
-            $(".offline").show()
+            $(".online").hide();
+            $(".offline").show();
         }
     });
 
     $('.route').on('change', function() {
         SETTINGS.route = RouteList[$(this).val()];
-        updateStationList()
-        updateUILanguage(SETTINGS.UILang)
+        updateStationList();
+        updatePanel(SETTINGS.UILang);
 
         if (SETTINGS.route.isLRT) {
             $('.direction').prop("disabled", true);
@@ -200,11 +200,11 @@ function registerUIControlEvent() {
         let toggledLang = SETTINGS.UILang == Lang.ENGLISH ? Lang.CHINESE : Lang.ENGLISH
         SETTINGS.UILang = toggledLang;
         $(`#langchoose`).text(toggledLang == Lang.ENGLISH ? 'EN' : '中')
-        updateUILanguage(toggledLang)
+        updatePanel(toggledLang)
     });
 
     $('.saveCfg').on('click', function() {
-        toggleVisibility()
+        toggleVisibility();
     });
 
     $('.tfs').on('click', function() {
@@ -220,7 +220,7 @@ function setup() {
     setupUI();
     saveConfig();
     registerUIControlEvent();
-    updateUILanguage(SETTINGS.UILang);
+    updatePanel(SETTINGS.UILang);
     
     $(window).on('keydown', function(e) {
         /* Enter key */

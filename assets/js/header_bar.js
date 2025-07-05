@@ -2,7 +2,7 @@
 
 import { WEATHER_API, WeatherIcon, WeatherUnit } from './static/weatherdata.js';
 import SETTINGS from './static/settings.js';
-import CONFIG_PANEL from './configpanel.js';
+import CONFIG_PANEL from './config_panel.js';
 import UI from './ui.js';
 
 function updateClock() {
