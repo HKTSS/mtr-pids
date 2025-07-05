@@ -6,6 +6,7 @@
 }
 
 #header-bar {
+    position: relative;
     display: flex;
     height: var(--title-height);
     background-color: #002b54;
@@ -21,13 +22,17 @@
     background-color: var(--route-color);
 }
 
-#configure-button {
+#header-bar > .filler {
     flex: 1;
+}
+
+#configure-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    border: none;
-    background: none;
-    font-size: inherit;
-    color: transparent;
+    opacity: 0;
 }
 
 #configure-button:focus-visible {
