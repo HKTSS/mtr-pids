@@ -11,6 +11,10 @@
     --eta-family: "Myriad Pro", "Noto Sans", "Noto Serif HK";
     --eta-width: 260px;
     --aqua: #c8ebfa;
+    
+    /* Units */
+    --px-100: 5.2vw;
+    --px-50: 2.6vw;
 }
 
 .main {

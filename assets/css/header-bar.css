@@ -13,7 +13,7 @@
     color: white;
     font-family: var(--title-family);
     font-weight: var(--title-weight);
-    padding: 0 5.208%;
+    padding: 0 var(--px-100);
     font-size: calc(calc(1vh + 1vw) * 3.35);
 }
 
@@ -37,7 +37,12 @@
 .weathers {
     display: flex;
     align-items: center;
-    gap: 2.5vw;
+    gap: var(--px-50);
+}
+
+.weatherIcon {
+    display: flex;
+    gap: var(--px-50);
 }
 
 .weatherIcon img {
