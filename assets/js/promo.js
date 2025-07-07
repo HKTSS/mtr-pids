@@ -1,7 +1,7 @@
 'use strict'
 
 import SETTINGS from './static/settings.js';
-import { RouteList, StationList, UIPreset, ETA_API, promotionData, DisplayMode } from './static/data.js';
+import { promotionData, DisplayMode } from './static/data.js';
 
 let nextPromoSwap = 0;
 let currentPromoScreen = 0;

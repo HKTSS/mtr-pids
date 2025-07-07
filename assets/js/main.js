@@ -3,7 +3,7 @@
 import ETA_CONTROLLER from './eta_controller.js'
 import SETTINGS from './static/settings.js';
 import UI from './ui.js'
-import { ETA_API, DisplayMode, getRoute } from './static/data.js';
+import { ETA_API, getRoute } from './static/data.js';
 
 let etaData = [];
 
@@ -32,6 +32,7 @@ $(document).ready(async function() {
 
     setInterval(() => {
         updateETA();
+        // const isPaxUpdating = etaData[0]?.paxLoad?.length == 1;
         UI.draw(etaData);
     }, 1 * 1000);
 });

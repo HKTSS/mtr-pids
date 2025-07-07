@@ -4,7 +4,7 @@ import SETTINGS from './static/settings.js';
 import HEADER_BAR from './header_bar.js'
 import PROMO from './promo.js'
 
-import { UIPreset, DisplayMode, getRoute, getStation } from './static/data.js';
+import { ViaData, UIPreset, DisplayMode, getRoute, getStation } from './static/data.js';
 
 const Chinese = /\p{Script=Han}/u;
 
@@ -26,9 +26,6 @@ function drawUI(etaData) {
     } else {
         $(".divider").hide();
     }
-    
-    const isPaxUpdating = etaData[0]?.paxLoad?.length == 1;
-    $(".notice-paxload").css('visibility', isPaxUpdating ? 'visible' : 'hidden');
 
     let entryIndex = 0;
     $('#arrivalOverlay > tbody > tr').each(function(i) {

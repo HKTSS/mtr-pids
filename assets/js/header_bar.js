@@ -1,6 +1,6 @@
 'use strict'
 
-import { WEATHER_API, WeatherUnit } from './static/weatherdata.js';
+import { fetchWeatherData } from './weather_controller.js';
 import SETTINGS from './static/settings.js';
 import UI from './ui.js';
 import { getRoute } from './static/data.js';
@@ -42,30 +42,7 @@ async function updateWeather() {
     }
 
     /* Update temperature */
-    let temperatureData = weatherData.rhrread.temperature.data;
-    let temperature = 0;
-
-    /* Average the temperature collected from all stations */
-    for (const place of temperatureData) {
-        temperature = temperature + parseInt(place.value);
-    }
-
-    temperature = Math.round(temperature / temperatureData.length)
-    document.querySelector('#temperature').textContent = `${temperature}${WeatherUnit}`;
-}
-
-async function fetchWeatherData() {
-    try {
-        let rhrread = await fetch(WEATHER_API.HKO_RHRREAD.url);
-        let warning = await fetch(WEATHER_API.HKO_WARNING_INFO.url);
-
-        return {
-            rhrread: await rhrread.json(),
-            warning: await warning.json()
-        }
-    } catch (err) {
-        return null;
-    }
+    document.querySelector('#temperature').textContent = `${Math.round(weatherData.avgTemp)}°C`;
 }
 
 function updateHeader() {

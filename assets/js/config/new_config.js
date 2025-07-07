@@ -1,9 +1,9 @@
 import LANG_EN from './lang/en.js';
 import LANG_ZH from './lang/zh.js';
-import SETTINGS from './static/settings.js';
-import { RouteList, DisplayMode, promotionData, getRoute, getStation } from './static/data.js';
-import API from './eta_controller.js';
-import { save } from './local_storage.js';
+import SETTINGS from '../static/settings.js';
+import { RouteList, DisplayMode, promotionData, getRoute, getStation } from '../static/data.js';
+import API from '../eta_controller.js';
+import { save } from '../local_storage.js';
 
 const { createApp, ref, watchEffect, watch, toRaw } = Vue;
 
