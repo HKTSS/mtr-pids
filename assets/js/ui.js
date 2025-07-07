@@ -152,7 +152,7 @@ function cycleLanguage() {
 }
 
 function changeUIPreset() {
-    let preset = UIPreset[SETTINGS.route.initials] ?? UIPreset["default"];
+    let preset = UIPreset[SETTINGS.route] ?? UIPreset["default"];
 
     $("body").css("--font-weight", preset.fontWeight);
     $("body").css("--platcircle-family", preset.platformCircle);
