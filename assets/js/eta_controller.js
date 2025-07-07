@@ -150,7 +150,7 @@ async function getETA(api, route, stn, direction) {
         for(let url of api.urls) {
             let transformedURL = transformURL(url, route, stn, null);
             try {
-                const response = await fetch(transformedURL);
+                const response = await fetch(transformedURL, { cache: "no-cache" });
                 if (!response.ok) {
                     console.warn(`Cannot fetch from URL:\n${transformedURL}\n(${response.status}).`);
                     continue;
