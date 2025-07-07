@@ -47,7 +47,7 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
     
     $('#promo').show();
     
-    let firstTrainTooLong = SETTINGS.debugMode ? false : etaData[0]?.ttnt > 20; // 4 row ttnt not displayed if first train over 20min
+    let firstTrainTooLong = SETTINGS.debugMode ? false : etaData.length == 0 || etaData[0].ttnt > 20; // 4 row ttnt not displayed if first train over 20min
 
     if (shouldShowTtnt && (SETTINGS.displayMode == DisplayMode.AD || SETTINGS.displayMode == DisplayMode.ADNT1 || firstTrainTooLong)) {
         // Skip 4 row arrival
