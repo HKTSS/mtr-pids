@@ -74,6 +74,9 @@ const app = createApp({
             close,
             dataSource
         }
+    },
+    mounted() {
+        document.querySelector("#overlay").classList.remove("hidden");
     }
 });
 
