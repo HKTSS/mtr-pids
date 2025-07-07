@@ -1,5 +1,4 @@
 :root {
-/*    --route-color: transparent;*/
     --title-weight: 600;
     --title-height: 13.7vh;
     --title-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif HK';
@@ -7,23 +6,21 @@
 
 #header-bar {
     position: relative;
-    display: flex;
+    padding: 0 var(--px-100);
     height: var(--title-height);
-    background-color: #002b54;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
-    color: white;
+    background-color: var(--mtr-blue);
+    font-size: calc(calc(1vh + 1vw) * 3.35);
     font-family: var(--title-family);
     font-weight: var(--title-weight);
-    padding: 0 var(--px-100);
-    font-size: calc(calc(1vh + 1vw) * 3.35);
+    color: white;
 }
 
 #header-bar.route-color {
     background-color: var(--route-color);
-}
-
-#header-bar > .filler {
-    flex: 1;
 }
 
 #configure-button {
@@ -33,24 +30,25 @@
     width: 100%;
     height: 100%;
     opacity: 0;
+    cursor: pointer;
 }
 
 #configure-button:focus-visible {
     color: white;
 }
 
-.weathers {
+.weather {
     display: flex;
     align-items: center;
     gap: var(--px-50);
 }
 
-.weatherIcon {
+#weather-icon {
     display: flex;
     gap: var(--px-50);
 }
 
-.weatherIcon img {
+#weather-icon img {
     width: calc((1vw + 1vh) * 4.5);
     max-width: calc(var(--title-height) - 20px);
     max-height: calc(var(--title-height) - 20px);

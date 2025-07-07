@@ -1,17 +1,17 @@
-let settings = {
+import { DisplayMode } from './data.js';
+
+const settings = {
     direction: 'UP',
     debugMode: false,
-    dpMode: DisplayMode.NORMAL,
-    onlineMode: true,
-    route: null,
-    stn: null,
-    customArrivalData: null,
+    displayMode: DisplayMode.NORMAL,
+    dataSource: "ONLINE",
+    route: "TCL",
+    station: "HOK",
+    adhoc: "NONE",
     showPlatform: true,
-    specialMsgID: "NONE",
     showingSpecialMessage: false,
     uiPreset: null,
-    rtHeader: false,
-    UILang: 'en'
+    rtHeader: false
 }
 
 export default settings;

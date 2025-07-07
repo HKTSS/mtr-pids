@@ -1,5 +1,23 @@
 /* This class is responsible for fetching the ETA Information via the respective API */
 
+import { RouteList, StationList, ETA_API, ArrivalEntry, Route } from './static/data.js';
+import SETTINGS from './static/settings.js';
+
+const customRoute = new Route("CST", ETA_API.NONE, "自定路綫|Custom Line", "#000", "#000", false, [], [], true);
+
+const customArrivalData = [
+    new ArrivalEntry("", 1, null, customRoute, "1", false, false, null, -1, null, false),
+    new ArrivalEntry("", 5, null, customRoute, "1", false, false, null, -1, null, false),
+    new ArrivalEntry("", 10, null, customRoute, "1", false, false, null, -1, null, false),
+    new ArrivalEntry("", 15, null, customRoute, "1", false, false, null, -1, null, false)
+];
+
+let etaCache = {
+    expiry: 0,
+    data: null,
+    lastRequestCombo: null
+};
+
 function processLightRailData(data) {
     if (data.status == 0) {
         console.error(`No ETA Available: ${data.message}`);
@@ -8,7 +26,7 @@ function processLightRailData(data) {
 
     let finalData = [];
     for (const platform of data.platform_list) {
-        let currentPlatform = platform.platform_id
+        let currentPlatform = platform.platform_id.toString();
         let isDeparture = false;
         if (platform.end_service_status == 1) continue;
 
@@ -22,8 +40,7 @@ function processLightRailData(data) {
                 isDeparture = entry.time_en == "Departing";
             }
             
-            let time = new Date(new Date().getTime() + (ttntNum * 60 * 1000));
-            let arrivalEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttntNum, time, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "");
+            let arrivalEntry = new ArrivalEntry(`${entry.dest_ch}|${entry.dest_en}`, ttntNum, null, RouteList[`LR${entry.route_no}`], currentPlatform, true, isDeparture, null, 0, "");
             finalData.push(arrivalEntry);
         }
         finalData.sort((a, b) => a.ttnt - b.ttnt);
@@ -87,7 +104,7 @@ function processHeavyRailData(data, route, stn, direction) {
 
         /* Calculate the time difference */
         let ttnt = Math.max(Math.ceil((arrTime - sysTime) / 60000), 0);
-        let destName = StationCodeList.get(entry.dest).name;
+        let destName = StationList.get(entry.dest).name;
 
         if (entry.timeType == "D") {
             isDeparture = true;
@@ -107,39 +124,53 @@ function processHeavyRailData(data, route, stn, direction) {
             }
         }
 
-        let arrivalEntry = new ArrivalEntry(destName, ttnt, arrTime, routeData, entry.plat, false, isDeparture, entry.paxLoad ? entry.paxLoad : null, entry.firstClass, entry.route, false);
+        let arrivalEntry = new ArrivalEntry(destName, ttnt, arrTime, routeData, entry.plat, false, isDeparture, entry.paxLoad ?? null, entry.firstClass, entry.route, false);
         finalData.push(arrivalEntry);
     }
 
     return finalData;
 }
 
-async function fetchData(api, route, stn, direction) {
+async function getETA(api, route, stn, direction) {
+    if(SETTINGS.dataSource == 'OFFLINE') {
+        return customArrivalData;
+    }
+
     if(api != ETA_API.MTR_LR && api != ETA_API.MTR_OPEN) {
         console.warn("Unknown API: " + api)
         return null;
     }
 
+    let requestCombo = `${route}-${stn}`;
+
     let data = null;
-    for(let url of api.urls) {
-        let transformedURL = transformURL(url, route, stn, null);
-        try {
-            const response = await fetch(transformedURL);
-            if (!response.ok) {
-                console.warn(`Cannot fetch from URL:\n${transformedURL}\n(${response.status}).`);
+    if(etaCache.data != null && canUseCache(requestCombo)) {
+        data = etaCache.data;
+    } else {
+        for(let url of api.urls) {
+            let transformedURL = transformURL(url, route, stn, null);
+            try {
+                const response = await fetch(transformedURL);
+                if (!response.ok) {
+                    console.warn(`Cannot fetch from URL:\n${transformedURL}\n(${response.status}).`);
+                    continue;
+                }
+                data = await response.json();
+                break;
+            } catch {
+                console.warn(`Cannot fetch from URL:\n${transformedURL}.`);
                 continue;
             }
-            data = await response.json();
-            break;
-        } catch {
-            console.warn(`Cannot fetch from URL:\n${transformedURL}.`);
-            continue;
         }
-    }
 
-    if(data == null) {
-        console.error(`Failed to fetch any ETAs from ${api.name}!.`);
-        return [];
+        if(data == null) {
+            console.error(`Failed to fetch any ETAs from ${api.name}!.`);
+            return [];
+        } else {
+            etaCache.expiry = Date.now() + (10 * 1000);
+            etaCache.data = data;
+            etaCache.lastRequestCombo = requestCombo;
+        }
     }
 
     if(api == ETA_API.MTR_LR) {
@@ -149,8 +180,12 @@ async function fetchData(api, route, stn, direction) {
     }
 }
 
+function canUseCache(requestCombo) {
+    return Date.now() <= etaCache.expiry && etaCache.lastRequestCombo == requestCombo;
+}
+
 function transformURL(url, rt, stn, dir) {
     return url.replace("{rt}", rt).replace("{stn}", stn).replace("{dir}", dir);
 }
 
-export default { fetchData };
+export default { getETA, customRoute, customArrivalData };

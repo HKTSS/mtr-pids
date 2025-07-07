@@ -4,17 +4,22 @@ import SETTINGS from './static/settings.js';
 import HEADER_BAR from './header_bar.js'
 import PROMO from './promo.js'
 
+import { UIPreset, DisplayMode, getRoute, getStation } from './static/data.js';
+
+const Chinese = /\p{Script=Han}/u;
+
 let arrivalVisibility = [true, true, true, true];
 let languageCycle = 0;
-let cycleShowTtnt = false;
-let etaData = [];
+let pauseUIUpdate = false;
 
-function drawUI() {
+function drawUI(etaData) {
+    if(pauseUIUpdate) return;
+    
     // Promo is responsive for cycling the language, so let it go first
     PROMO.draw(etaData, cycleLanguage, (newVisibility) => arrivalVisibility = newVisibility);
     HEADER_BAR.draw();
     
-    $('body').css('--route-color', "#" + SETTINGS.route.color);
+    $('body').css('--route-color', getRoute(SETTINGS.route).color);
     
     if(SETTINGS.direction == "BOTH_SPLIT") {
         $(".divider").show();
@@ -31,7 +36,7 @@ function drawUI() {
         const thisRowHaveETA = entryIndex <= etaData.length - 1 && etaData[entryIndex] != null;
         
         // ETA is not displayed if first train is over 20 min.
-        const arrivalEntryValid = SETTINGS.debugMode ? true : etaData[0]?.ttnt <= 20; 
+        const arrivalEntryValid = SETTINGS.debugMode ? true : (etaData[0]?.ttnt <= 20 && isArrivalEntryValid(etaData[entryIndex])); 
 
         if (!thisRowIsVisible || !thisRowHaveETA || !arrivalEntryValid) {
             $(this).replaceWith(`<tr><td class="destination">&nbsp;</td><td style="width:10%">&nbsp;</td><td class="eta">&nbsp;</td></tr>`);
@@ -39,7 +44,7 @@ function drawUI() {
         }
 
         let entry = etaData[entryIndex];
-        let viaData = entry.via ? ViaData[SETTINGS.route.initials]?.[SETTINGS.stn.initials] : null;
+        let viaData = entry.via ? ViaData[SETTINGS.route]?.[SETTINGS.station] : null;
         let stationName;
         if(entry.via) {
             stationName = `${switchLang(entry.dest)}${switchLang(viaData.via)}${switchLang(viaData.name)}`;
@@ -50,8 +55,8 @@ function drawUI() {
         let timetext = "";
         let time = "";
 
-        if (SETTINGS.dpMode == DisplayMode.NT4_CT) {
-            time = getETAtime(entry.time, entry.isDeparture);
+        if (SETTINGS.displayMode == DisplayMode.NT4_CT) {
+            time = getETAtime(entry.ttnt, entry.absTime, entry.isDeparture);
         } else {
             time = getETAmin(entry.ttnt, entry.isDeparture);
 
@@ -65,8 +70,8 @@ function drawUI() {
         }
 
         let tableRow = "";
-        const lrtElement = entry.route.isLRT ? `<span class="lrt-route" style="border-color:#${entry.route.secondaryColor}">${entry.route.initials}</span>` : "";
-        const platformElement = SETTINGS.showPlatform ? `<td class="plat"><span class="plat-circle" style="background-color: #${entry.route.color}">${entry.plat}</span></td>` : `<td class="plat"></td>`;
+        const lrtElement = entry.route.isLRT ? `<span class="lrt-route" style="border-color: ${entry.route.secondaryColor}">${entry.route.initials}</span>` : "";
+        const platformElement = SETTINGS.showPlatform ? `<td class="plat"><span class="plat-circle" style="background-color: ${entry.route.color}">${entry.plat}</span></td>` : `<td class="plat"></td>`;
         const ETAElement = `<td class="eta scalable">${time} <span class="etamin">${switchLang(timetext)}</span></td>`
         const destElement = `<td class="destination scalable">${lrtElement}${stationName}</td>`;
 
@@ -88,22 +93,22 @@ function drawUI() {
 /* Hacky solution, but if it works then it works. */
 function adjustLayoutSize() {
     $('.destination').each(function() {
-        if(SETTINGS.stn.marquee) {
+        if(getStation(SETTINGS.station).marquee) {
             return;
         }
         
         const ogSize = SETTINGS.uiPreset.fontRatio * parseInt($(this).css("font-size"));
-        const PADDING = 80 * (window.innerWidth / 1920);
-        const tdWidth = $(this).width() - PADDING;
+        const PADDING = 120 * (window.innerWidth / 1920);
+        const tdWidth = $(this).outerWidth(true) - PADDING;
         let percentW = 1;
         
-        $('#widthCheck').html($(this).html())
+        $('#widthCheck').html($(this).html());
         $('#widthCheck').css("font-size", ogSize);
         $('#widthCheck').css("font-family", $(this).css("font-family"));
         $("#widthCheck").css("letter-spacing", $(this).css("letter-spacing"));
         $("#widthCheck").css("font-weight", $(this).css("font-weight"));
         
-        let resultWidth = $('#widthCheck').width();
+        let resultWidth = $('#widthCheck').outerWidth(true);
         
         if (resultWidth > tdWidth) {
             percentW = (tdWidth / resultWidth);
@@ -111,13 +116,6 @@ function adjustLayoutSize() {
         
         $(this).css("font-size", `${ogSize * (percentW)}px`);
     });
-}
-
-function switchLang(str) {
-    let targetLang = languageCycle;
-    
-    let name = str.split("|");
-    return name[targetLang % name.length];
 }
 
 function getETAmin(eta, departure) {
@@ -129,20 +127,28 @@ function getETAmin(eta, departure) {
     return eta;
 }
 
-function getETAtime(time, departure) {
-    return time.toLocaleTimeString('en-US', { 
+function getETAtime(ttnt, absTime, departure) {
+    let arrivalDate = absTime ?? new Date(Date.now() + (ttnt * 1000 * 60));
+    return arrivalDate.toLocaleTimeString('en-US', { 
         hour: '2-digit', 
         minute: '2-digit', 
         hour12: false
     });
 }
 
-function cycleLanguage() {
-    languageCycle++;
+function isArrivalEntryValid(arrivalEntry) {
+    return arrivalEntry == null || arrivalEntry.plat.length > 0 && arrivalEntry.dest.length > 0 && !isNaN(parseInt(arrivalEntry.ttnt));
 }
 
-function updateETAData(newData) {
-    etaData = newData;
+function switchLang(str) {
+    let targetLang = languageCycle;
+    
+    let name = str.split("|");
+    return name[targetLang % name.length];
+}
+
+function cycleLanguage() {
+    languageCycle++;
 }
 
 function changeUIPreset() {
@@ -167,18 +173,22 @@ function setupDebugKeybind() {
     $(window).on('keydown', function(e) {
         /* G key */
         if (e.which == 71 && SETTINGS.debugMode) {
-            PROMO.cycle()
-            PROMO.draw(etaData, cycleLanguage, (newVisibility) => arrivalVisibility = newVisibility)
+            PROMO.cycle();
+            PROMO.draw([], cycleLanguage, (newVisibility) => arrivalVisibility = newVisibility);
             cycleLanguage();
-            drawUI();
+            drawUI([]);
+        }
+
+        if(e.which == 70 && SETTINGS.debugMode) {
+            pauseUIUpdate = !pauseUIUpdate;
         }
     });
 }
 
-function setup() {
-    HEADER_BAR.setup();
-    PROMO.setup();
+async function setup() {
+    await HEADER_BAR.setup();
+    PROMO.setup()
     setupDebugKeybind();
 }
 
-export default {setup: setup, draw: drawUI, switchLang: switchLang, cycleLanguage: cycleLanguage, updateETAData: updateETAData};
+export default {setup, draw: drawUI, switchLang: switchLang, cycleLanguage };

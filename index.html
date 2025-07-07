@@ -6,20 +6,22 @@
     <meta charset="UTF-8">
     <title>MTR PIDS Simulator</title>
     <link rel="stylesheet" href="./assets/css/reset.css">
-    <link rel="stylesheet" href="./assets/css/config-panel.css">
+    <link rel="stylesheet" href="./assets/css/overlay.css">
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/header-bar.css">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="./assets/js/static/data.js"></script>
+    <script src="https://unpkg.com/vue@3.5.17/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/vue-i18n@11.1.9/dist/vue-i18n.global.prod.js"></script>
+    <script src="https://unpkg.com/jquery@3.7.1/dist/jquery.min.js"></script>
+
     <script src="./assets/js/main.js" type="module"></script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:locale" content="zh_HK" />
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hktss.github.io/mtr-pids">
-    <meta property="og:title" content="願景資訊顯示屏模擬器">
-    <meta property="og:description" content=" ">
+    <meta property="og:title" content="港鐵願景資訊顯示屏模擬器">
+    <meta property="og:description" content="Hong Kong MTR Railway Vision PIDS Simulator">
     <meta property="og:image" content="https://hktss.github.io/mtr-pids/assets/img/thumb.png">
     <meta property="og:image:width" content="960">
     <meta property="og:image:height" content="468">
@@ -35,176 +37,139 @@
 
 <body>
     <span id="widthCheck"></span>
-    <div class="config">
-        <div class="config-box">
-            <div class="title-div">
-                <span class="title lang lang-en">PIDS Config</span>
-                <span class="title lang lang-zh">願景資訊顯示屏模擬器</span>
+    <div id="overlay">
+        <section class="intro">
+            <div id="lang">
+                <h2>{{ $t('intro.languages') }}</h2>
+                <div id="lang-select">
+                    <button :class="locale == $i18n.locale ? 'selected' : null" v-for="locale in $i18n.availableLocales"
+                        :key="`locale-${locale}`" @click="$i18n.locale = locale">{{ $t(`intro.language.${locale}`)
+                        }}</button>
+                </div>
+            </div>
+
+            <h1>{{ $t('intro.welcome') }}</h1>
+            <p>{{ $t('intro.description_1') }}</p>
+            <p>{{ $t('intro.description_2') }}</p>
+            <p>{{ $t('intro.description_3') }}</p>
+            <img class="pids-preview" alt="A preview of the MTR PIDS in real life" src="./assets/img/preview.png">
+            <a href="https://hktss.github.io"><img height="42" src="./assets/img/hktss_3d.png" alt="HKTSS Homepage"></a>
+            <p>{{ $t('intro.disclaimer') }}</p>
+            <p>{{ $t('intro.enquiries') }}</p>
+            <a href="https://github.com/HKTSS/mtr-pids">{{ $t('intro.oss') }}</a>
+        </section>
+        <section class="settings">
+            <h1>{{ $t('settings.title') }}</h1>
+            <form>
+                <fieldset>
+                    <legend>{{ $t('settings.sections.data.title') }}</legend>
+                    <div>
+                        <label for="source">{{ $t('settings.sections.data.source.name') }}</label>
+                        <select id="source" v-model="dataSourceReference">
+                            <option value="ONLINE">{{ $t('settings.sections.data.source.online') }}</option>
+                            <option value="OFFLINE">{{ $t('settings.sections.data.source.offline') }}</option>
+                        </select>
+                    </div>
+
+                    <div v-if="dataSourceReference == 'ONLINE'">
+                        <div>
+                            <label for="route">{{ $t('settings.sections.data.route') }}</label>
+                            <select id="route" v-model="routeReference">
+                                <option v-for="route in Object.values(RouteList).filter(e => !e.hidden)" :key="route.initials" :value="route.initials">{{ $t(`data.routes.${route.initials}`) }}
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="station">{{ $t('settings.sections.data.station') }}</label>
+                            <select id="station" v-model="stationReference">
+                                <option v-for="stationCode in getRoute(routeReference).stations" :value="stationCode">{{ $t(`data.stations.${stationCode}`) }}</option>
+                            </select>
+                        </div>
+                        <div v-if="!routeReference.isLRT">
+                            <label for="direction">{{ $t('settings.sections.data.direction.name') }}</label>
+                            <select id="direction" v-model="SETTINGS.direction">
+                                <option value="UP">{{ $t('settings.sections.data.direction.to', { dir: $t(`data.stations.${getRoute(routeReference).directionInfo[0]}`)} ) }}</option>
+                                <option value="DOWN">{{ $t('settings.sections.data.direction.to', { dir: $t(`data.stations.${getRoute(routeReference).directionInfo[1]}`)} ) }}</option>
+                                <option value="BOTH">{{ $t('settings.sections.data.direction.both') }}</option>
+                                <option value="BOTH_SPLIT">{{ $t('settings.sections.data.direction.both_split') }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <fieldset>
+                            <legend>{{ $t('settings.sections.data.custom.name') }}</legend>
+                            <p class="section-box">
+                                {{ $t('settings.sections.data.custom.tips_1') }}
+                                <br>
+                                {{ $t('settings.sections.data.custom.tips_2') }}
+                            </p>
+                            <table>
+                                <tr>
+                                    <td>{{ $t('settings.sections.data.custom.destination') }}</td>
+                                    <td class="centeredItem">{{ $t('settings.sections.data.custom.platform') }}</td>
+                                    <td class="centeredItem">{{ $t('settings.sections.data.custom.eta') }}</td>
+                                </tr>
+                                <tr v-for="(arrival, idx) in API.customArrivalData">
+                                    <td><input type="text" autocomplete="off" :id="`destination-${idx}`" v-model="arrival.dest"></input></td>
+                                    <td><input type="text" size="1" autocomplete="off" :id="`platform-${idx}`" v-model="arrival.plat"></input></td>
+                                    <td><input type="number" size="2" min="0" :max="idx == 0 ? 19 : 99" autocomplete="off" :id="`ttnt-${idx}`" v-model="arrival.ttnt"></input></td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                        <section>
+                            <label for="route-color">{{ $t('settings.sections.data.custom.route_color') }}</label>
+                            <input type="color" maxlength="6" size="6" id="route-color"
+                                v-model="API.customRoute.color"></input>
+                        </section>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>{{ $t('settings.sections.display.title') }}</legend>
+                    <section>
+                        <label for="adhoc">{{ $t('settings.sections.display.adhoc.name') }}</label>
+                        <select id="adhoc" v-model="SETTINGS.adhoc">
+                            <option v-for="adhoc in promotionData.special" :key="adhoc.id" :value="adhoc.id">{{ $t(`settings.sections.display.adhoc.${adhoc.id}`) }}</option>
+                        </select>
+                    </section>
+                    <section>
+                        <label>{{ $t('settings.sections.display.mode.name') }}</label>
+                        <select v-model="SETTINGS.displayMode">
+                            <option v-for="[key, mode] in Object.entries(DisplayMode)" :key="key" :value="mode">{{ $t(`settings.sections.display.mode.${key}`) }}</option>
+                        </select>
+                    </section>
+                    <section>
+                        <div>
+                            <input id="show-platform" type="checkbox" v-model="SETTINGS.showPlatform"></input>
+                            <label for="show-platform" attr-inline>{{ $t('settings.sections.display.platform_number') }}</label>
+                        </div>
+                        <div>
+                            <input id="route-header" type="checkbox" v-model="SETTINGS.rtHeader"></input>
+                            <label for="route-header" attr-inline>{{ $t('settings.sections.display.line') }}</label>
+                        </div>
+                    </section>
+                </fieldset>
+                <div @click="toggleFullscreen">
+                    <button>{{ $t('settings.sections.generic.fullscreen.' + (isFullscreen ? "entered" : "exited") )
+                        }}</button>
+                </div>
                 <div>
-                    <button id="langchoose">EN</button>
+                    <button @click="close">{{ $t('settings.sections.generic.start') }}</button>
                 </div>
-            </div>
-            <div class="banner">
-                <div class="notice-box notice lang lang-en">
-                    <h1>Note</h1>
-                    <p>The font 'Myriad Pro' as used in real-life is not shipped<br>with this site.<br>If you wish to use the font, please obtain your own copy<br> of the font and install it on your system.</p>
-                </div>
-                <div class="notice-box notice lang lang-zh">
-                    <h1>注意</h1>
-                    <p>本網頁不會提供港鐵顯示屏使用的 'Myriad Pro' 字體。<br>如需要顯示該字體，請安裝有關字體在你的系統上。</p>
-                </div>
-                <div class="notice-box notice lang lang-en">
-                    <p>Press 'Esc' key or click the header bar to return to this menu</p>
-                </div>
-                <div class="notice-box notice lang lang-zh">
-                    <p>如需返回此頁面，請按 Esc 鍵 或在標題列的空餘位置按下</p>
-                </div>
-<!--                <div class="notice-box live notice-paxload lang lang-en">
-                    <p>Passenger load for the next train is being updated...</p>
-                </div>
-                <div class="notice-box live notice-paxload lang lang-zh">
-                    <p>下一班列車的載客量資訊正在更新中...</p>
-                </div>-->
-            </div>
-            <div class="online">
-                <section>
-                    <h1 class="secHeader lang lang-en">Line</h1>
-                    <h1 class="secHeader lang lang-zh">路線</h1>
-                    <select class="route">
-                    </select>
-                </section>
-                <section>
-                    <h1 class="secHeader lang lang-en">Station</h1>
-                    <h1 class="secHeader lang lang-zh">車站</h1>
-                    <select class="station">
-                    </select>
-                </section>
-                <section>
-                    <h1 class="secHeader lang lang-en">Direction</h1>
-                    <h1 class="secHeader lang lang-zh">方向</h1>
-                    <select class="direction">
-                        <option value="UP"></option>
-                        <option value="DOWN"></option>
-                        <option value="BOTH"></option>
-                        <option value="BOTH_SPLIT"></option>
-                    </select>
-                </section>
-            </div>
-
-            <div class="offline" style="display: none;">
-                <h1 class="secHeader lang lang-en">ETA Data</h1>
-                <h1 class="secHeader lang lang-zh">下班列車資料</h1>
-                <table>
-                    <tr class="lang lang-en">
-                        <td>Destination</td>
-                        <td class="centeredItem">Platform</td>
-                        <td class="centeredItem">ETA</td>
-                    </tr>
-                    <tr class="lang lang-zh">
-                        <td>終點站</td>
-                        <td class="centeredItem">月台</td>
-                        <td class="centeredItem">到達時間</td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" autocomplete="off" id="dest1"></input>
-                        </td>
-                        <td><input type="text" size="1" autocomplete="off" id="plat1"></input>
-                        </td>
-                        <td><input type="text" size="2" autocomplete="off" id="ttnt1"></input>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" autocomplete="off" id="dest2"></input>
-                        </td>
-                        <td><input type="text" size="1" autocomplete="off" id="plat2"></input>
-                        </td>
-                        <td><input type="text" size="2" autocomplete="off" id="ttnt2"></input>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" autocomplete="off" id="dest3"></input>
-                        </td>
-                        <td><input type="text" size="1" autocomplete="off" id="plat3"></input>
-                        </td>
-                        <td><input type="text" size="2" autocomplete="off" id="ttnt3"></input>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" autocomplete="off" id="dest4"></input>
-                        </td>
-                        <td><input type="text" size="1" autocomplete="off" id="plat4"></input>
-                        </td>
-                        <td><input type="text" size="2" autocomplete="off" id="ttnt4"></input>
-                        </td>
-                    </tr>
-                </table>
-                <h1 class="lang lang-en secHeader">Route Color</h1>
-                <h1 class="lang lang-zh secHeader">路線顏色</h1>
-
-                <input type="color" maxlength="6" size="6" class="rtColor"></input>
-                <br>
-                <h1 class="lang lang-en secHeader">Font Ratio:</h1>
-                <h1 class="lang lang-zh secHeader">字體比例</h1>
-                <input type="number" class="fontRatioCustom" size="2" step="0.1" value="1"></input>
-            </div>
-            <div>
-                <section>
-                    <h1 class="secHeader lang lang-en">Special Message</h1>
-                    <h1 class="secHeader lang lang-zh">特別信息</h1>
-                    <select class="specialMsg"></select>
-                </section>
-                <section>
-                    <h1 class="secHeader lang lang-en">Display Mode</h1>
-                    <h1 class="secHeader lang lang-zh">顯示模式</h1>
-                    <select class="dpMode">
-                        <option value="NORMAL">Normal 正常</option>
-                        <option value="AD">Display Ads Only 只顯示廣告</option>
-                        <option value="ADNT1">Ads+Next Train 廣告+下一班車</option>
-                        <option value="NT4">Next 4 Train 顯示下四班車</option>
-                        <option value="NT4_CT">Next 4 Train (Clock Time) 顯示下四班車(時刻)</option>
-                    </select>
-                </section>
-            </div>
-            <div>
-                <input type="checkbox" id="onlinemode" class="onlineMode translatable" checked></input>
-                <label for="onlinemode" class="lang lang-en">Use real-time train data</label>
-                <label for="onlinemode" class="lang lang-zh">使用實時到站資訊</label>
-                <br>
-                <input class="showPlat" id="showplatform" type="checkbox" checked></input>
-                <label for="showplatform" class="lang lang-en">Display platform number</label>
-                <label for="showplatform" class="lang lang-zh">顯示月台號碼</label>
-                <br>
-                <input id="routeheader" type="checkbox" class="translatable"></input>
-                <label for="routeheader" class="lang lang-en">Show line name in header</label>
-                <label for="routeheader" class="lang lang-zh">顯示路線名稱</label>
-                <br>
-                <button class="tfs lang lang-en">Toggle Fullscreen</button>
-                <button class="tfs lang lang-zh">切換全螢幕</button>
-                <br>
-                <button class="saveCfg lang lang-en">Save & Close this page</button>
-                <button class="saveCfg lang lang-zh">套用設定及關閉此頁面</button>
-            </div>
-
-            <footer class="footer">
-                <a href="https://hktss.github.io"><img src="./assets/img/brand/hktss_3d.png" alt="HKTSS Homepage"></a>
-                <a href="https://github.com/HKTSS/mtr-pids"><img src="./assets/img/brand/github-mark.png" alt="GitHub Repository"></a>
-            </footer>
-        </div>
+            </form>
+        </section>
     </div>
 
-    <div class="main">
+    <main>
         <div id="header-bar">
             <button id="configure-button" title="Configure PIDS">Configure PIDS</button>
             <div class="t2">
                 <span class="rtname"></span>
             </div>
-            <div class="t1 weathers">
-                <span class="weatherIcon"><noscript>Javascript is required for this page</noscript></span>
-                <span class="weather notranslate"></span>
+            <div class="t1 weather">
+                <span id="weather-icon"><noscript>Javascript is required for this page</noscript></span>
+                <span id="temperature" class="notranslate"></span>
             </div>
-            <div class="filler"></div>
-            <div class="t1 topbar-clock">
-                <span class="clock"></span>
+            <div class="t1 clock">
             </div>
         </div>
 
@@ -212,20 +177,12 @@
         </div>
 
         <div id="arrivals">
-            <table id="arrivalBackground">
-                <tr>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <td>&nbsp</td>
-                </tr>
-            </table>
+            <div id="arrivalBackground">
+                <div>&nbsp</div>
+                <div>&nbsp</div>
+                <div>&nbsp</div>
+                <div>&nbsp</div>
+            </div>
             <table id="arrivalOverlay">
                 <tr>
                     <td class="destination scalable"></td>
@@ -250,7 +207,9 @@
             </table>
             <div class="divider"></div>
         </div>
-    </div>
+    </main>
 </body>
+<script src="./assets/js/local_storage.js" type="module"></script>
+<script src="./assets/js/new_config.js" type="module"></script>
 
 </html>

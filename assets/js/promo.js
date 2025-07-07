@@ -1,6 +1,7 @@
 'use strict'
 
 import SETTINGS from './static/settings.js';
+import { RouteList, StationList, UIPreset, ETA_API, promotionData, DisplayMode } from './static/data.js';
 
 let nextPromoSwap = 0;
 let currentPromoScreen = 0;
@@ -38,7 +39,7 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
         needRerender = true;
     }
 
-    if ((SETTINGS.dpMode == DisplayMode.NT4 || SETTINGS.dpMode == DisplayMode.NT4_CT) && !SETTINGS.showingSpecialMessage) {
+    if ((SETTINGS.displayMode == DisplayMode.NT4 || SETTINGS.displayMode == DisplayMode.NT4_CT) && SETTINGS.adhoc == "NONE") {
         setArrivalVisibility([true, true, true, true]);
         $('#promo').hide();
         return;
@@ -48,14 +49,14 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
     
     let firstTrainTooLong = SETTINGS.debugMode ? false : etaData[0]?.ttnt > 20; // 4 row ttnt not displayed if first train over 20min
 
-    if (shouldShowTtnt && (SETTINGS.dpMode == DisplayMode.AD || SETTINGS.dpMode == DisplayMode.ADNT1 || firstTrainTooLong)) {
+    if (shouldShowTtnt && (SETTINGS.displayMode == DisplayMode.AD || SETTINGS.displayMode == DisplayMode.ADNT1 || firstTrainTooLong)) {
         // Skip 4 row arrival
         cycle();
         needRerender = true;
     }
 
-    if (SETTINGS.showingSpecialMessage) {
-        nextPromoCycle = promotionData.special.filter(e => e.id == SETTINGS.specialMsgID)[0];
+    if (SETTINGS.adhoc != "NONE") {
+        nextPromoCycle = promotionData.special.filter(e => e.id == SETTINGS.adhoc)[0];
     }
 
     for (const promo of promotionData.cycle) {
@@ -66,7 +67,7 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
         $(`.promo-${promo.id}`).hide()
     }
 
-    if (shouldShowTtnt && !SETTINGS.showingSpecialMessage) {
+    if (shouldShowTtnt && SETTINGS.adhoc == "NONE") {
         setArrivalVisibility([true, true, true, true]);
         $('#promo').hide();
     } else {
@@ -75,14 +76,14 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
         setArrivalVisibility([false, false, false, true]);
     }
     
-    if (SETTINGS.dpMode == DisplayMode.AD) {
+    if (SETTINGS.displayMode == DisplayMode.AD) {
         $('#promo').addClass("promo-full");
         setArrivalVisibility([false, false, false, false]);
     } else {
         $('#promo').removeClass("promo-full");
     }
 
-    if (SETTINGS.showingSpecialMessage) {
+    if (SETTINGS.adhoc != "NONE") {
         let fullURL = nextPromoCycle.framesrc + nextPromoCycle.queryString;
         let needRefreshPromoSrc = false;
         $('#promo').show();
@@ -125,13 +126,14 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
 
 function setup() {
     $('#promo').empty();
+
     for (const cate in promotionData) {
         for (const promo of promotionData[cate]) {
             if (promo.framesrc != null) {
-                $('#promo').append(`<iframe style="display:block" class="promo-${promo.id} centeredItem" src=${promo.framesrc}></iframe>`);
+                $('#promo').append(`<iframe style="display:none" class="promo-${promo.id} centeredItem" src=${promo.framesrc}></iframe>`);
             }
         }
     }
 }
 
-export default {setup: setup, cycle: cycle, draw: draw};
+export default {setup, cycle, draw};

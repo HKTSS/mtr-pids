@@ -1,9 +1,9 @@
 'use strict'
 
-import { WEATHER_API, WeatherIcon, WeatherUnit } from './static/weatherdata.js';
+import { WEATHER_API, WeatherUnit } from './static/weatherdata.js';
 import SETTINGS from './static/settings.js';
-import CONFIG_PANEL from './config_panel.js';
 import UI from './ui.js';
+import { getRoute } from './static/data.js';
 
 function updateClock() {
     let currDate = new Date();
@@ -17,21 +17,27 @@ async function updateWeather() {
     /* Update weather icon */
     let weatherIconList = weatherData.rhrread.icon;
     let weatherWarningList = weatherData.warning.details;
+    let weatherIconElement = document.querySelector("#weather-icon");
     
     let wIconCount = 0;
-    $('.weatherIcon').empty();
+    weatherIconElement.innerHTML = ``;
     for (const iconID of weatherIconList) {
         wIconCount++;
         if(wIconCount > 4) continue;
-        $('.weatherIcon').append(`<img src=./assets/img/w_icon/${iconID}.png>`);
+        let iconElement = document.createElement("img");
+        iconElement.src = `./assets/img/w_icon/${iconID}.png`;
+        weatherIconElement.appendChild(iconElement);
     }
 
     if (weatherWarningList) {
         for (const warns of weatherWarningList) {
             let code = warns.subtype ? warns.subtype : warns.warningStatementCode;
+            if(code == "CANCEL") continue; // HKO Cancel All Signal, no icon for display
             wIconCount++;
             if(wIconCount > 4) continue;
-            $('.weatherIcon').append(`<img src=./assets/img/w_icon/${code}.png>`);
+            let iconElement = document.createElement("img");
+            iconElement.src = `./assets/img/w_icon/${code}.png`;
+            weatherIconElement.appendChild(iconElement);
         }
     }
 
@@ -45,7 +51,7 @@ async function updateWeather() {
     }
 
     temperature = Math.round(temperature / temperatureData.length)
-    $('.weather').text(temperature + WeatherUnit);
+    document.querySelector('#temperature').textContent = `${temperature}${WeatherUnit}`;
 }
 
 async function fetchWeatherData() {
@@ -67,7 +73,7 @@ function updateHeader() {
         $('.t1').hide();
         $('.t2').show();
         $("#header-bar").addClass("route-color");
-        $(".rtname").text(UI.switchLang(SETTINGS.route.name));
+        $(".rtname").text(UI.switchLang(getRoute(SETTINGS.route).name));
         $('body').css("--title-height", `17vh`);
     } else {
         $('.t2').hide();
@@ -82,10 +88,12 @@ function draw() {
     updateClock();
 }
 
-function setup() {
-    updateWeather();
+async function setup() {
+    await updateWeather();
     setInterval(updateWeather, 60 * 1000, false);
-    $("#configure-button").click(() => CONFIG_PANEL.toggle());
+    $("#configure-button").click(() => {
+        document.querySelector("#overlay").classList.remove("hidden");
+    });
 }
 
-export default {setup: setup, draw: draw};
+export default { setup, draw };

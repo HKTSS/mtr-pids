@@ -19,21 +19,19 @@ function processData() {
     if (langSwitchTick > 0) {
         if (currentLanguage == "EN") {
             currentLanguage = "ZH"
-            $('.header-zh').show()
-            $('.header-en').hide()
+            document.querySelector('.header-zh').style.visibility = 'visible';
+            document.querySelector('.header-en').style.visibility = 'none';
         } else {
             currentLanguage = "EN"
-            $('.header-en').show()
-            $('.header-zh').hide()
+            document.querySelector('.header-en').style.visibility = 'visible';
+            document.querySelector('.header-zh').style.visibility = 'none';
         }
 
         setTimeout(processData, langSwitchTick * 1000)
     }
 
-    $('.header-zh').text(data.zh)
-    $('.header-en').text(data.en)
+    document.querySelector('.header-zh').textContent = data.zh;
+    document.querySelector('.header-en').textContent = data.en;
 }
 
-$(document).ready(function() {
-    processData()
-})
+window.onload = (e) => processData();

@@ -30,28 +30,31 @@ function updateData() {
 
     let car = 1;
     for (paxLoad of paxLoadEntry) {
-        let elem;
+        let elem = document.createElement("div");
+        elem.classList.add("pax-child");
+
         if (car == 1) {
-            elem = $(`<div class="pax-child head"><img class="scalable" src="./Pax${paxLoad}H.png"></div>`);
+            elem.classList.add("head");
+            elem.innerHTML += `<img class="scalable" src="./Pax${paxLoad}H.png">`;
         } else {
-            elem = $(`<div class="pax-child"><img class="scalable" src="./Pax${paxLoad}.png"></div>`);
+            elem.innerHTML += `<img class="scalable" src="./Pax${paxLoad}.png"></div>`;
         }
         let carElement = car == firstClassCar ? `<p class="firstclass-zh">頭等</p><p class="firstclass-en">First Class</p>` : `<p>${car}</p>`;
-        elem.append(carElement);
-        $('#pax').append(elem);
+        elem.innerHTML += carElement;
+        document.querySelector('#pax').appendChild(elem);
         car++;
     }
 }
 
-$(document).ready(function() {
+window.onload = () => {
     let errorMsg = parseQuery();
     if (errorMsg.length > 0) {
-        $('body').html(errorMsg.join("<br>"));
+        document.body.innerHTML = errorMsg.join("<br>");
         return;
     }
 
-    updateData()
-})
+    updateData();
+}
 
 /* You know, let's not over complicate things. */
 // function adjustFontSize() {
