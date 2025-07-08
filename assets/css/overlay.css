@@ -15,7 +15,6 @@
     display: flex;
     color: white;
     line-height: 1.5;
-    overflow: auto;
     transition: opacity .25s, visibility .25s, transform .25s;
     align-items: stretch;
 }
@@ -43,11 +42,14 @@
 }
 
 .intro {
+    overflow: auto;
     flex: 1;
     align-self: center;
     text-align: center;
-    margin: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
     color: white;
+    height: 100%;
 }
 
 .intro a {
@@ -101,6 +103,7 @@
 }
 
 .settings {
+    overflow: auto;
     box-sizing: border-box;
     padding: 1rem 1rem;
     background-color: #f0f2f6;
@@ -187,6 +190,11 @@ table tr td {
     #overlay {
         flex-direction: column;
         font-size: 0.9rem;
+        overflow: auto;
+    }
+
+    .intro, .settings {
+        overflow: initial;
     }
 
     .settings {
