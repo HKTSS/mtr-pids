@@ -508,4 +508,4 @@ function getStation(initials) {
     return StationList.get(initials);
 }
 
-export { Route, Station, ArrivalEntry, RouteList, StationList, DisplayMode, UIPreset, ETA_API, PIDS_OVERRIDE_DATA as ViaData, promotionData, getRoute, getStation };
+export { Route, Station, ArrivalEntry, RouteList, StationList, DisplayMode, UIPreset, ETA_API, PIDS_OVERRIDE_DATA, promotionData, getRoute, getStation };

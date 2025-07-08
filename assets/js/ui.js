@@ -4,7 +4,7 @@ import SETTINGS from './static/settings.js';
 import HEADER_BAR from './header_bar.js'
 import PROMO from './promo.js'
 
-import { ViaData, UIPreset, DisplayMode, getRoute, getStation } from './static/data.js';
+import { PIDS_OVERRIDE_DATA, UIPreset, DisplayMode, getRoute, getStation } from './static/data.js';
 
 const Chinese = /\p{Script=Han}/u;
 
@@ -45,7 +45,7 @@ function drawUI(etaData) {
         }
 
         let entry = etaData[entryIndex];
-        let pidsOverrideData = entry.via ? ViaData[SETTINGS.route]?.[SETTINGS.station] ?? ViaData[SETTINGS.route].default : null;
+        let pidsOverrideData = entry.via ? PIDS_OVERRIDE_DATA[SETTINGS.route]?.[SETTINGS.station] ?? PIDS_OVERRIDE_DATA[SETTINGS.route].default : null;
         let destinationName;
         if(entry.via) {
             let stationName = switchLang(entry.dest);
@@ -97,7 +97,7 @@ let animFrame = null;
 /* Hacky solution, but if it works then it works. */
 function adjustLayoutSize() {
     $('.destination').each(function() {
-        let isMarquee = (ViaData?.[SETTINGS.route]?.[SETTINGS.station] ?? ViaData[SETTINGS.route].default)?.marquee;
+        let isMarquee = (PIDS_OVERRIDE_DATA?.[SETTINGS.route]?.[SETTINGS.station] ?? PIDS_OVERRIDE_DATA[SETTINGS.route]?.default)?.marquee;
 
         const ogSize = SETTINGS.uiPreset.fontRatio * parseInt($(this).css("font-size"));
         const PADDING = 120 * (window.innerWidth / 1920);
