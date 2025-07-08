@@ -121,6 +121,10 @@ b {
     overflow: hidden;
 }
 
+.destination-name {
+    display: inline-block;
+}
+
 .plat {
     width: 11vmin;
     font-family: var(--platcircle-family);

@@ -75,7 +75,7 @@ function drawUI(etaData) {
         const lrtElement = entry.route.isLRT ? `<span class="lrt-route" style="border-color: ${entry.route.secondaryColor}">${entry.route.initials}</span>` : "";
         const platformElement = SETTINGS.showPlatform ? `<td class="plat"><span class="plat-circle" style="background-color: ${entry.route.color}">${entry.plat}</span></td>` : `<td class="plat"></td>`;
         const ETAElement = `<td class="eta scalable">${time} <span class="etamin">${switchLang(timetext)}</span></td>`
-        const destElement = `<td class="destination scalable">${lrtElement}<div class="name">${destinationName}</div></td>`;
+        const destElement = `<td class="destination scalable">${lrtElement}<div class="destination-name">${destinationName}</div></td>`;
 
         tableRow += destElement;
         tableRow += platformElement;
@@ -116,7 +116,7 @@ function adjustLayoutSize() {
             percentW = (tdWidth / resultWidth);
 
             if(isMarquee) {
-                $(this).find(".name").addClass("marquee");
+                $(this).find(".destination-name").addClass("marquee");
             } else {
                 $(this).css("font-size", `${ogSize * (percentW)}px`);
             }
