@@ -6,10 +6,10 @@ import SETTINGS from './static/settings.js';
 const customRoute = new Route("CST", ETA_API.NONE, "自定路綫|Custom Line", "#000", "#000", false, [], [], true);
 
 const customArrivalData = [
-    new ArrivalEntry("", 1, null, customRoute, "1", false, false, null, -1, null, false),
-    new ArrivalEntry("", 5, null, customRoute, "1", false, false, null, -1, null, false),
-    new ArrivalEntry("", 10, null, customRoute, "1", false, false, null, -1, null, false),
-    new ArrivalEntry("", 15, null, customRoute, "1", false, false, null, -1, null, false)
+    new ArrivalEntry("", 1, null, customRoute, "1", false, false, null, -1, "RAC"),
+    new ArrivalEntry("", 5, null, customRoute, "1", false, false, null, -1, "RAC"),
+    new ArrivalEntry("", 10, null, customRoute, "1", false, false, null, -1, "RAC"),
+    new ArrivalEntry("", 15, null, customRoute, "1", false, false, null, -1, "RAC")
 ];
 
 let etaCache = {
@@ -124,7 +124,7 @@ function processHeavyRailData(data, route, stn, direction) {
             }
         }
 
-        let arrivalEntry = new ArrivalEntry(destName, ttnt, arrTime, routeData, entry.plat, false, isDeparture, entry.paxLoad ?? null, entry.firstClass, entry.route, false);
+        let arrivalEntry = new ArrivalEntry(destName, ttnt, arrTime, routeData, entry.plat, false, isDeparture, entry.paxLoad ?? null, entry.firstClass, entry.route);
         finalData.push(arrivalEntry);
     }
 

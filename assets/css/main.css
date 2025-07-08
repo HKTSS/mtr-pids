@@ -80,13 +80,18 @@ b {
     background: black;
 }
 
-#widthCheck {
+#width-check-wrapper {
     position: absolute;
-    display: inline-block;
     top: 0;
     left: 0;
-    visibility: hidden;
+    max-width: 100%;
     z-index: 100;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+#check-content {
+    display: inline-block;
     overflow: visible;
     white-space: nowrap;
 }
@@ -163,6 +168,10 @@ b {
     white-space: nowrap;
 }
 
-.etamin {
+.etamin, .via-zh {
     font-size: 0.6333em;
+}
+
+.marquee {
+    width: max-content;
 }

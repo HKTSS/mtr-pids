@@ -31,8 +31,7 @@ class ArrivalEntry {
     isDeparture;
     firstClassCar;
     via;
-    marquee;
-    constructor(dest, ttnt, absTime, route, platformNumber, isLRT, isDeparture, paxLoad, firstClass, via, marquee) {
+    constructor(dest, ttnt, absTime, route, platformNumber, isLRT, isDeparture, paxLoad, firstClass, via) {
         this.dest = dest;
         this.ttnt = ttnt;
         this.absTime = absTime;
@@ -43,7 +42,6 @@ class ArrivalEntry {
         this.firstClassCar = firstClass;
         this.route = route;
         this.via = via;
-        this.marquee = marquee;
     }
 }
 
@@ -288,22 +286,25 @@ const UIPreset = {
     }
 }
 
-const ViaData = {
+const PIDS_OVERRIDE_DATA = {
     EAL: {
         default: {
             name: "馬場|Racecourse",
             viaSmall: true,
-            via: "經| via "
+            via: " 經 | via ",
+            marquee: true
         },
         EXC: {
             name: "馬場|racecourse",
             viaSmall: true,
-            via: " 經| Via "
+            via: " 經| Via ",
+            marquee: false
         },
         ADM: {
             name: "馬場|racecourse",
             viaSmall: true,
-            via: " 經| via "
+            via: " 經| via ",
+            marquee: false
         }
     }
 }
@@ -507,4 +508,4 @@ function getStation(initials) {
     return StationList.get(initials);
 }
 
-export { Route, Station, ArrivalEntry, RouteList, StationList, DisplayMode, UIPreset, ETA_API, ViaData, promotionData, getRoute, getStation };
+export { Route, Station, ArrivalEntry, RouteList, StationList, DisplayMode, UIPreset, ETA_API, PIDS_OVERRIDE_DATA as ViaData, promotionData, getRoute, getStation };

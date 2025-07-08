@@ -12,11 +12,15 @@ let arrivalVisibility = [true, true, true, true];
 let languageCycle = 0;
 let pauseUIUpdate = false;
 
+const MARQUEE_SCROLL_TIME = 10 * 1000;
+
 function drawUI(etaData) {
     if(pauseUIUpdate) return;
     
     // Promo is responsive for cycling the language, so let it go first
-    PROMO.draw(etaData, cycleLanguage, (newVisibility) => arrivalVisibility = newVisibility);
+    PROMO.draw(etaData, cycleLanguage, () => {
+        marquee.startScroll = Date.now();
+    }, (newVisibility) => arrivalVisibility = newVisibility);
     HEADER_BAR.draw();
     
     $('body').css('--route-color', getRoute(SETTINGS.route).color);
@@ -41,12 +45,13 @@ function drawUI(etaData) {
         }
 
         let entry = etaData[entryIndex];
-        let viaData = entry.via ? ViaData[SETTINGS.route]?.[SETTINGS.station] : null;
-        let stationName;
+        let pidsOverrideData = entry.via ? ViaData[SETTINGS.route]?.[SETTINGS.station] ?? ViaData[SETTINGS.route].default : null;
+        let destinationName;
         if(entry.via) {
-            stationName = `${switchLang(entry.dest)}${switchLang(viaData.via)}${switchLang(viaData.name)}`;
+            let stationName = switchLang(entry.dest);
+            destinationName = `${stationName}<span class="${pidsOverrideData?.viaSmall && Chinese.test(stationName) ? "via-zh" : ""}">${switchLang(pidsOverrideData.via)}</span>${switchLang(pidsOverrideData.name)}`;
         } else {
-            stationName = switchLang(entry.dest);
+            destinationName = switchLang(entry.dest);
         }
 
         let timetext = "";
@@ -70,7 +75,7 @@ function drawUI(etaData) {
         const lrtElement = entry.route.isLRT ? `<span class="lrt-route" style="border-color: ${entry.route.secondaryColor}">${entry.route.initials}</span>` : "";
         const platformElement = SETTINGS.showPlatform ? `<td class="plat"><span class="plat-circle" style="background-color: ${entry.route.color}">${entry.plat}</span></td>` : `<td class="plat"></td>`;
         const ETAElement = `<td class="eta scalable">${time} <span class="etamin">${switchLang(timetext)}</span></td>`
-        const destElement = `<td class="destination scalable">${lrtElement}${stationName}</td>`;
+        const destElement = `<td class="destination scalable">${lrtElement}<div class="name">${destinationName}</div></td>`;
 
         tableRow += destElement;
         tableRow += platformElement;
@@ -86,33 +91,69 @@ function drawUI(etaData) {
     adjustLayoutSize();
 }
 
+let animFrame = null;
+
 /* This function puts the arrival destination text into a hidden element to calculate the width and make changes accordingly */
 /* Hacky solution, but if it works then it works. */
 function adjustLayoutSize() {
     $('.destination').each(function() {
-        if(getStation(SETTINGS.station).marquee) {
-            return;
-        }
-        
+        let isMarquee = (ViaData?.[SETTINGS.route]?.[SETTINGS.station] ?? ViaData[SETTINGS.route].default)?.marquee;
+
         const ogSize = SETTINGS.uiPreset.fontRatio * parseInt($(this).css("font-size"));
         const PADDING = 120 * (window.innerWidth / 1920);
         const tdWidth = $(this).outerWidth(true) - PADDING;
         let percentW = 1;
         
-        $('#widthCheck').html($(this).html());
-        $('#widthCheck').css("font-size", ogSize);
-        $('#widthCheck').css("font-family", $(this).css("font-family"));
-        $("#widthCheck").css("letter-spacing", $(this).css("letter-spacing"));
-        $("#widthCheck").css("font-weight", $(this).css("font-weight"));
+        $('#check-content').html($(this).html());
+        $('#check-content').css("font-size", ogSize);
+        $('#check-content').css("font-family", $(this).css("font-family"));
+        $("#check-content").css("letter-spacing", $(this).css("letter-spacing"));
+        $("#check-content").css("font-weight", $(this).css("font-weight"));
         
-        let resultWidth = $('#widthCheck').outerWidth(true);
+        let resultWidth = $('#check-content').outerWidth(true);
         
         if (resultWidth > tdWidth) {
             percentW = (tdWidth / resultWidth);
+
+            if(isMarquee) {
+                $(this).find(".name").addClass("marquee");
+            } else {
+                $(this).css("font-size", `${ogSize * (percentW)}px`);
+            }
+        } else {
+            $(this).removeClass("marquee");
+            $(this).css("font-size", `${ogSize}px`);   
         }
-        
-        $(this).css("font-size", `${ogSize * (percentW)}px`);
     });
+
+    if(document.querySelectorAll(".marquee").length > 0) {
+        if(animFrame == null) {
+            animFrame = requestAnimationFrame(startMarqueeLoop);
+        }
+    } else {
+        if(animFrame != null) {
+            cancelAnimationFrame(animFrame);
+            animFrame = null;
+        };
+    }
+}
+
+const marquee = {
+    progress: 100,
+    startScroll: -1
+}
+
+function startMarqueeLoop() {
+    let endScroll = marquee.startScroll + MARQUEE_SCROLL_TIME;
+    let scrollProgress = (Date.now() - marquee.startScroll) / (endScroll - marquee.startScroll);
+
+    marquee.progress = scrollProgress * 105; // +5 for padding
+    let translationPercentage = (-marquee.progress * 2) + 100;
+
+    document.querySelectorAll(".marquee").forEach(e => {
+        e.style.transform = `translateX(${translationPercentage}%)`
+    });
+    animFrame = requestAnimationFrame(startMarqueeLoop);
 }
 
 function getETAmin(eta, departure) {

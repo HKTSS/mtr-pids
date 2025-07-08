@@ -24,12 +24,13 @@ function cycle() {
     }
 }
 
-function draw(etaData, cycleLanguage, setArrivalVisibility) {
+function draw(etaData, cycleLanguage, onCycle, setArrivalVisibility) {
     let nextPromoCycle = promotionData.cycle[currentPromoScreen];
     let needRerender = false;
     if (Date.now() >= nextPromoSwap) {
         languageCounter++;
         cycle();
+        onCycle();
         
         if(languageCounter >= 2) {
             cycleLanguage();
@@ -52,6 +53,7 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
     if (shouldShowTtnt && (SETTINGS.displayMode == DisplayMode.AD || SETTINGS.displayMode == DisplayMode.ADNT1 || firstTrainTooLong)) {
         // Skip 4 row arrival
         cycle();
+        onCycle();
         needRerender = true;
     }
 
@@ -114,12 +116,13 @@ function draw(etaData, cycleLanguage, setArrivalVisibility) {
             $(`.promo-${nextPromoCycle.id}`).attr("src", fullURL);
         } else {
             cycle();
+            onCycle();
             needRerender = true;
         }
     }
 
     if(needRerender) {
-        draw(etaData, cycleLanguage, setArrivalVisibility);
+        draw(etaData, cycleLanguage, onCycle, setArrivalVisibility);
         return;
     }
 }
