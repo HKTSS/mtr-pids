@@ -113,7 +113,7 @@ const LANG = {
             LAK: "茘景",
             TSY: "青衣",
             AIR: "機場",
-            AWE: "機場及博覽館",
+            AWE: "博覽館",
             SUN: "欣澳",
             OYB: "小蠔灣",
             TCE: "東涌東",

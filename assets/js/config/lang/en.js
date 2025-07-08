@@ -113,7 +113,7 @@ const LANG = {
             LAK: "Lai King",
             TSY: "Tsing Yi",
             AIR: "Airport",
-            AWE: "Airport & AsiaWorld–Expo",
+            AWE: "AsiaWorld–Expo",
             SUN: "Sunny Bay",
             OYB: "Oyster Bay",
             TCE: "Tung Chung East",
