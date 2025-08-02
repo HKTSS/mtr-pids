@@ -68,13 +68,15 @@ const ETA_API = {
         urls: [
             "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line={rt}&sta={stn}",
             "https://rp.lx86.workers.dev/mtr?line={rt}&sta={stn}" // Fallback cf worker reverse proxy in-case of CORS misconfiguration. Consider spinning up your own instance if you chose to fork.
-        ]
+        ],
+        requestConfig: {}
     },
     MTR_LR: {
         name: "MTR Light Rail Data",
         urls: [
             "https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id={stn}"
-        ]
+        ],
+        requestConfig: {}
     }
 }
 
@@ -497,7 +499,7 @@ const StationList = new Map([
     ["580", new Station("580", "康樂路|Hong Lok Road", [1, 2])],
     ["590", new Station("590", "大棠路|Tai Tong Road", [1, 2])],
     ["600", new Station("600", "元朗|Yuen Long", [2, 3, 4, 5])],
-    ["920", new Station("920", "三聖|Sam Shing", [1, 3])]
+    ["920", new Station("920", "三聖|Sam Shing", [1, 3])],
 ]);
 
 function getRoute(initials) {
