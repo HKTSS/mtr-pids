@@ -50,7 +50,8 @@ const LANG = {
                     STANDBACK_PSD: "請勿靠近幕門",
                     STANDBACK_APG: "請勿靠近閘門",
                     HUH_TML: "舊紅磡站屯馬綫轉乘顯示",
-                    WELCOME_MTR: "歡迎乘搭港鐵"
+                    WELCOME_MTR: "歡迎乘搭港鐵",
+                    EMERGENCY: "嚴重事故"
                 },
                 mode: {
                     name: "顯示模式",

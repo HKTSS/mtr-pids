@@ -69,14 +69,14 @@ const ETA_API = {
             "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line={rt}&sta={stn}",
             "https://rp.lx86.workers.dev/mtr?line={rt}&sta={stn}" // Fallback cf worker reverse proxy in-case of CORS misconfiguration. Consider spinning up your own instance if you chose to fork.
         ],
-        requestConfig: {}
+        requestConfig: (rt, stn) => {}
     },
     MTR_LR: {
         name: "MTR Light Rail Data",
         urls: [
             "https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id={stn}"
         ],
-        requestConfig: {}
+        requestConfig: (rt, stn) => {}
     }
 }
 
@@ -182,6 +182,12 @@ let promotionData = {
             id: "WELCOME_MTR",
             framesrc: './promo/welcome.html',
             queryString: ''
+        },
+        {
+            id: "EMERGENCY",
+            framesrc: './promo/emergency.html',
+            queryString: '',
+            isFullScreen: true
         }
     ]
 }
@@ -258,7 +264,7 @@ const UIPreset = {
         arrivals: "'Myriad Pro', 'Noto Sans', 'DFLiSong-Md', 'Noto Serif TC'",
         platformCircle: "'Myriad Pro', 'Noto Sans', 'DFLiSong-Md', 'Noto Serif TC'",
         eta: "'Myriad Pro', 'Noto Sans', 'DFLiSong-Md', 'Noto Serif TC'",
-        chinFontSpacing: "3.5rem",
+        chinFontSpacing: "3rem",
         titleWidth: 93,
         ETAWidth: 93,
         fontWeight: 600,
@@ -269,7 +275,7 @@ const UIPreset = {
         arrivals: "'Myriad Pro Semibold', 'Noto Sans', 'DFLiSong-Md', 'Noto Serif TC'",
         platformCircle: "'Myriad Pro', 'Noto Sans', 'DFLiSong-Md', 'Noto Serif TC'",
         eta: "'Myriad Pro', 'Noto Sans', 'DFLiSong-Md', 'Noto Serif TC'",
-        chinFontSpacing: "3.5rem",
+        chinFontSpacing: "3rem",
         titleWidth: 93,
         ETAWidth: 93,
         fontWeight: 600,
@@ -280,7 +286,7 @@ const UIPreset = {
         arrivals: "'Myriad Pro Semibold', 'Noto Sans', 'DFLiSong-Md', 'Noto Serif TC'",
         platformCircle: "'Myriad Pro', 'Noto Sans', 'DFLiSong-Md', 'Noto Serif TC'",
         eta: "'Myriad Pro', 'Noto Sans', 'DFLiSong-Md', 'Noto Serif TC'",
-        chinFontSpacing: "3.5rem",
+        chinFontSpacing: "3rem",
         titleWidth: 93,
         ETAWidth: 93,
         fontWeight: 600,
@@ -500,6 +506,7 @@ const StationList = new Map([
     ["590", new Station("590", "大棠路|Tai Tong Road", [1, 2])],
     ["600", new Station("600", "元朗|Yuen Long", [2, 3, 4, 5])],
     ["920", new Station("920", "三聖|Sam Shing", [1, 3])],
+    ['NO_', new Station("NO_", "不載客列車|Not in Service", [])],
 ]);
 
 function getRoute(initials) {

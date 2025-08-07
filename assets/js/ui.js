@@ -35,16 +35,22 @@ function drawUI(etaData) {
     $('#arrivalOverlay > tbody > tr').each(function(i) {
         const thisRowIsVisible = arrivalVisibility[i];
         const thisRowHaveETA = entryIndex <= etaData.length - 1 && etaData[entryIndex] != null;
-        
-        // ETA is not displayed if first train is over 20 min.
-        const arrivalEntryValid = SETTINGS.debugMode ? true : (etaData[0]?.ttnt <= 20 && isArrivalEntryValid(etaData[entryIndex])); 
 
-        if (!thisRowIsVisible || !thisRowHaveETA || !arrivalEntryValid) {
+        let arrivalEntryValid = null;
+        // ETA is not displayed if first train is over 20 min.
+        do {
+            arrivalEntryValid = SETTINGS.debugMode ? true : (etaData[0]?.ttnt <= 20 && isArrivalEntryValid(etaData[entryIndex]));
+            if(etaData[entryIndex] == null) break;
+            if(!arrivalEntryValid) entryIndex++;
+        } while(!arrivalEntryValid);
+            
+        let entry = etaData[entryIndex];
+
+        if (!thisRowIsVisible || !thisRowHaveETA || !arrivalEntryValid || entry == null) {
             $(this).replaceWith(`<tr><td class="destination">&nbsp;</td><td style="width:10%">&nbsp;</td><td class="eta">&nbsp;</td></tr>`);
             return;
         }
-
-        let entry = etaData[entryIndex];
+        
         let pidsOverrideData = entry.via ? PIDS_OVERRIDE_DATA[SETTINGS.route]?.[SETTINGS.station] ?? PIDS_OVERRIDE_DATA[SETTINGS.route].default : null;
         let destinationName;
         if(entry.via) {
@@ -175,7 +181,8 @@ function getETAtime(ttnt, absTime, departure) {
 }
 
 function isArrivalEntryValid(arrivalEntry) {
-    return arrivalEntry == null || arrivalEntry.plat.length > 0 && arrivalEntry.dest.length > 0 && !isNaN(parseInt(arrivalEntry.ttnt));
+    return arrivalEntry == null || arrivalEntry.plat.length > 0 && arrivalEntry.dest.length > 0 && !isNaN(parseInt(arrivalEntry.ttnt))
+    && (arrivalEntry.dest != "不載客列車|Not in Service" || parseInt(arrivalEntry.ttnt) <= 1);
 }
 
 function switchLang(str) {

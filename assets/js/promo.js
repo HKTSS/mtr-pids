@@ -84,6 +84,8 @@ function draw(etaData, cycleLanguage, onCycle, setArrivalVisibility) {
     } else {
         $('#promo').removeClass("promo-full");
     }
+    
+    document.querySelector("#promo").classList.remove("fullscreen");
 
     if (SETTINGS.adhoc != "NONE") {
         let fullURL = nextPromoCycle.framesrc + nextPromoCycle.queryString;
@@ -98,6 +100,10 @@ function draw(etaData, cycleLanguage, onCycle, setArrivalVisibility) {
         if (needRefreshPromoSrc) {
             $(`.promo-${nextPromoCycle.id}`).attr("src", fullURL);
             $(`.promo-${nextPromoCycle.id}`).show();
+        }
+        
+        if(nextPromoCycle.isFullScreen) {
+            document.querySelector("#promo").classList.add("fullscreen");
         }
     }
 

@@ -162,6 +162,12 @@ b {
     pointer-events: none;
 }
 
+#promo.fullscreen {
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
 .eta {
     font-family: var(--eta-family);
     font-weight: var(--font-weight);

@@ -50,7 +50,8 @@ const LANG = {
                     STANDBACK_PSD: "Stand back from the platform doors",
                     STANDBACK_APG: "Stand back from the platform gates",
                     HUH_TML: "Old Hung Hum WRL Platform",
-                    WELCOME_MTR: "Welcome to the MTR"
+                    WELCOME_MTR: "Welcome to the MTR",
+                    EMERGENCY: "Emergency"
                 },
                 mode: {
                     name: "Display Mode",
