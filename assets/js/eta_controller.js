@@ -55,6 +55,7 @@ function processHeavyRailData(data, route, stn, direction) {
     }
 
     const routeAndStation = `${route}-${stn}`;
+    const isTerminus = (RouteList[route].directionInfo ?? []).includes(stn.replace("LMC", "LOW"));
 
     let tempArray = [];
     let finalData = [];
@@ -97,7 +98,7 @@ function processHeavyRailData(data, route, stn, direction) {
 
     /* Convert data to adapt to a standardized format */
     for (const entry of tempArray) {
-        let isDeparture = false;
+        let isDeparture = isTerminus;
         let routeData = RouteList[route];
         let arrTime = new Date(`${entry.time.replace(" ", "T")}+08:00`);
         let sysTime = new Date(`${data.sys_time.replace(" ", "T")}+08:00`);
@@ -106,7 +107,9 @@ function processHeavyRailData(data, route, stn, direction) {
         let ttnt = Math.max(Math.ceil((arrTime - sysTime) / 60000), 0);
         let destName = StationList.get(entry.dest).name;
 
-        if (entry.timeType == "D") {
+        if (entry.timeType == "A") {
+            isDeparture = false;
+        } else if (entry.timeType == "D") {
             isDeparture = true;
         }
 
