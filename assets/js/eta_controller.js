@@ -99,8 +99,8 @@ function processHeavyRailData(data, route, stn, direction) {
     for (const entry of tempArray) {
         let isDeparture = false;
         let routeData = RouteList[route];
-        let arrTime = new Date(entry.time.replace(/-/g, "/"));
-        let sysTime = new Date(data.sys_time.replace(/-/g, "/"));
+        let arrTime = new Date(`${entry.time.replace(" ", "T")}+08:00`);
+        let sysTime = new Date(`${data.sys_time.replace(" ", "T")}+08:00`);
 
         /* Calculate the time difference */
         let ttnt = Math.max(Math.ceil((arrTime - sysTime) / 60000), 0);
