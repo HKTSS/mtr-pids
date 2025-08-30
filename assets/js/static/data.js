@@ -161,17 +161,17 @@ let promotionData = {
         {
             id: "STANDBACK_TRAIN",
             framesrc: './promo/custom_msg.html',
-            queryString: '?zh=請勿靠近車門&en=Please stand back from the train doors.'
+            queryString: '?zh=請勿靠近車門&en=Please stand back from the train doors'
         },
         {
             id: "STANDBACK_PSD",
             framesrc: './promo/custom_msg.html',
-            queryString: '?zh=請勿靠近幕門&en=Please stand back from the platform doors.'
+            queryString: '?zh=請勿靠近幕門&en=Please stand back from the platform doors'
         },
         {
             id: "STANDBACK_APG",
             framesrc: './promo/custom_msg.html',
-            queryString: '?zh=請勿靠近閘門&en=Please stand back from the platform gates.'
+            queryString: '?zh=請勿靠近閘門&en=Please stand back from the platform gates'
         },
         {
             id: "HUH_TML",
