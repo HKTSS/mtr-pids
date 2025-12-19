@@ -61,6 +61,9 @@ const LANG = {
                     NT4: "下四班車",
                     NT4_CT: "下四班車 (24小時顯示)"
                 },
+                first_train_cutoff: {
+                    name: "首班車開始顯示時間(分鐘)",
+                },
                 platform_number: "顯示月台號碼",
                 line: "在頂部顯示路線名稱"
             },

@@ -8,7 +8,7 @@ import { getRoute } from './static/data.js';
 function updateClock() {
     let currDate = new Date();
 
-    $('.clock').text(currDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }));
+    $('.clock').text(currDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: 'Asia/Hong_Kong' }));
 }
 
 async function updateWeather() {

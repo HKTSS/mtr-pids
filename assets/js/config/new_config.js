@@ -23,6 +23,7 @@ const app = createApp({
         const routeReference = ref(SETTINGS.route);
         const stationReference = ref(SETTINGS.station);
         const dataSourceReference = ref(SETTINGS.dataSource);
+        const firstTrainCutoffReference = ref(SETTINGS.firstTrainCutoff);
         const isFullscreen = ref(document.fullscreenElement != null);
         const { locale } = VueI18n.useI18n();
 
@@ -41,6 +42,7 @@ const app = createApp({
 
         watchEffect(() => SETTINGS.station = toRaw(stationReference.value));
         watchEffect(() => SETTINGS.dataSource = toRaw(dataSourceReference.value));
+        watchEffect(() => SETTINGS.firstTrainCutoff = toRaw(firstTrainCutoffReference.value));
         
         function toggleFullscreen(e) {
             e.preventDefault();
@@ -67,6 +69,7 @@ const app = createApp({
             RouteList,
             routeReference,
             stationReference,
+            firstTrainCutoffReference,
             API,
             dataSourceReference,
             getRoute,
