@@ -1,5 +1,5 @@
 :root {
-    --config-fonts: 'Noto Sans HK', 'Noto Sans TC', sans-serif;
+    --config-fonts: 'Noto Sans', 'Noto Sans HK', sans-serif;
 }
 
 #overlay {
@@ -21,6 +21,7 @@
 
 #overlay h1 {
     font-size: 2rem;
+    font-weight: 500;
 }
 
 #overlay.hidden {
@@ -123,7 +124,7 @@
 
 .settings form fieldset label:not([attr-inline]) {
     display: block;
-    font-size: 1.25rem;
+    font-size: 1.25em;
     margin-top: 0.5rem;
     font-weight: 600;
 }
