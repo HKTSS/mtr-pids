@@ -61,6 +61,9 @@ const LANG = {
                     NT4: "Next 4 Train",
                     NT4_CT: "Next 4 Train (24h display)"
                 },
+                first_train_cutoff: {
+                    name: "First Train Display Cutoff (Minutes)",
+                },
                 platform_number: "Display Platform Number",
                 line: "Show line name in header"
             },

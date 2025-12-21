@@ -157,9 +157,16 @@ section > h1 {
     cursor: pointer;
 }
 
-#overlay select {
+#overlay select,
+#overlay input,
+#overlay textarea {
+    font-size: 1em;
+    font-family: inherit;
+    border: 1px solid #aaa;
+    border-radius: 5px;
     background-color: #eaeaea;
-    padding: 5px 10px 5px 10px;
+    padding: 5px 10px;
+    box-sizing: border-box;
 }
 
 .settings button {

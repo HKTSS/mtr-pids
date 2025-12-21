@@ -39,7 +39,7 @@ function drawUI(etaData) {
         let arrivalEntryValid = null;
         // ETA is not displayed if first train is over 20 min.
         do {
-            arrivalEntryValid = SETTINGS.debugMode ? true : (etaData[0]?.ttnt <= 20 && isArrivalEntryValid(etaData[entryIndex]));
+            arrivalEntryValid = SETTINGS.debugMode ? true : (etaData[0]?.ttnt <= SETTINGS.firstTrainCutoff && isArrivalEntryValid(etaData[entryIndex]));
             if(etaData[entryIndex] == null) break;
             if(!arrivalEntryValid) entryIndex++;
         } while(!arrivalEntryValid);

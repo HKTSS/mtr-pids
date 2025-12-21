@@ -11,7 +11,8 @@ const settings = {
     showPlatform: true,
     showingSpecialMessage: false,
     uiPreset: null,
-    rtHeader: false
+    rtHeader: false,
+    firstTrainCutoff: 20
 }
 
 export default settings;

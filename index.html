@@ -140,6 +140,10 @@
                         </select>
                     </section>
                     <section>
+                        <label>{{ $t('settings.sections.display.first_train_cutoff.name') }}</label>
+                        <input type="number" min="0" step="1" v-model.number="SETTINGS.firstTrainCutoff"/>
+                    </section>
+                    <section>
                         <div>
                             <input id="show-platform" type="checkbox" v-model="SETTINGS.showPlatform"></input>
                             <label for="show-platform" attr-inline>{{ $t('settings.sections.display.platform_number') }}</label>
