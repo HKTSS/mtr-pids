@@ -1,13 +1,13 @@
 :root {
-    --font-arrivals: "Myriad Pro", "Noto Sans", "Noto Serif HK";
-    --font-platformcircle: "Myriad Pro", "Noto Sans";
+    --font-arrivals: "Myriad Pro", "Noto Sans", 'DFLiSongHK', "Noto Serif HK";
+    --font-platformcircle: "Myriad Pro", "Noto Sans", 'DFLiSongHK';
     --font-size: 12vmin;
     --eta-font-size: 13vmin;
     --route-color: transparent;
     --font-weight: 600;
-    --platcircle-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif HK';
-    --dest-family: 'Myriad Pro', 'Noto Sans', 'Noto Serif HK';
-    --eta-family: "Myriad Pro", "Noto Sans", "Noto Serif HK";
+    --platcircle-family: 'Myriad Pro', 'Noto Sans', 'DFLiSongHK', 'Noto Serif HK';
+    --dest-family: 'Myriad Pro', 'Noto Sans', 'DFLiSongHK', 'Noto Serif HK';
+    --eta-family: "Myriad Pro", "Noto Sans", 'DFLiSongHK', "Noto Serif HK";
     --eta-width: 260px;
     --aqua: #c8ebfa;
 
@@ -23,6 +23,9 @@
 
 main {
     font-family: var(--font-arrivals);
+    
+    /* We have multiple fallback font with slightly different available weight, let's not have the browser force change the weight for us */
+    font-synthesis: none;
 }
 
 b {
