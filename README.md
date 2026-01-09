@@ -1,6 +1,6 @@
 <div align="center">
     <h1>MTR Railway Vision PIDS Simulator</h1>
-    <img src="./assets/img/thumb.png">
+    <img src="./assets/img/thumb.png" width=384>
 </div>
 
 ---
