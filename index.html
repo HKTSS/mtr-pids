@@ -95,8 +95,8 @@
                         <div v-if="!getRoute(routeReference).isLRT">
                             <label for="direction">{{ $t('settings.sections.data.direction.name') }}</label>
                             <select id="direction" v-model="SETTINGS.direction">
-                                <option value="UP">{{ $t('settings.sections.data.direction.to', { dir: $t(`data.stations.${getRoute(routeReference).directionInfo[0]}`)} ) }}</option>
-                                <option value="DOWN">{{ $t('settings.sections.data.direction.to', { dir: $t(`data.stations.${getRoute(routeReference).directionInfo[1]}`)} ) }}</option>
+                                <option value="UP">{{ $t('settings.sections.data.direction.to', { dir: `${getRoute(routeReference).directionInfo[0].split(";").map(e => $t(`data.stations.${e}`)).join("/")}` }) }}</option>
+                                <option value="DOWN">{{ $t('settings.sections.data.direction.to', { dir: `${getRoute(routeReference).directionInfo[1].split(";").map(e => $t(`data.stations.${e}`)).join("/")}` }) }}</option>
                                 <option value="BOTH">{{ $t('settings.sections.data.direction.both') }}</option>
                                 <option value="BOTH_SPLIT">{{ $t('settings.sections.data.direction.both_split') }}</option>
                             </select>

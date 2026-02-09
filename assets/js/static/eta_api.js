@@ -37,7 +37,12 @@ function processHeavyRailData(data, route, stn, direction) {
     }
 
     const routeAndStation = `${route}-${stn}`;
-    const isTerminus = (RouteList[route].directionInfo ?? []).includes(stn.replace("LMC", "LOW"));
+    let terminus = [];
+    for(let term of RouteList[route].directionInfo ?? []) {
+        terminus.push(...term.split(";"));
+    }
+
+    const isTermini = terminus.includes(stn);
 
     let tempArray = [];
     let finalData = [];
@@ -80,7 +85,7 @@ function processHeavyRailData(data, route, stn, direction) {
 
     /* Convert data to adapt to a standardized format */
     for (const entry of tempArray) {
-        let isDeparture = isTerminus;
+        let isDeparture = isTermini;
         let routeData = RouteList[route];
         let arrTime = new Date(`${entry.time.replace(" ", "T")}+08:00`);
         let sysTime = new Date(`${data.sys_time.replace(" ", "T")}+08:00`);
@@ -143,11 +148,9 @@ const ETA_API = [
 function getSuitableAPI(lineName) {
     let sortedApis = ETA_API.sort((e, f) => e.priority - f.priority);
     for(let api of sortedApis) {
-        console.log(api);
         if(api.isSuitable(lineName)) return api;
-        else console.warn("Failed for " + api.name);
     }
-    console.warn("Unknown API: " + api);
+    console.warn(`Unknown API for: ${lineName}`);
     return null;
 }
 
