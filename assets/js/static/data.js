@@ -345,7 +345,7 @@ const StationList = new Map([
     ['LAK', new Station("LAK", "茘景|Lai King", [])],
     ['TSY', new Station("TSY", "青衣|Tsing Yi", [])],
     ['AIR', new Station("AIR", "機場|Airport", [])],
-    ['AWE', new Station("AWE", "機場及博覽館|Airport & AsiaWorld–Expo", [])],
+    ['AWE', new Station("AWE", "博覽館|AsiaWorld–Expo", [])],
     ['SUN', new Station("SUN", "欣澳|Sunny Bay", [])],
     ['OYB', new Station("OYB", "小蠔灣|Oyster Bay", [])],
     ['TCE', new Station("TCE", "東涌東|Tung Chung East", [])],

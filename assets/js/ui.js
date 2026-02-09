@@ -4,7 +4,7 @@ import SETTINGS from './static/settings.js';
 import HEADER_BAR from './header_bar.js'
 import PROMO from './promo.js'
 
-import { PIDS_OVERRIDE_DATA, UIPreset, DisplayMode, getRoute, getStation } from './static/data.js';
+import { PIDS_OVERRIDE_DATA, UIPreset, DisplayMode, getRoute } from './static/data.js';
 
 const Chinese = /\p{Script=Han}/u;
 
@@ -52,12 +52,14 @@ function drawUI(etaData) {
         }
         
         let pidsOverrideData = entry.via ? PIDS_OVERRIDE_DATA[SETTINGS.route]?.[SETTINGS.station] ?? PIDS_OVERRIDE_DATA[SETTINGS.route].default : null;
+        let fullDestinationName = specialCaseDestination(entry.dest);
+
         let destinationName;
         if(entry.via) {
-            let stationName = switchLang(entry.dest);
-            destinationName = `${stationName}<span class="${pidsOverrideData?.viaSmall && Chinese.test(stationName) ? "via-zh" : ""}">${switchLang(pidsOverrideData.via)}</span>${switchLang(pidsOverrideData.name)}`;
+            let destinationName = switchLang(fullDestinationName);
+            destinationName = `${destinationName}<span class="${pidsOverrideData?.viaSmall && Chinese.test(destinationName) ? "via-zh" : ""}">${switchLang(pidsOverrideData.via)}</span>${switchLang(pidsOverrideData.name)}`;
         } else {
-            destinationName = switchLang(entry.dest);
+            destinationName = switchLang(fullDestinationName);
         }
 
         let timetext = "";
@@ -95,6 +97,14 @@ function drawUI(etaData) {
 
     changeUIPreset();
     adjustLayoutSize();
+}
+
+/* Show "Airport & AsiaWorld-Expo" before Airport Station */
+function specialCaseDestination(str) {
+    if(str == "博覽館|AsiaWorld–Expo" && SETTINGS.station != "AIR" && SETTINGS.station != "AWE") {
+        return "機場及博覽館|Airport & AsiaWorld–Expo";
+    }
+    return str;
 }
 
 let animFrame = null;
