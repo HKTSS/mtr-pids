@@ -92,7 +92,7 @@
                                 <option v-for="stationCode in getRoute(routeReference).stations" :value="stationCode">{{ $t(`data.stations.${stationCode}`) }}</option>
                             </select>
                         </div>
-                        <div v-if="!routeReference.isLRT">
+                        <div v-if="!getRoute(routeReference).isLRT">
                             <label for="direction">{{ $t('settings.sections.data.direction.name') }}</label>
                             <select id="direction" v-model="SETTINGS.direction">
                                 <option value="UP">{{ $t('settings.sections.data.direction.to', { dir: $t(`data.stations.${getRoute(routeReference).directionInfo[0]}`)} ) }}</option>

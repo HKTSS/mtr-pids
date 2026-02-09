@@ -3,7 +3,8 @@
 import ETA_CONTROLLER from './eta_controller.js'
 import SETTINGS from './static/settings.js';
 import UI from './ui.js'
-import { ETA_API, getRoute } from './static/data.js';
+import { getRoute } from './static/data.js';
+import { getSuitableAPI } from './static/eta_api.js';
 
 let etaData = [];
 
@@ -17,8 +18,8 @@ function parseQuery() {
 
 async function updateETA() {
     let route = getRoute(SETTINGS.route);
-    let api = route.api;
-    if (api == ETA_API.NONE) return;
+    let api = getSuitableAPI(SETTINGS.route);
+    if (api == null) return;
 
     let data = await ETA_CONTROLLER.getETA(api, route.initials, SETTINGS.station, SETTINGS.direction);
     etaData = data;
