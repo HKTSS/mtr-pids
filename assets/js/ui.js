@@ -56,8 +56,8 @@ function drawUI(etaData) {
 
         let destinationName;
         if(entry.via) {
-            let destinationName = switchLang(fullDestinationName);
-            destinationName = `${destinationName}<span class="${pidsOverrideData?.viaSmall && Chinese.test(destinationName) ? "via-zh" : ""}">${switchLang(pidsOverrideData.via)}</span>${switchLang(pidsOverrideData.name)}`;
+            let newDestinationName = switchLang(fullDestinationName);
+            destinationName = `${newDestinationName}<span class="${pidsOverrideData?.viaSmall && Chinese.test(newDestinationName) ? "via-zh" : ""}">${switchLang(pidsOverrideData.via)}</span>${switchLang(pidsOverrideData.name)}`;
         } else {
             destinationName = switchLang(fullDestinationName);
         }
