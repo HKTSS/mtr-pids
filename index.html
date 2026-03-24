@@ -220,6 +220,50 @@
         </div>
     </main>
 </body>
+<script>
+let lastState = "";
+
+// создаём звуки
+const soundOpen = new Audio("door_open.mp3");
+const soundClose = new Audio("door_close.mp3");
+const soundAnn = new Audio("door_clsann.mp3");
+
+// функция проверки табло
+function checkArrivals() {
+    const arrivals = document.querySelectorAll(".eta");
+
+    arrivals.forEach(el => {
+        const text = el.innerText.toLowerCase();
+
+        // --- ARRIVING ---
+        if (text.includes("arriving") && lastState !== "arriving") {
+            lastState = "arriving";
+
+            console.log("Arriving detected");
+
+            setTimeout(() => {
+                soundOpen.play();
+            }, 10000); // 10 секунд
+        }
+
+        // --- DEPARTING ---
+        if (text.includes("departing") && lastState !== "departing") {
+            lastState = "departing";
+
+            console.log("Departing detected");
+
+            soundClose.play();
+
+            setTimeout(() => {
+                soundAnn.play();
+            }, 2000); // 2 секунды
+        }
+    });
+}
+
+// проверка каждые 1 сек
+setInterval(checkArrivals, 1000);
+</script>
 <script src="./assets/js/local_storage.js" type="module"></script>
 <script src="./assets/js/config/new_config.js" type="module"></script>
 
