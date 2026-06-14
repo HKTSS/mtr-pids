@@ -65,7 +65,7 @@ const DisplayMode = {
 const RouteList = {
     'TWL': new Route('TWL', '荃灣綫|Tsuen Wan Line', '#ff0000', '#ff0000', false, ["TSW", "CEN"], ["CEN", "ADM", "TST", "JOR", "YMT", "MOK", "PRE", "SSP", "CSW", "LCK", "MEF", "LAK", "KWF", "KWH", "TWH", "TSW"]),
     'KTL': new Route('KTL', '觀塘綫|Kwun Tong Line', '#1a9431', '#1a9431', false, ["TIK", "WHA"], ["TIK", "YAT", "LAT", "KWT", "NTK", "KOB", "CHH", "DIH", "WTS", "LOF", "KOT", "SKM", "PRE", "MOK", "YMT", "HOM", "WHA"]),
-    'ISL': new Route('ISL', '港島綫|Island Line', '#007dc5', '#007dc5', false, ["CHW", "KET"], ["KET", "HKU", "SYP", "SHW", "CEN", "ADM", "WAC", "CAB", "TIH", "FOH", "NOP", "QUB", "SWH", "SKW", "HFC", "CHW"]),
+    'ISL': new Route('ISL', '港島綫|Island Line', '#007dc5', '#007dc5', false, ["CHW", "KET"], ["KET", "HKU", "SYP", "SHW", "CEN", "ADM", "WAC", "CAB", "TIH", "FOH", "NOP", "QUB", "TAK", "SWH", "SKW", "HFC", "CHW"]),
     'TKL': new Route('TKL', '將軍澳綫|Tsueng Kwan O Line', '#7d499d', '#7d499d', false, ["POA;LHP", "NOP"], ["NOP", "QUB", "YAT", "TIK", "TKO", "LHP", "HAH", "POA"]),
     
     'TCL': new Route('TCL', '東涌綫|Tung Chung Line', '#f7943e', '#f7943e', false, ["TUC", "HOK"], ["HOK", "KOW", "OLY", "NAC", "LAK", "TSY", "SUN", "TUC"]),
