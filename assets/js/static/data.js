@@ -439,7 +439,7 @@ const StationList = new Map([
     ["220", new Station("220", "大興 (南)|Tai Hing (South)", [1, 2])],
     ["230", new Station("230", "銀圍|Ngan Wai", [1, 2])],
     ["240", new Station("240", "兆禧|Siu Hei", [1, 2])],
-    ["250", new Station("250", "屯門泳池|Tuen Mun Swimming Pool", [1, 2])],
+    ["250", new Station("250", "海皇路|Hoi Wong Road", [1, 2])],
     ["260", new Station("260", "豐景園|Goodview Garden", [1, 2])],
     ["265", new Station("265", "兆麟|Siu Lun", [1, 2])],
     ["270", new Station("270", "安定|On Ting", [1, 2])],
