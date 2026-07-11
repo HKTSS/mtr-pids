@@ -237,7 +237,7 @@ const LANG = {
             "220": "Tai Hing (South)",
             "230": "Ngan Wai",
             "240": "Siu Hei",
-            "250": "Tuen Mun Swimming Pool",
+            "250": "Hoi Wong Road",
             "260": "Goodview Garden",
             "265": "Siu Lun",
             "270": "On Ting",
